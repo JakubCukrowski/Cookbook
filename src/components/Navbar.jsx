@@ -1,14 +1,15 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { StyledNavbarBrand, StyledNavbarColapse } from '../styles/NavbarStyles/StyledNavbar';
 
 export const CustomNavbar = () => {
   return (
-    <Navbar variant="dark" bg="dark" expand="lg">
+    <Navbar fixed='top' variant="dark" bg="dark" expand="lg">
       <Container fluid>
-        <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+        <StyledNavbarBrand href="#">Przepisowa pasja</StyledNavbarBrand>
         <Navbar.Toggle aria-controls="navbar-dark-example" />
-        <Navbar.Collapse id="navbar-dark-example">
+        <StyledNavbarColapse id="navbar-dark-example">
           <Nav>
             <Nav.Item>
               <Nav.Link href='#'>Zapisane przepisy</Nav.Link>
@@ -26,7 +27,7 @@ export const CustomNavbar = () => {
               <Nav.Link href='#'>Wyloguj</Nav.Link>
             </Nav.Item>
           </Nav>
-        </Navbar.Collapse>
+        </StyledNavbarColapse>
       </Container>
     </Navbar>
   );
