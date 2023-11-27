@@ -1,10 +1,14 @@
-import { CustomNavbar } from "./Navbar";
+import { CustomNavbar } from "./components/Navbar";
+import { Hero } from "./components/Hero";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 
   return (
-    <CustomNavbar />
+    <>
+      <CustomNavbar />
+      <Hero />
+    </>
   )
 }
 
