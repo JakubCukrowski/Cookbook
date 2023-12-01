@@ -4,13 +4,16 @@ export const StyledHeroSection = styled.section`
     width: 100%;
     height: 100vh;
     background: transparent center no-repeat url(${(props) => props.backgroundimage});
-    background-attachment: scroll;
     background-size: cover;
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    @media (min-width: 992px) {
+        background-attachment: fixed;
+    }
 
     &::after {
         content: "";

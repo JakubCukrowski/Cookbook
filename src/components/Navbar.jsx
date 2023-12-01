@@ -21,7 +21,7 @@ export const CustomNavbar = () => {
               <Nav.Link href='#'>Polubione przepisy</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link href='#'>Losuj przepis</Nav.Link>
+              <Nav.Link href='#'>Planer</Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link href='#'>Wyloguj</Nav.Link>

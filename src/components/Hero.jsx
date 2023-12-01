@@ -11,7 +11,7 @@ import {Button, Container } from "react-bootstrap";
 export const Hero = () => {
     return (
         <StyledHeroSection backgroundimage={heroBackgroundImage}> 
-            <h1>Na co masz dzisiaj ochotę?</h1>
+            <h1 style={{textAlign: "center"}}>Cześc, na co masz dzisiaj ochotę?</h1>
             <HeroFlexContainer direction="column" justify="center" align="center" fluid>
                 <SearchBarContainer>
                     <StyledInput type="text" placeholder="Znajdź przepis" name="searchbar"/>
@@ -21,10 +21,10 @@ export const Hero = () => {
                 <h2>Możesz również poszukać czegoś w naszych najpopularniejszych kategoriach</h2>
                 
                 <Container>
-                    <Button variant="dark">Kurczak</Button>{' '}
-                    <Button variant="dark">Ciasta</Button>{' '}
-                    <Button variant="dark">Nabiał</Button>{' '}
-                    <Button variant="dark">Jajka</Button>{' '}
+                    <Button variant="dark">Popularne</Button>{' '}
+                    <Button variant="dark">Popularne</Button>{' '}
+                    <Button variant="dark">Popularne</Button>{' '}
+                    <Button variant="dark">Popularne</Button>{' '}
                 </Container>
             </HeroFlexContainer>
         </StyledHeroSection>        
