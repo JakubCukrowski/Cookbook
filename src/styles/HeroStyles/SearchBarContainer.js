@@ -6,7 +6,6 @@ export const SearchBarContainer = styled.div`
     align-items: center;
     width: 80%;
     position: relative;
-    height: 50px;
     margin-bottom: 120px;
 
     @media (min-width: 766px) {

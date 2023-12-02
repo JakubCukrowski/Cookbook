@@ -21,6 +21,7 @@ export const HeroFlexContainer = styled(FlexContainer)`
 `
 
 export const StyledCardGroupContainer = styled(CardGroup)`
+
     @media (min-width: 576px) {
         width: 100%;
         display: flex;
