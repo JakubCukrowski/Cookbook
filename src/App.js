@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { CustomNavbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { NewestRecipes } from "./components/NewestRecipes";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { PopularRecipes } from "./components/PopularRecipes";
 import { Footer } from "./components/Footer";
 
@@ -28,7 +27,7 @@ function App() {
       <Hero />
       <NewestRecipes recipes={recipes}/>
       <PopularRecipes recipes={recipes}/>
-      <Footer />
+      {/* <Footer /> */}
     </>
   )
 }
