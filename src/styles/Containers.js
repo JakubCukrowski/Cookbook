@@ -29,3 +29,10 @@ export const StyledCardGroupContainer = styled(CardGroup)`
         align-items: center;
     }
 `
+export const PopularButtonsContainer = styled(Container)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+`

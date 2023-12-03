@@ -2,13 +2,14 @@ import styled from "styled-components";
 
 export const SearchBarContainer = styled.div`
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 80%;
+    padding-bottom: 60px;
     position: relative;
-    margin-bottom: 120px;
 
-    @media (min-width: 766px) {
+    @media (min-width: 992px) {
         width: 60%;
     }
 

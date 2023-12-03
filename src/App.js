@@ -24,7 +24,7 @@ function App() {
   return (
     <>
       <CustomNavbar />
-      <Hero />
+      <Hero recipes={recipes} />
       <NewestRecipes recipes={recipes}/>
       <PopularRecipes recipes={recipes}/>
       {/* <Footer /> */}
