@@ -17,6 +17,17 @@ export const Hero = ({recipes}) => {
         setInputValue(e.target.value);
     }
 
+    // function to normalize the string => ę === e etc.
+    const normalizeString = (string) => 
+        string.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+
+    //filters recipes to match input word/s
+    const filteredRecipes = recipes.filter(recipe => {
+        const normalizedInput = normalizeString(inputValue)
+        const normalizedRecipe = normalizeString(recipe.name)
+        return normalizedRecipe.includes(normalizedInput)
+    })
+
     return (
         <StyledHeroSection backgroundimage={heroBackgroundImage}> 
             <h1 style={{textAlign: "center"}}>Cześć, na co masz dzisiaj ochotę?</h1>
@@ -25,21 +36,20 @@ export const Hero = ({recipes}) => {
                 <SearchBarContainer>
                     <SearchBarWrapper>
                         <StyledInput 
-                        className={inputValue.length > 0 ? 'no-radius-left-bottom' : ""}
                         onChange={handleInputValue} 
                         type="text" 
                         placeholder="Znajdź przepis" 
                         name="searchbar" 
                         value={inputValue}
                     />
-                        <Button className={inputValue.length > 0 ? 'no-radius-right-bottom' : ""}>
+                        <Button>
                             <FontAwesomeIcon icon={faMagnifyingGlass}/>
                         </Button>
                     </SearchBarWrapper>
-                    {inputValue.length > 0
+                    {inputValue.length > 2 
+                    && filteredRecipes.length > 0
                     ? <StyledSearchedRecipes>
-                        {recipes.map((recipe, index) => recipe.name.toLowerCase().includes(inputValue.toLowerCase()) 
-                        ? <a key={index} href="#"><li>{recipe.name}</li></a> : null)}
+                        {filteredRecipes.map((recipe, index) => <li key={index}><a href="#">{recipe.name}</a></li>)}
                     </StyledSearchedRecipes> 
                     : null}
 
