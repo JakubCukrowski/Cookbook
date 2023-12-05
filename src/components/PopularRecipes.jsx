@@ -6,6 +6,7 @@ import { StyledCol } from "../styles/CardStyles/StyledCol";
 import { StyledCard } from "../styles/CardStyles/StyledCard";
 import { StyledCardImg } from "../styles/CardStyles/StyledCardImg";
 import { FlexContainer } from "../styles/Containers";
+import { Link } from "react-router-dom";
 
 export const PopularRecipes = ({recipes}) => {
     const popular = [...recipes].sort((a, b) => b.likes - a.likes)
@@ -16,15 +17,17 @@ export const PopularRecipes = ({recipes}) => {
             <Row xs={1} md={2} className="g-4" style={{paddingBottom: 20}}>
                 {popular.splice(0, 4).map((recipe, idx) => (
                     <StyledCol key={idx}>
-                        <StyledCard>
-                            <StyledCardImg variant="top" src={recipe.image} />
-                            <Card.Body>
-                            <Card.Title>{recipe.name}</Card.Title>
-                            <Card.Text>
-                                {`Liczba polubień: ${recipe.likes}`}
-                            </Card.Text>
-                            </Card.Body>
-                        </StyledCard>
+                        <Link to={`/recipes/${recipe._id}`}>
+                            <StyledCard>
+                                <StyledCardImg variant="top" src={recipe.image} />
+                                <Card.Body>
+                                <Card.Title>{recipe.name}</Card.Title>
+                                <Card.Text>
+                                    {`Liczba polubień: ${recipe.likes}`}
+                                </Card.Text>
+                                </Card.Body>
+                            </StyledCard>
+                        </Link>
                     </StyledCol>
                 ))}
             </Row>

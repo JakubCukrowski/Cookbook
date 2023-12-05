@@ -1,8 +1,12 @@
 import styled from "styled-components";
 import { Navbar } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-export const StyledNavbarBrand = styled(Navbar.Brand)`
+export const StyledLink = styled(Link)`
     font-family: 'Gloria Hallelujah', cursive;
+    font-size: 1.4rem;
+    text-decoration: none;
+    color: white;
 `
 
 export const StyledNavbarColapse = styled(Navbar.Collapse)`
