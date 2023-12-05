@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { CustomNavbar } from "./components/Navbar";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Layout } from "./components/Layout";
 import { Hero } from "./components/Hero";
-import { NewestRecipes } from "./components/NewestRecipes";
-import { PopularRecipes } from "./components/PopularRecipes";
-import { Footer } from "./components/Footer";
+import {NewestRecipes} from './components/NewestRecipes'
+import {PopularRecipes} from './components/PopularRecipes'
+import { SingleRecipe } from "./components/SingleRecipe";
 
 function App() {
 
@@ -22,13 +23,19 @@ function App() {
     }, [])
 
   return (
-    <>
-      <CustomNavbar />
-      <Hero recipes={recipes} />
-      <NewestRecipes recipes={recipes}/>
-      <PopularRecipes recipes={recipes}/>
-      {/* <Footer /> */}
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={
+          <>
+            <Hero recipes={recipes}/>
+            <NewestRecipes recipes={recipes}/>
+            <PopularRecipes recipes={recipes} />
+          </>}/>
+          <Route path="/recipes/:recipeId" element={<SingleRecipe recipes={recipes} />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
