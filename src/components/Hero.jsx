@@ -9,9 +9,12 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import {Button } from "react-bootstrap";
 import { SearchBarWrapper } from "../styles/HeroStyles/SearchBarWrapper";
 import { StyledSearchedRecipes } from "../styles/HeroStyles/StyledSearchedRecipes";
+import { UserAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
-export const Hero = ({recipes}) => {
+export const Hero = () => {
     const [inputValue, setInputValue] = useState('')
+    const {recipes} = UserAuth()
 
     const handleInputValue = (e) => {
         setInputValue(e.target.value);
@@ -49,7 +52,7 @@ export const Hero = ({recipes}) => {
                     {inputValue.length > 2 
                     && filteredRecipes.length > 0
                     ? <StyledSearchedRecipes>
-                        {filteredRecipes.map((recipe, index) => <li key={index}><a href="#">{recipe.name}</a></li>)}
+                        {filteredRecipes.map((recipe, index) => <li key={index}><Link to={`/recipes/${recipe._id}`}>{recipe.name}</Link></li>)}
                     </StyledSearchedRecipes> 
                     : null}
 

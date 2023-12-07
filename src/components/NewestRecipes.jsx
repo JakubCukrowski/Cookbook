@@ -7,9 +7,11 @@ import { StyledCard } from "../styles/CardStyles/StyledCard";
 import { StyledCardImg } from "../styles/CardStyles/StyledCardImg";
 import { FlexContainer } from "../styles/Containers";
 import { Link } from "react-router-dom";
+import { UserAuth } from "../context/AuthContext";
 
 
-export const NewestRecipes = ({recipes}) => {
+export const NewestRecipes = () => {
+    const {recipes} = UserAuth()
     const checkDate = (date) => {
         return new Date(date)
     }

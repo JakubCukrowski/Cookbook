@@ -1,9 +1,8 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { StyledLink, StyledNavbarBrand, StyledNavbarColapse } from '../styles/NavbarStyles/StyledNavbar';
+import { StyledLink, StyledNavbarColapse } from '../styles/NavbarStyles/StyledNavbar';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 export const CustomNavbar = () => {
   const [userLogged, setUserLogged] = useState(false)
