@@ -7,8 +7,10 @@ import { StyledCard } from "../styles/CardStyles/StyledCard";
 import { StyledCardImg } from "../styles/CardStyles/StyledCardImg";
 import { FlexContainer } from "../styles/Containers";
 import { Link } from "react-router-dom";
+import { UserAuth } from "../context/AuthContext";
 
-export const PopularRecipes = ({recipes}) => {
+export const PopularRecipes = () => {
+    const {recipes} = UserAuth()
     const popular = [...recipes].sort((a, b) => b.likes - a.likes)
     
     return (
