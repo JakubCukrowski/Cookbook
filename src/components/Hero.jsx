@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyledHeroSection } from "../styles/HeroStyles/StyledHeroSection";
 import heroBackgroundImage from '../images/heroImage.jpg'
 import { StyledInput } from "../styles/HeroStyles/StyledInput";
@@ -11,25 +11,30 @@ import { SearchBarWrapper } from "../styles/HeroStyles/SearchBarWrapper";
 import { StyledSearchedRecipes } from "../styles/HeroStyles/StyledSearchedRecipes";
 import { UserAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import Fuse from 'fuse.js'
 
 export const Hero = () => {
-    const [inputValue, setInputValue] = useState('')
+    const [queryText, setQueryText] = useState('')
+    const [queryResults, setQueryResults] = useState([])
     const {recipes} = UserAuth()
 
     const handleInputValue = (e) => {
-        setInputValue(e.target.value);
+        setQueryText(e.target.value);
     }
 
-    // function to normalize the string => ę === e etc.
-    const normalizeString = (string) => 
-        string.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    useEffect(() => {
+        if (!queryText) {
+            setQueryResults([])
+        }
 
-    //filters recipes to match input word/s
-    const filteredRecipes = recipes.filter(recipe => {
-        const normalizedInput = normalizeString(inputValue)
-        const normalizedRecipe = normalizeString(recipe.name)
-        return normalizedRecipe.includes(normalizedInput)
-    })
+        const fuse = new Fuse(recipes, {
+            keys: ['name'],
+            threshold: 0.3
+        })
+
+        const result = fuse.search(queryText).map(res => res.item)
+        setQueryResults(result)
+    }, [queryText])
 
     return (
         <StyledHeroSection backgroundimage={heroBackgroundImage}> 
@@ -39,20 +44,21 @@ export const Hero = () => {
                 <SearchBarContainer>
                     <SearchBarWrapper>
                         <StyledInput 
+                        autoComplete="off"
                         onChange={handleInputValue} 
                         type="text" 
                         placeholder="Znajdź przepis" 
                         name="searchbar" 
-                        value={inputValue}
+                        value={queryText}
                     />
                         <Button>
                             <FontAwesomeIcon icon={faMagnifyingGlass}/>
                         </Button>
                     </SearchBarWrapper>
-                    {inputValue.length > 2 
-                    && filteredRecipes.length > 0
+                    {queryText.length > 2 
+                    && queryResults.length > 0
                     ? <StyledSearchedRecipes>
-                        {filteredRecipes.map((recipe, index) => <li key={index}><Link to={`/recipes/${recipe._id}`}>{recipe.name}</Link></li>)}
+                        {queryResults.map((recipe, index) => <li key={index}><Link to={`/recipes/${recipe._id}`}>{recipe.name}</Link></li>)}
                     </StyledSearchedRecipes> 
                     : null}
 
