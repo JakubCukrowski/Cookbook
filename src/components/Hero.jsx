@@ -29,7 +29,7 @@ export const Hero = () => {
 
         const fuse = new Fuse(recipes, {
             keys: ['name'],
-            threshold: 0.3
+            threshold: 0.4
         })
 
         const result = fuse.search(queryText).map(res => res.item)
