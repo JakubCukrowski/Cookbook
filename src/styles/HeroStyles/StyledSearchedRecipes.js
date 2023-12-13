@@ -35,7 +35,6 @@ export const StyledSearchedRecipes = styled.ul`
     
 
     li {
-        padding: 10px;
 
         &:nth-child(1n) {
             background-color: rgba(190, 190, 190, 0.5);
@@ -49,6 +48,13 @@ export const StyledSearchedRecipes = styled.ul`
             text-decoration: none;
             color: black;
             display: block;
+            padding: 10px;
         }
+
+        
+    }
+
+    .active {
+            background-color: red !important;
     }
 `
