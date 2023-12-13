@@ -17,9 +17,23 @@ export const Hero = () => {
     const [queryText, setQueryText] = useState('')
     const [queryResults, setQueryResults] = useState([])
     const {recipes} = UserAuth()
+    const [isFocused, setIsFocused] = useState(false)
+    const [activeIndex, setActiveIndex] = useState("")
 
     const handleInputValue = (e) => {
         setQueryText(e.target.value);
+    }
+
+    const handleKeyPress = (e) => {
+        if (e.key === "ArrowDown" && activeIndex === "") {
+            setActiveIndex(0)
+
+        } else if (e.key === "ArrowDown" && activeIndex >= 0) {
+            setActiveIndex(prev => prev + 1)
+
+        } else if (e.key === "ArrowUp") {
+            setActiveIndex(prev => prev - 1)
+        }
     }
 
     useEffect(() => {
@@ -29,7 +43,7 @@ export const Hero = () => {
 
         const fuse = new Fuse(recipes, {
             keys: ['name'],
-            threshold: 0.4
+            threshold: 0.5
         })
 
         const result = fuse.search(queryText).map(res => res.item)
@@ -44,12 +58,15 @@ export const Hero = () => {
                 <SearchBarContainer>
                     <SearchBarWrapper>
                         <StyledInput 
+                        onKeyDown={handleKeyPress}
                         autoComplete="off"
-                        onChange={handleInputValue} 
+                        onChange={handleInputValue}
+                        onFocus={() => setIsFocused(true)} 
+                        onBlur={() => setIsFocused(false)}
                         type="text" 
-                        placeholder="Znajdź przepis" 
+                        placeholder={isFocused ? "Napisz coś" : "Znajdź przepis"}
                         name="searchbar" 
-                        value={queryText}
+                        value={activeIndex === "" ? queryText : queryResults[activeIndex].name}
                     />
                         <Button>
                             <FontAwesomeIcon icon={faMagnifyingGlass}/>
@@ -58,7 +75,10 @@ export const Hero = () => {
                     {queryText.length > 2 
                     && queryResults.length > 0
                     ? <StyledSearchedRecipes>
-                        {queryResults.map((recipe, index) => <li key={index}><Link to={`/recipes/${recipe._id}`}>{recipe.name}</Link></li>)}
+                        {queryResults.map((recipe, index) => 
+                        <li key={index} tabIndex="0" className={activeIndex === index ? "active" : null}>
+                            <Link to={`/recipes/${recipe._id}`}>{recipe.name}</Link>
+                        </li>)}
                     </StyledSearchedRecipes> 
                     : null}
 
