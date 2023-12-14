@@ -32,29 +32,20 @@ export const StyledSearchedRecipes = styled.ul`
     &::-webkit-scrollbar-thumb:hover {
     background: #b30000; 
     }
-    
 
-    li {
+    a {
+        text-decoration: none;
+        color: black;
+        display: block;
+        padding: 10px;
 
-        &:nth-child(1n) {
-            background-color: rgba(190, 190, 190, 0.5);
-        }
+        /* add different background every one link!! */
 
-        &:nth-child(2n) {
-            background-color: rgba(167, 167, 167, 0.5);
-        }
-
-        a {
-            text-decoration: none;
-            color: black;
-            display: block;
-            padding: 10px;
-        }
-
-        
     }
 
     .active {
-            background-color: red !important;
+        background-color: rgb(33, 37, 41) !important;
+        color: white !important;
     }
+
 `

@@ -10,7 +10,7 @@ import {Button } from "react-bootstrap";
 import { SearchBarWrapper } from "../styles/HeroStyles/SearchBarWrapper";
 import { StyledSearchedRecipes } from "../styles/HeroStyles/StyledSearchedRecipes";
 import { UserAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Fuse from 'fuse.js'
 
 export const Hero = () => {
@@ -19,23 +19,37 @@ export const Hero = () => {
     const {recipes} = UserAuth()
     const [isFocused, setIsFocused] = useState(false)
     const [activeIndex, setActiveIndex] = useState("")
+    const navigate = useNavigate();
 
     const handleInputValue = (e) => {
         setQueryText(e.target.value);
     }
 
+
+    //logic for keys down/up/enter
     const handleKeyPress = (e) => {
+
+        //prevent from moving cursor to beginning/end of the sentence/word
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault()
+        }
+
         if (e.key === "ArrowDown" && activeIndex === "") {
             setActiveIndex(0)
 
-        } else if (e.key === "ArrowDown" && activeIndex >= 0) {
+        } else if (e.key === "ArrowDown" && activeIndex >= 0 && activeIndex < queryResults.length - 1 ) {
             setActiveIndex(prev => prev + 1)
 
-        } else if (e.key === "ArrowUp") {
+        } else if (e.key === "ArrowUp" && activeIndex > 0) {
             setActiveIndex(prev => prev - 1)
+        }
+
+        if (e.key === "Enter") {
+            navigate(`/recipes/${queryResults[activeIndex]._id}`)
         }
     }
 
+    //useEffect handles fuse.js library. It looks for names in API
     useEffect(() => {
         if (!queryText) {
             setQueryResults([])
@@ -43,7 +57,7 @@ export const Hero = () => {
 
         const fuse = new Fuse(recipes, {
             keys: ['name'],
-            threshold: 0.5
+            threshold: 1
         })
 
         const result = fuse.search(queryText).map(res => res.item)
@@ -64,7 +78,7 @@ export const Hero = () => {
                         onFocus={() => setIsFocused(true)} 
                         onBlur={() => setIsFocused(false)}
                         type="text" 
-                        placeholder={isFocused ? "Napisz coś" : "Znajdź przepis"}
+                        placeholder={isFocused ? "Wpisz nazwę potrawy, lub składnik" : "Znajdź przepis"}
                         name="searchbar" 
                         value={activeIndex === "" ? queryText : queryResults[activeIndex].name}
                     />
@@ -76,8 +90,13 @@ export const Hero = () => {
                     && queryResults.length > 0
                     ? <StyledSearchedRecipes>
                         {queryResults.map((recipe, index) => 
-                        <li key={index} tabIndex="0" className={activeIndex === index ? "active" : null}>
-                            <Link to={`/recipes/${recipe._id}`}>{recipe.name}</Link>
+                        <li key={index}>
+                            <Link 
+                                className={activeIndex === index ? "active" : null} 
+                                tabIndex="1" 
+                                to={`/recipes/${recipe._id}`}>
+                                {recipe.name}
+                            </Link>
                         </li>)}
                     </StyledSearchedRecipes> 
                     : null}
