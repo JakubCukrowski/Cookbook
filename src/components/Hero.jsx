@@ -25,7 +25,6 @@ export const Hero = () => {
         setQueryText(e.target.value);
     }
 
-
     //logic for keys down/up/enter
     const handleKeyPress = (e) => {
 
@@ -47,6 +46,18 @@ export const Hero = () => {
         if (e.key === "Enter") {
             navigate(`/recipes/${queryResults[activeIndex]._id}`)
         }
+    }
+
+    //close the results on focus out
+    const handleFocusOut = () => {
+        const timeoutId = setTimeout(() => {
+            setIsFocused(false)
+            setQueryText("")
+            setQueryResults([])
+            setActiveIndex("")
+        }, 100);
+
+        return () => clearTimeout(timeoutId)        
     }
 
     //useEffect handles fuse.js library. It looks for names in API
@@ -76,7 +87,7 @@ export const Hero = () => {
                         autoComplete="off"
                         onChange={handleInputValue}
                         onFocus={() => setIsFocused(true)} 
-                        onBlur={() => setIsFocused(false)}
+                        onBlur={handleFocusOut}
                         type="text" 
                         placeholder={isFocused ? "Wpisz nazwę potrawy, lub składnik" : "Znajdź przepis"}
                         name="searchbar" 
@@ -91,7 +102,8 @@ export const Hero = () => {
                     ? <StyledSearchedRecipes>
                         {queryResults.map((recipe, index) => 
                         <li key={index}>
-                            <Link 
+                            <Link
+                            onMouseEnter={() => setActiveIndex(index)} 
                                 className={activeIndex === index ? "active" : null} 
                                 tabIndex="1" 
                                 to={`/recipes/${recipe._id}`}>
