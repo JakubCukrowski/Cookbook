@@ -44,3 +44,14 @@ export const SpinnerContainer = styled.div`
     justify-content: center;
     align-items: center;
 `
+
+export const FakeSpinnerContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 220px;
+
+    @media (min-width: 992px) {
+        height: 250px;
+    }
+`
