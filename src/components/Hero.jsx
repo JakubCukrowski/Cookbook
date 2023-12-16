@@ -60,6 +60,11 @@ export const Hero = () => {
         return () => clearTimeout(timeoutId)        
     }
 
+    //handle mouse over
+    const handleMouseEnter = (index) => {
+        setActiveIndex(index)
+    }
+
     //useEffect handles fuse.js library. It looks for names in API
     useEffect(() => {
         if (!queryText) {
@@ -67,10 +72,11 @@ export const Hero = () => {
         }
 
         const fuse = new Fuse(recipes, {
-            keys: ['name'],
-            threshold: 1
+            keys: ['name', 'ingredients'],
+            threshold: 0.4
         })
 
+        //results are pushed to queryresults state
         const result = fuse.search(queryText).map(res => res.item)
         setQueryResults(result)
     }, [queryText])
@@ -91,7 +97,7 @@ export const Hero = () => {
                         type="text" 
                         placeholder={isFocused ? "Wpisz nazwę potrawy, lub składnik" : "Znajdź przepis"}
                         name="searchbar" 
-                        value={activeIndex === "" ? queryText : queryResults[activeIndex].name}
+                        value={queryText}
                     />
                         <Button>
                             <FontAwesomeIcon icon={faMagnifyingGlass}/>
@@ -103,7 +109,7 @@ export const Hero = () => {
                         {queryResults.map((recipe, index) => 
                         <li key={index}>
                             <Link
-                            onMouseEnter={() => setActiveIndex(index)} 
+                            onMouseEnter={() => handleMouseEnter(index)} 
                                 className={activeIndex === index ? "active" : null} 
                                 tabIndex="1" 
                                 to={`/recipes/${recipe._id}`}>
