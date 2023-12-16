@@ -4,7 +4,7 @@ const userContext = createContext()
 
 export const AuthContextProvider = ({children}) => {
 
-    const [recipes, setRecipes] = useState([])
+    const [recipes, setRecipes] = useState(['recipe1', 'recipe2', 'recipe3', 'recipe4'])
     const [isLoading, setIsLoading] = useState(false)
     const URL = 'https://food-api-7ukw.onrender.com/api/recipes'
 
@@ -21,7 +21,6 @@ export const AuthContextProvider = ({children}) => {
 
         fetchRecipes()
     }, [])
-    
 
     return (
         <userContext.Provider value={{recipes, isLoading}}>

@@ -10,7 +10,7 @@ import { UserAuth } from "../context/AuthContext";
 import { StyledLink } from "../styles/StyledLink";
 
 export const PopularRecipes = () => {
-    const {recipes} = UserAuth()
+    const {recipes, isLoading} = UserAuth()
     const popular = [...recipes].sort((a, b) => b.likes - a.likes)
     
     return (
@@ -18,9 +18,9 @@ export const PopularRecipes = () => {
             <h2 style={{textAlign: "center", padding: 60}}>Najpopularniejsze przepisy</h2>
             <Row xs={1} md={2} className="g-4" style={{paddingBottom: 20}}>
                 {popular.splice(0, 4).map((recipe, idx) => (
-                    <>
-                        {recipes.length === 0
-                        ? <StyledCol key={idx}>
+                    <StyledCol key={recipe._id || idx}>
+                        {!isLoading
+                        ? <>
                             <StyledCard>
                                 <FakeSpinnerContainer>
                                     <Spinner />
@@ -34,8 +34,8 @@ export const PopularRecipes = () => {
                                     </Placeholder>
                                 </CardBody>                            
                             </StyledCard>
-                        </StyledCol>
-                        : <StyledCol key={idx}>
+                        </>
+                        :   <>
                                 <StyledLink to={`/recipes/${recipe._id}`}>
                                     <StyledCard>
                                         <StyledCardImg variant="top" src={recipe.image} />
@@ -47,8 +47,8 @@ export const PopularRecipes = () => {
                                         </Card.Body>
                                     </StyledCard>
                                 </StyledLink>
-                            </StyledCol>}
-                    </>
+                            </>}
+                    </StyledCol>
                 ))}
             </Row>
             <FlexContainer justify="center">
