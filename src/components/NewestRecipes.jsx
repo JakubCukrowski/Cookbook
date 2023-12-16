@@ -8,6 +8,7 @@ import { StyledCardImg } from "../styles/CardStyles/StyledCardImg";
 import { FlexContainer } from "../styles/Containers";
 import { Link } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
+import { StyledLink } from "../styles/StyledLink";
 
 
 export const NewestRecipes = () => {
@@ -24,7 +25,7 @@ export const NewestRecipes = () => {
             <Row xs={1} md={2} className="g-4" style={{paddingBottom: 20}}>
                 {sorted.splice(0, 4).map((recipe, idx) => (
                     <StyledCol key={idx}>
-                        <Link to={`/recipes/${recipe._id}`}>
+                        <StyledLink to={`/recipes/${recipe._id}`}>
                             <StyledCard>
                                 <StyledCardImg variant="top" src={recipe.image} />
                                 <Card.Body>
@@ -34,7 +35,7 @@ export const NewestRecipes = () => {
                                 </Card.Text>
                                 </Card.Body>
                             </StyledCard>
-                        </Link>
+                        </StyledLink>
                     </StyledCol>
                 ))}
             </Row>
