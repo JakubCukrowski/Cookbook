@@ -1,6 +1,9 @@
 import { useParams } from "react-router-dom"
-import { Col, Row, Container, Image, Spinner } from "react-bootstrap"
+import { Col, Row, Container, Spinner } from "react-bootstrap"
 import { UserAuth } from "../context/AuthContext"
+import { StyledImage } from "../styles/StyledImage"
+import { StyledH2 } from "../styles/StyledH2"
+import { SpinnerContainer } from "../styles/Containers"
 
 export const SingleRecipe = () => {
     const {recipes, isLoading} = UserAuth()
@@ -10,16 +13,33 @@ export const SingleRecipe = () => {
     return (
         <section>
             {!isLoading 
-            ? <div style={{width: "100%", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
+            ? <SpinnerContainer>
                 <Spinner/> 
-            </div>
+            </SpinnerContainer>
             : <Container>
                 <Row>
-                    <Col sm={8}><Image style={{width: "100%", maxHeight: "80vh"}} rounded src={findRecipe.image}/></Col>
-                    <Col sm={4}>
-                        <p>Jak przygotować</p>
-                        {Object.entries(findRecipe.steps).map((value, index) => <p key={index}>{`${value[0]}.`}<span> {value[1]}</span></p>)}
-                        </Col>
+                    <Col style={{textAlign: "center", padding: "20px 0"}}>
+                        <h1>{findRecipe.name}</h1>
+                    </Col>
+                </Row>
+                <Row style={{marginBottom: 30}}>
+                    <Col style={{display: "flex", justifyContent: "center"}}>
+                        <StyledImage rounded src={findRecipe.image}/>
+                    </Col>
+                </Row>
+                <Row style={{justifyContent: "center"}}>
+                    <Col sm={5}>
+                        <StyledH2>Składniki</StyledH2>
+                        {findRecipe.ingredients.map((ingredient, index) => <p key={index}>{ingredient}</p>)}
+                    </Col>
+                    <Col sm={5}>
+                        <StyledH2>Jak przygotować</StyledH2>
+                        {Object.entries(findRecipe.steps).map((value, index) => 
+                        <p key={index}>
+                            {`${value[0]}.`}
+                            <span> {value[1]}</span>
+                        </p>)}
+                    </Col>
                 </Row>
             </Container>}
         </section>

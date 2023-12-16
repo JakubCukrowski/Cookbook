@@ -8,5 +8,4 @@ export const GlobalStyle = createGlobalStyle`
     .no-radius-right-bottom {
         border-bottom-right-radius: 0 !important;
     }
-
 `

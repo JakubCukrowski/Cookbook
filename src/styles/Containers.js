@@ -36,3 +36,11 @@ export const PopularButtonsContainer = styled(Container)`
     gap: 20px;
     flex-wrap: wrap;
 `
+
+export const SpinnerContainer = styled.div`
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
