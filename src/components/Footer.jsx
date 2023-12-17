@@ -14,8 +14,7 @@ export const Footer = () => {
                     <Col>
                         <h4>Przepisowa pasja</h4>
                         <p style={{fontSize: 12}}>
-                            Jedzenie to nie tylko sposób uzupełniania energii, 
-                            to też sztuka, która kusi nasze zmysły i tworzy 
+                            Jedzenie to sztuka, która tworzy 
                             niepowtarzalne chwile pełne smaku i doznań kulinarnych.
                         </p>
                     </Col>

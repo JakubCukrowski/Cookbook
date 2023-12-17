@@ -3,4 +3,9 @@ import { Link } from "react-router-dom";
 
 export const StyledLink = styled(Link)`
     text-decoration: none;
+    color: ${props => props.color};
+
+    &:hover {
+        opacity: 0.7;
+    }
 `
