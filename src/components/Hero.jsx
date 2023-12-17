@@ -43,7 +43,7 @@ export const Hero = () => {
             setActiveIndex(prev => prev - 1)
         }
 
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && queryResults.length > 0 && activeIndex !== "") {
             navigate(`/recipes/${queryResults[activeIndex]._id}`)
         }
     }
@@ -72,12 +72,13 @@ export const Hero = () => {
         }
 
         const fuse = new Fuse(recipes, {
-            keys: ['name', 'ingredients'],
+            keys: ['name'],
             threshold: 0.4
         })
 
         //results are pushed to queryresults state
         const result = fuse.search(queryText).map(res => res.item)
+
         setQueryResults(result)
     }, [queryText])
 
