@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { StyledLink, StyledNavbarColapse } from '../styles/NavbarStyles/StyledNavbar';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export const CustomNavbar = () => {
   const [userLogged, setUserLogged] = useState(false)
@@ -44,7 +44,7 @@ export const CustomNavbar = () => {
               </>
               :
               <Nav.Item>
-                <Nav.Link href='#'>Zaloguj się</Nav.Link>
+                <Link className='nav-link' to="/signin">Zaloguj się</Link>
               </Nav.Item>}
             </Nav>
           </StyledNavbarColapse>

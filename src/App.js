@@ -6,6 +6,8 @@ import {NewestRecipes} from './components/NewestRecipes'
 import {PopularRecipes} from './components/PopularRecipes'
 import { SingleRecipe } from "./components/SingleRecipe";
 import { AuthContextProvider } from "./context/AuthContext";
+import { SignUp } from "./components/SignUp";
+import { SignIn } from "./components/SignIn";
 
 function App() {
 
@@ -22,6 +24,8 @@ function App() {
             </>}/>
             <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
           </Route>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>
