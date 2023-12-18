@@ -73,7 +73,8 @@ export const Hero = () => {
 
         const fuse = new Fuse(recipes, {
             keys: ['name'],
-            threshold: 0.4
+            threshold: 0.4,
+            includeMatches: true
         })
 
         //results are pushed to queryresults state
