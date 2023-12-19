@@ -19,7 +19,7 @@ export const PopularRecipes = () => {
             <Row xs={1} md={2} className="g-4" style={{paddingBottom: 20}}>
                 {popular.splice(0, 4).map((recipe, idx) => (
                     <StyledCol key={recipe._id || idx}>
-                        {!isLoading
+                        {isLoading
                         ? <>
                             <StyledCard>
                                 <FakeSpinnerContainer>
