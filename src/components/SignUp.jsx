@@ -65,6 +65,10 @@ export const SignUp = () => {
                 }
             })
         }
+
+        if (!inputErrors.displayName && !inputErrors.email && !inputErrors.password && !inputErrors.repeatedPassword) {
+            createUser(userCredentials.displayName, userCredentials.email, userCredentials.password)
+        }
     }
 
     const handleUserCredentials = (e) => {
@@ -153,7 +157,7 @@ export const SignUp = () => {
                             <Form.Control
                                 isInvalid={inputErrors.password} 
                                 isValid={
-                                    inputErrors.password === inputErrors.repeatedPassword
+                                    userCredentials.password === userCredentials.repeatedPassword
                                     && userCredentials.password.length >= 6
                                     && userCredentials.repeatedPassword.length >= 6
                                 }
@@ -169,7 +173,7 @@ export const SignUp = () => {
                             <Form.Control 
                                 isInvalid={inputErrors.repeatedPassword}
                                 isValid={
-                                    inputErrors.password === inputErrors.repeatedPassword
+                                    userCredentials.password === userCredentials.repeatedPassword
                                     && userCredentials.password.length >= 6
                                     && userCredentials.repeatedPassword.length >= 6
                                 }
