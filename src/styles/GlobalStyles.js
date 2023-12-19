@@ -8,4 +8,10 @@ export const GlobalStyle = createGlobalStyle`
     .no-radius-right-bottom {
         border-bottom-right-radius: 0 !important;
     }
+
+    .error {
+        border-color: tomato;
+        color: green;
+        padding: 20px;
+    }
 `

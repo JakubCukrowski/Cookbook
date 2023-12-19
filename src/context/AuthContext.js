@@ -14,14 +14,18 @@ const userContext = createContext()
 export const AuthContextProvider = ({children}) => {
     //fake recipes for awaiting api response (api goes to sleep after inactive)
     const [recipes, setRecipes] = useState(['recipe1', 'recipe2', 'recipe3', 'recipe4'])
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const URL = 'https://food-api-7ukw.onrender.com/api/recipes'
 
     const createUser = (displayName, email, password) => {
-        const create = createUserWithEmailAndPassword(auth, email, password)
-        return updateProfile(auth.currentUser, {
-            displayName: displayName
-        })
+        return createUserWithEmailAndPassword(auth, email, password)
+            .then(userCredentials => {
+                updateProfile(userCredentials.user, {
+                    displayName: displayName 
+                })
+                console.log(userCredentials.user)
+            })
+            .catch(error => console.log(error)) 
     }
 
     useEffect(() => {
@@ -30,7 +34,7 @@ export const AuthContextProvider = ({children}) => {
             .then(response => response.json())
             .then(response => {
                 setRecipes(response)
-                setIsLoading(true)
+                setIsLoading(false)
             })
             .catch(err => console.log(err))
         }

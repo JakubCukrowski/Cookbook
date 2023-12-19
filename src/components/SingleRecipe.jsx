@@ -12,7 +12,7 @@ export const SingleRecipe = () => {
     
     return (
         <section>
-            {!isLoading 
+            {isLoading 
             ? <SpinnerContainer>
                 <Spinner/> 
             </SpinnerContainer>
