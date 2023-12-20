@@ -16,6 +16,7 @@ export const AuthContextProvider = ({children}) => {
     const [recipes, setRecipes] = useState(['recipe1', 'recipe2', 'recipe3', 'recipe4'])
     const [isLoading, setIsLoading] = useState(true)
     const URL = 'https://food-api-7ukw.onrender.com/api/recipes'
+    const [user, setUser] = useState(null)
 
     const createUser = (displayName, email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
@@ -23,11 +24,15 @@ export const AuthContextProvider = ({children}) => {
                 updateProfile(userCredentials.user, {
                     displayName: displayName 
                 })
-                console.log(userCredentials.user)
             })
             .catch(error => console.log(error)) 
     }
 
+    const signout = () => {
+        return signOut(auth)
+    }
+
+    //fetching recipes and logging in
     useEffect(() => {
         const fetchRecipes = async () => {
           await fetch(URL)
@@ -39,11 +44,16 @@ export const AuthContextProvider = ({children}) => {
             .catch(err => console.log(err))
         }
 
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser)
+        })
+
         fetchRecipes()
+        return () => unsubscribe()
     }, [])
 
     return (
-        <userContext.Provider value={{recipes, isLoading, createUser}}>
+        <userContext.Provider value={{recipes, isLoading, user, createUser, signout}}>
             {children}
         </userContext.Provider>
     )

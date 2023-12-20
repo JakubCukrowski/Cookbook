@@ -3,18 +3,27 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { StyledLink, StyledNavbarColapse } from '../styles/NavbarStyles/StyledNavbar';
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { UserAuth } from '../context/AuthContext';
 
 export const CustomNavbar = () => {
-  const [userLogged, setUserLogged] = useState(false)
+  const {user, signout} = UserAuth()
+  const navigate = useNavigate()
 
-  const pathname = useLocation().pathname
+  const handleSignOut = async () => {
+    try {
+      await signout()
+      navigate('/')
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
       <Navbar 
-        sticky={pathname !== "/" ? "top" : ""} 
-        fixed={pathname === "/" ? "top" : ""} 
+        fixed="top"
         variant="dark" 
         bg="dark" 
         expand="lg">
@@ -23,9 +32,12 @@ export const CustomNavbar = () => {
           <Navbar.Toggle aria-controls="navbar-dark-example" />
           <StyledNavbarColapse id="navbar-dark-example">
             <Nav>
-              {userLogged 
+              {user !== null
               ? 
               <>
+                <Nav.Item>
+                  <Nav.Link href='#'>Zalogowano: {user.displayName}</Nav.Link>
+                </Nav.Item>
                 <Nav.Item>
                   <Nav.Link href='#'>Zapisane przepisy</Nav.Link>
                 </Nav.Item>
@@ -33,13 +45,10 @@ export const CustomNavbar = () => {
                   <Nav.Link href='#'>Twoje przepisy</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link href='#'>Polubione przepisy</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
                   <Nav.Link href='#'>Planer</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link href='#'>Wyloguj</Nav.Link>
+                  <Nav.Link onClick={handleSignOut} href=''>Wyloguj</Nav.Link>
                 </Nav.Item>
               </>
               :

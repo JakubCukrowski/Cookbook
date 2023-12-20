@@ -7,9 +7,11 @@ import { StyledLink } from "../styles/StyledLink";
 import { StyledForm } from "../styles/StyledForm";
 import { UserAuth } from "../context/AuthContext";
 import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 export const SignUp = () => {
     const {createUser} = UserAuth()
+    const navigate = useNavigate()
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     const [userCredentials, setUserCredentials] = useState({
         displayName: '',
@@ -68,6 +70,7 @@ export const SignUp = () => {
 
         if (!inputErrors.displayName && !inputErrors.email && !inputErrors.password && !inputErrors.repeatedPassword) {
             createUser(userCredentials.displayName, userCredentials.email, userCredentials.password)
+            navigate('/dashboard')
         }
     }
 
