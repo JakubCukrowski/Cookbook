@@ -99,14 +99,12 @@ export const SignUp = () => {
             })
         }
 
-        if (userCredentials.password.length >= 5) {
-            setInputErrors(prev => {
-                return {
-                    ...prev,
-                    password: false
-                }
-            })
-        }
+        setInputErrors(prev => {
+            return {
+                ...prev,
+                password: false
+            }
+        })
 
         if (userCredentials.repeatedPassword === userCredentials.password) {
             setInputErrors(prev => {
@@ -153,7 +151,14 @@ export const SignUp = () => {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formGroupPassword">
                             <Form.Label>Hasło</Form.Label>
-                            <Alert show={inputErrors.password} variant="danger">Hasło jest za krótkie</Alert>
+                            <Alert show={inputErrors.password && userCredentials.password < 6} variant="danger">
+                                Hasło jest za krótkie
+                            </Alert>
+                            <Alert show={
+                                inputErrors.password 
+                                && userCredentials.password !== userCredentials.repeatedPassword} variant="danger">
+                                Hasła nie zgadzają się
+                            </Alert>
                             <Form.Control
                                 isInvalid={inputErrors.password} 
                                 isValid={
