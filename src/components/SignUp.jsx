@@ -6,7 +6,6 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../styles/StyledLink";
 import { StyledForm } from "../styles/StyledForm";
 import { UserAuth } from "../context/AuthContext";
-import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
 export const SignUp = () => {
@@ -71,6 +70,13 @@ export const SignUp = () => {
         if (!inputErrors.displayName && !inputErrors.email && !inputErrors.password && !inputErrors.repeatedPassword) {
             createUser(userCredentials.displayName, userCredentials.email, userCredentials.password)
             navigate('/dashboard')
+
+            const timeout = setTimeout(() => {
+                window.location.reload(true)
+                console.log("timeout");
+            }, 700);
+            
+            return () => clearTimeout(timeout)
         }
     }
 
