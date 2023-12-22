@@ -35,19 +35,7 @@ export const CustomNavbar = () => {
               ? 
               <>
                 <Nav.Item>
-                  <Nav.Link href='#'>Zalogowano: {user.displayName}</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link href='#'>Zapisane przepisy</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link href='#'>Twoje przepisy</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link href='#'>Planer</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link onClick={handleSignOut} href=''>Wyloguj</Nav.Link>
+                  <Link className='nav-link' to='/dashboard'>Zalogowany: {user.displayName}</Link>
                 </Nav.Item>
               </>
               :
