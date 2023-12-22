@@ -67,14 +67,17 @@ export const SignUp = () => {
             })
         }
 
+        //if no errors creates the account
         if (!inputErrors.displayName && !inputErrors.email && !inputErrors.password && !inputErrors.repeatedPassword) {
             createUser(userCredentials.displayName, userCredentials.email, userCredentials.password)
             navigate('/dashboard')
 
+            //add method to check if registration was successful below
+
             const timeout = setTimeout(() => {
                 window.location.reload(true)
                 console.log("timeout");
-            }, 700);
+            }, 800);
             
             return () => clearTimeout(timeout)
         }

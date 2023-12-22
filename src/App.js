@@ -9,6 +9,7 @@ import { AuthContextProvider } from "./context/AuthContext";
 import { SignUp } from "./components/SignUp";
 import { SignIn } from "./components/SignIn";
 import { Dashboard } from "./components/Dashboard";
+import { NotFound } from "./components/NotFound";
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
           </Route>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="*" element={<NotFound />}/>
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>
