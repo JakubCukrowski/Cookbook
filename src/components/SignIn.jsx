@@ -7,6 +7,7 @@ import { StyledLink } from "../styles/StyledLink";
 import { StyledForm } from "../styles/StyledForm";
 import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { StyledSignSection } from "../styles/SignStyles/StyledSignSection";
 
 export const SignIn = () => {
     const {login} = UserAuth()
@@ -39,7 +40,7 @@ export const SignIn = () => {
     }
 
     return (
-        <section style={{color: "white", backgroundColor: 'rgb(33, 37, 41)', maxWidth: "100%", minHeight: "100vh", display: "flex", flexDirection: "column"}}>
+        <StyledSignSection>
             <StyledLink color="white" style={{padding: 20}} to='/'><FontAwesomeIcon icon={faArrowLeft}/> Strona główna</StyledLink>
             <FlexContainer direction='column' align='center'>
                 <h2 style={{color: "white", padding: 26}}>Zaloguj się</h2>
@@ -68,6 +69,6 @@ export const SignIn = () => {
                         </Button>
                     </StyledForm>  
                 </FlexContainer>    
-        </section>
+        </StyledSignSection>
     )
 }
