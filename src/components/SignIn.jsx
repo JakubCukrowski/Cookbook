@@ -1,12 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { FlexContainer } from '../styles/Containers';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../styles/StyledLink";
 import { StyledForm } from "../styles/StyledForm";
+import { UserAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export const SignIn = () => {
+    const {login} = UserAuth()
+    const navigate = useNavigate()
+    const [userData, setUserData] = useState({
+        email: '',
+        password: ''
+    })
+
+    const handleInputs = (e) => {
+        const {name, value} = e.target
+
+        setUserData(prev => {
+            return {
+                ...prev,
+                [name]: value
+            }
+        })
+    }
+
+    const handleLogin = async (e) => {
+        e.preventDefault()
+
+        try {
+            await login(userData.email, userData.password)
+            navigate('/dashboard')
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <section style={{color: "white", backgroundColor: 'rgb(33, 37, 41)', maxWidth: "100%", minHeight: "100vh", display: "flex", flexDirection: "column"}}>
             <StyledLink color="white" style={{padding: 20}} to='/'><FontAwesomeIcon icon={faArrowLeft}/> Strona główna</StyledLink>
@@ -16,13 +47,23 @@ export const SignIn = () => {
                     <StyledForm>
                         <Form.Group className="mb-3" controlId="formGroupEmail">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="Twój email" />
+                            <Form.Control
+                                onChange={handleInputs} 
+                                value={userData.email} 
+                                name="email" 
+                                type="email" 
+                                placeholder="Twój email" />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formGroupPassword">
                             <Form.Label>Hasło</Form.Label>
-                            <Form.Control type="password" placeholder="Hasło" />
+                            <Form.Control 
+                                onChange={handleInputs} 
+                                value={userData.password} 
+                                name="password" 
+                                type="password" 
+                                placeholder="Hasło" />
                         </Form.Group>
-                        <Button variant="light" type="submit">
+                        <Button onClick={handleLogin} variant="light" type="submit">
                             Potwierdź
                         </Button>
                     </StyledForm>  

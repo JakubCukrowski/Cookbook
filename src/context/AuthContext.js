@@ -32,6 +32,10 @@ export const AuthContextProvider = ({children}) => {
             .catch(error => console.log(error)) 
     }
 
+    const login = (email, password) => {
+        return signInWithEmailAndPassword(auth, email, password)
+    }
+
     const signout = () => {
         return signOut(auth)
     }
@@ -62,7 +66,7 @@ export const AuthContextProvider = ({children}) => {
     }, [])
 
     return (
-        <userContext.Provider value={{recipes, isLoading, user, createUser, signout}}>
+        <userContext.Provider value={{recipes, isLoading, user, createUser, login, signout}}>
             {!loading && children}
         </userContext.Provider>
     )
