@@ -11,7 +11,7 @@ export const SingleRecipe = () => {
     const findRecipe = recipes.find(recipe => recipeId === recipe._id)
     
     return (
-        <section>
+        <section style={{paddingTop: 80}}>
             {isLoading 
             ? <SpinnerContainer>
                 <Spinner/> 

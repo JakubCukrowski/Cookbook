@@ -6,10 +6,11 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../styles/StyledLink";
 import { StyledForm } from "../styles/StyledForm";
 import { UserAuth } from "../context/AuthContext";
-import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 export const SignUp = () => {
     const {createUser} = UserAuth()
+    const navigate = useNavigate()
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     const [userCredentials, setUserCredentials] = useState({
         displayName: '',
@@ -66,8 +67,19 @@ export const SignUp = () => {
             })
         }
 
+        //if no errors creates the account
         if (!inputErrors.displayName && !inputErrors.email && !inputErrors.password && !inputErrors.repeatedPassword) {
             createUser(userCredentials.displayName, userCredentials.email, userCredentials.password)
+            navigate('/dashboard')
+
+            //add method to check if registration was successful below
+
+            const timeout = setTimeout(() => {
+                window.location.reload(true)
+                console.log("timeout");
+            }, 800);
+            
+            return () => clearTimeout(timeout)
         }
     }
 
@@ -99,14 +111,12 @@ export const SignUp = () => {
             })
         }
 
-        if (userCredentials.password.length >= 5) {
-            setInputErrors(prev => {
-                return {
-                    ...prev,
-                    password: false
-                }
-            })
-        }
+        setInputErrors(prev => {
+            return {
+                ...prev,
+                password: false
+            }
+        })
 
         if (userCredentials.repeatedPassword === userCredentials.password) {
             setInputErrors(prev => {
@@ -153,7 +163,14 @@ export const SignUp = () => {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formGroupPassword">
                             <Form.Label>Hasło</Form.Label>
-                            <Alert show={inputErrors.password} variant="danger">Hasło jest za krótkie</Alert>
+                            <Alert show={inputErrors.password && userCredentials.password < 6} variant="danger">
+                                Hasło jest za krótkie
+                            </Alert>
+                            <Alert show={
+                                inputErrors.password 
+                                && userCredentials.password !== userCredentials.repeatedPassword} variant="danger">
+                                Hasła nie zgadzają się
+                            </Alert>
                             <Form.Control
                                 isInvalid={inputErrors.password} 
                                 isValid={
