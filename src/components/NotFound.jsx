@@ -1,12 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { StyledNotFoundSection } from "../styles/NotFound/StyledNotFoundSection";
+import { Image } from "react-bootstrap";
+import { StyledLink } from "../styles/StyledLink";
 
 export const NotFound = () => {
 
     return (
-        <section style={{color: "white", backgroundColor: 'rgb(33, 37, 41)', maxWidth: "100%", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
-            <img src='https://prestashop.com/sites/default/files/wysiwyg/404_not_found.png' alt="error404" />
-            <Link to="/" style={{textDecoration: 'none', fontSize: 24}}>Take me home!</Link>
-        </section>
+        <StyledNotFoundSection>
+            <Image rounded src='https://prestashop.com/sites/default/files/wysiwyg/404_not_found.png' alt="error404" />
+            <StyledLink to="/" fontsize="24px">Take me home!</StyledLink>
+        </StyledNotFoundSection>
     )
 }
