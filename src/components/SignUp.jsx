@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { FlexContainer } from '../styles/Containers';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faL } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../styles/StyledLink";
 import { StyledForm } from "../styles/StyledForm";
 import { UserAuth } from "../context/AuthContext";
@@ -27,65 +27,10 @@ export const SignUp = () => {
         repeatedPassword: false
     })
 
-    //handle form submit
-    const submitUserCredentials = (e) => {
-        e.preventDefault()
-
-        if (userCredentials.displayName.length < 6) {
-            setInputErrors(prev => {
-                return {
-                    ...prev,
-                    displayName: true
-                }
-            })
-        }
-
-        if (!userCredentials.email.match(emailRegex)) {
-            setInputErrors(prev => {
-                return {
-                    ...prev,
-                    email: true
-                }
-            })
-        }
-
-        if (userCredentials.password.length < 6) {
-            setInputErrors(prev => {
-                return {
-                    ...prev,
-                    password: true
-                }
-            })
-        }
-
-        if (userCredentials.repeatedPassword !== userCredentials.password) {
-            setInputErrors(prev => {
-                return {
-                    ...prev,
-                    password: true,
-                    repeatedPassword: true
-                }
-            })
-        }
-
-        //if no errors creates the account
-        if (!inputErrors.displayName && !inputErrors.email && !inputErrors.password && !inputErrors.repeatedPassword) {
-            createUser(userCredentials.displayName, userCredentials.email, userCredentials.password)
-            navigate('/dashboard')
-
-            //add method to check if registration was successful below
-
-            const timeout = setTimeout(() => {
-                window.location.reload(true)
-                console.log("timeout");
-            }, 800);
-            
-            return () => clearTimeout(timeout)
-        }
-    }
-
-    const handleUserCredentials = (e) => {
+    //handle inputs, and reset errors
+    const handleInputs = (e) => {
         const {name, value} = e.target
+
         setUserCredentials(prev => {
             return {
                 ...prev,
@@ -93,17 +38,16 @@ export const SignUp = () => {
             }
         })
 
-        //conditions to remove errors
-        if (userCredentials.displayName.length >= 5) {
+        if (name === 'displayName') {
             setInputErrors(prev => {
                 return {
                     ...prev,
                     displayName: false
                 }
             })
-        } 
+        }
 
-        if (userCredentials.email.match(emailRegex)) {
+        if (name === 'email') {
             setInputErrors(prev => {
                 return {
                     ...prev,
@@ -112,18 +56,26 @@ export const SignUp = () => {
             })
         }
 
-        setInputErrors(prev => {
-            return {
-                ...prev,
-                password: false
-            }
-        })
-
-        if (userCredentials.repeatedPassword === userCredentials.password) {
+        if (name === 'password' || name === 'repeatedPassword') {
             setInputErrors(prev => {
                 return {
                     ...prev,
+                    password: false,
                     repeatedPassword: false
+                }
+            })
+        }
+    }
+
+    //handle sumbit button + validation
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        if (userCredentials.displayName.length < 6) {
+            setInputErrors(prev => {
+                return {
+                    ...prev,
+                    displayName: true
                 }
             })
         }
@@ -135,15 +87,17 @@ export const SignUp = () => {
             <FlexContainer direction='column' align='center'>
                 <h2 style={{color: "white", padding: 26}}>Zarejestruj się</h2>
                 <span style={{margin: 10}}>Masz już konto? <StyledLink to='/signin'>Zaloguj się</StyledLink></span>
-                    <StyledForm noValidate onSubmit={submitUserCredentials}>
+                    <StyledForm noValidate onSubmit={handleSubmit}>
                         <Form.Group className="mb-3" controlId="formGroupId">
                             <Form.Label>Nazwa użytkownika</Form.Label>
-                            <Alert show={inputErrors.displayName} variant="danger">Nazwa użytkownika jest za krótka</Alert> 
+                            <Alert show={inputErrors.displayName} variant="danger">
+                                Nazwa użytkownika jest za krótka. Nazwa musi posiadać minimalnie 6 znaków
+                                </Alert> 
                             <Form.Control
                                 autoComplete="off"
                                 isInvalid={inputErrors.displayName}
-                                isValid={!inputErrors.displayName && userCredentials.displayName.length >= 6}
-                                onChange={handleUserCredentials} 
+                                isValid={userCredentials.displayName.length >= 6}
+                                onChange={handleInputs} 
                                 name="displayName" 
                                 value={userCredentials.id} 
                                 type="text" 
@@ -156,7 +110,7 @@ export const SignUp = () => {
                                 autoComplete="off"
                                 isInvalid={inputErrors.email}
                                 isValid={!inputErrors.email && userCredentials.email.match(emailRegex)}
-                                onChange={handleUserCredentials} 
+                                onChange={handleInputs}  
                                 name="email" 
                                 value={userCredentials.email} 
                                 type="email" 
@@ -173,13 +127,13 @@ export const SignUp = () => {
                                 Hasła nie zgadzają się
                             </Alert>
                             <Form.Control
-                                isInvalid={inputErrors.password} 
-                                isValid={
-                                    userCredentials.password === userCredentials.repeatedPassword
-                                    && userCredentials.password.length >= 6
-                                    && userCredentials.repeatedPassword.length >= 6
-                                }
-                                onChange={handleUserCredentials} 
+                                // isInvalid={inputErrors.password} 
+                                // isValid={
+                                //     userCredentials.password === userCredentials.repeatedPassword
+                                //     && userCredentials.password.length >= 6
+                                //     && userCredentials.repeatedPassword.length >= 6
+                                // }
+                                onChange={handleInputs} 
                                 name="password" 
                                 value={userCredentials.password} 
                                 type="password" 
@@ -189,13 +143,13 @@ export const SignUp = () => {
                             <Form.Label>Powtórz hasło</Form.Label>
                             <Alert show={inputErrors.repeatedPassword} variant="danger">Hasła nie zgadzają się</Alert> 
                             <Form.Control 
-                                isInvalid={inputErrors.repeatedPassword}
-                                isValid={
-                                    userCredentials.password === userCredentials.repeatedPassword
-                                    && userCredentials.password.length >= 6
-                                    && userCredentials.repeatedPassword.length >= 6
-                                }
-                                onChange={handleUserCredentials} 
+                                // isInvalid={inputErrors.repeatedPassword}
+                                // isValid={
+                                //     userCredentials.password === userCredentials.repeatedPassword
+                                //     && userCredentials.password.length >= 6
+                                //     && userCredentials.repeatedPassword.length >= 6
+                                // }
+                                onChange={handleInputs} 
                                 name="repeatedPassword" 
                                 value={userCredentials.repeatedPassword} 
                                 type="password" 

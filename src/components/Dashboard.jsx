@@ -9,7 +9,7 @@ export const Dashboard = () => {
         <>
             {user !== null 
             ? <section style={{maxWidth: "100%", minHeight: "100vh", paddingTop: 80}}>
-                {user.displayName}
+                <h1>{user.displayName}</h1>
             </section>
             :   <div style={{maxWidth: "100%", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
                     <Spinner/>
