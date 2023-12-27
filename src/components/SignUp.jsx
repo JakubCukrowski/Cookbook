@@ -79,6 +79,52 @@ export const SignUp = () => {
                 }
             })
         }
+
+        if (!userCredentials.email.match(emailRegex)) {
+            setInputErrors(prev => {
+                return {
+                    ...prev,
+                    email: true
+                }
+            })
+        }
+
+        if (userCredentials.password !== userCredentials.repeatedPassword || userCredentials.password.length < 6) {
+            setInputErrors(prev => {
+                return {
+                    ...prev,
+                    password: true,
+                }
+            })
+        }
+
+        if (userCredentials.repeatedPassword !== userCredentials.password) {
+            setInputErrors(prev => {
+                return {
+                    ...prev,
+                    repeatedPassword: true,
+                }
+            })
+        }
+
+        if (userCredentials.displayName.length >= 6 
+            && userCredentials.email.match(emailRegex)
+            && userCredentials.password === userCredentials.repeatedPassword
+            && userCredentials.password.length >= 6) {
+                
+                try {
+                    createUser(userCredentials.displayName, userCredentials.email, userCredentials.password)
+                    navigate('/dashboard')
+
+                    const timeoutId = setTimeout(() => {
+                        window.location.reload(true)
+                    }, 900);
+
+                    return () => clearTimeout(timeoutId)
+                } catch (error) {
+                    alert(error)
+                }
+            }
     }
 
     return (
@@ -127,12 +173,7 @@ export const SignUp = () => {
                                 Hasła nie zgadzają się
                             </Alert>
                             <Form.Control
-                                // isInvalid={inputErrors.password} 
-                                // isValid={
-                                //     userCredentials.password === userCredentials.repeatedPassword
-                                //     && userCredentials.password.length >= 6
-                                //     && userCredentials.repeatedPassword.length >= 6
-                                // }
+                                isInvalid={inputErrors.password} 
                                 onChange={handleInputs} 
                                 name="password" 
                                 value={userCredentials.password} 
@@ -143,12 +184,7 @@ export const SignUp = () => {
                             <Form.Label>Powtórz hasło</Form.Label>
                             <Alert show={inputErrors.repeatedPassword} variant="danger">Hasła nie zgadzają się</Alert> 
                             <Form.Control 
-                                // isInvalid={inputErrors.repeatedPassword}
-                                // isValid={
-                                //     userCredentials.password === userCredentials.repeatedPassword
-                                //     && userCredentials.password.length >= 6
-                                //     && userCredentials.repeatedPassword.length >= 6
-                                // }
+                                isInvalid={inputErrors.repeatedPassword}
                                 onChange={handleInputs} 
                                 name="repeatedPassword" 
                                 value={userCredentials.repeatedPassword} 
