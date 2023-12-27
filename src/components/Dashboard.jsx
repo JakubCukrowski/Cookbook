@@ -8,7 +8,7 @@ export const Dashboard = () => {
     return (
         <>
             {user !== null 
-            ? <section style={{maxWidth: "100%", minHeight: "100vh", paddingTop: 80}}>
+            ? <section style={{maxWidth: "100%", paddingTop: 80}}>
                 <h1>{user.displayName}</h1>
             </section>
             :   <div style={{maxWidth: "100%", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
