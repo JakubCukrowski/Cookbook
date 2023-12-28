@@ -1,14 +1,14 @@
 import styled from "styled-components";
+import { LikeButton } from "../../components/LikeButton";
 
-export const LikeButton = styled.button`
+export const StyledLikeButton = styled.button`
     position: absolute;
     border: none;
     top: ${props => props.top};
     right: ${props => props.right};
     background-color: transparent;
     z-index: 100;
-    color: gray;
-    border-radius: 50%;
+    color: rgb(33, 37, 41);
     font-size: 50px;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -18,6 +18,10 @@ export const LikeButton = styled.button`
 
     &:hover {
         color: red;
+    }
+
+    &:focus {
+        border: none;
     }
 
     @media (min-width: 992px) {
@@ -30,5 +34,9 @@ export const LikeButton = styled.button`
 
     @media (min-width: 1400px) {
         right: ${props => props.rightXl};
+    }
+
+    &:disabled {
+        color: red !important; 
     }
 `
