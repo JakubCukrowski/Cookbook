@@ -4,9 +4,7 @@ import { UserAuth } from "../context/AuthContext"
 import { StyledImage } from "../styles/StyledImage"
 import { StyledH2 } from "../styles/StyledH2"
 import { SpinnerContainer } from "../styles/Containers"
-import { LikeButton } from "../styles/CardStyles/LikeButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { LikeButton } from "./LikeButton"
 
 export const SingleRecipe = () => {
     const {recipes, isLoading, user} = UserAuth()
@@ -29,9 +27,7 @@ export const SingleRecipe = () => {
                     <Col style={{display: "flex", justifyContent: "center", position: "relative"}}>
                         <StyledImage rounded src={findRecipe.image}/>
                         {user 
-                            ?   <LikeButton top="0" right="30px" rightTablet="180px" rightDesktop="200px" rightXl="220px">
-                                    <FontAwesomeIcon icon={faHeart}/>
-                                </LikeButton> : ''}
+                            ?   <LikeButton top="0" right="30px" rightTablet="180px" rightDesktop="200px" rightXl="220px" /> : ''}
                     </Col>
                 </Row>
                 <Row style={{justifyContent: "center"}}>

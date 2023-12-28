@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {Button, CardBody, Container, Placeholder, Spinner } from "react-bootstrap";
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
@@ -8,16 +8,27 @@ import { StyledCardImg } from "../styles/CardStyles/StyledCardImg";
 import { FakeSpinnerContainer, FlexContainer } from "../styles/Containers";
 import { UserAuth } from "../context/AuthContext";
 import { StyledLink } from "../styles/StyledLink";
-import { LikeButton } from "../styles/CardStyles/LikeButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { LikeButton } from "./LikeButton";
 
 export const NewestRecipes = () => {
     const {recipes, isLoading, user} = UserAuth()
     const checkDate = (date) => {
         return new Date(date)
     }
-    
+
+    //exemplary array soon to be replaced with array from firebase
+    const [likedRecipes, setLikedRecipes] = useState([])
+
+    //exemplary function for saving recipe data in firebase
+    const handleShowData = (data) => {
+        setLikedRecipes(prev => [...prev, data])
+        console.log(likedRecipes);
+    }
+
+    const checkIfExists = (data) => {
+        return likedRecipes.some(recipe => data === recipe._id)
+    }
+
     const sorted = [...recipes].sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt))
        
     return (
@@ -46,9 +57,12 @@ export const NewestRecipes = () => {
                                 {/* StyledCardWrapper */}
                                 <div style={{position: "relative", height: '100%'}}> 
                                     {user 
-                                        ?   <LikeButton top="0" right="14px">
-                                                <FontAwesomeIcon icon={faHeart}/>
-                                            </LikeButton> : ''}
+                                        ?   <LikeButton
+                                                id={recipe._id} 
+                                                disabled={checkIfExists(recipe._id)}
+                                                onClick={() => handleShowData(recipe)} 
+                                                top="0" 
+                                                right="14px" /> : ''}
                                     <StyledLink to={`/recipes/${recipe._id}`}>
                                         <StyledCard>
                                             
