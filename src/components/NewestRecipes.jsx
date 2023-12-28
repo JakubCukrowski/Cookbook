@@ -8,9 +8,12 @@ import { StyledCardImg } from "../styles/CardStyles/StyledCardImg";
 import { FakeSpinnerContainer, FlexContainer } from "../styles/Containers";
 import { UserAuth } from "../context/AuthContext";
 import { StyledLink } from "../styles/StyledLink";
+import { LikeButton } from "../styles/CardStyles/LikeButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 export const NewestRecipes = () => {
-    const {recipes, isLoading} = UserAuth()
+    const {recipes, isLoading, user} = UserAuth()
     const checkDate = (date) => {
         return new Date(date)
     }
@@ -40,17 +43,25 @@ export const NewestRecipes = () => {
                             </StyledCard>
                         </>
                         :   <>
-                                <StyledLink to={`/recipes/${recipe._id}`}>
-                                    <StyledCard>
-                                        <StyledCardImg variant="top" src={recipe.image} />
-                                        <Card.Body>
-                                        <Card.Title>{recipe.name}</Card.Title>
-                                        <Card.Text>
-                                            {`Liczba polubień: ${recipe.likes}`}
-                                        </Card.Text>
-                                        </Card.Body>
-                                    </StyledCard>
-                                </StyledLink>
+                                {/* StyledCardWrapper */}
+                                <div style={{position: "relative", height: '100%'}}> 
+                                    {user 
+                                        ?   <LikeButton top="0" right="14px">
+                                                <FontAwesomeIcon icon={faHeart}/>
+                                            </LikeButton> : ''}
+                                    <StyledLink to={`/recipes/${recipe._id}`}>
+                                        <StyledCard>
+                                            
+                                            <StyledCardImg variant="top" src={recipe.image} />
+                                            <Card.Body>
+                                            <Card.Title>{recipe.name}</Card.Title>
+                                            <Card.Text>
+                                                {`Liczba polubień: ${recipe.likes}`}
+                                            </Card.Text>
+                                            </Card.Body>
+                                        </StyledCard>
+                                    </StyledLink>
+                                </div>
                             </>}
                     </StyledCol>   
                 ))}
