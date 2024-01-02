@@ -1,88 +1,14 @@
-import React, { useEffect, useState } from "react";
-import {Button, CardBody, Container, Placeholder, Spinner } from "react-bootstrap";
-import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import { StyledCol } from "../styles/CardStyles/StyledCol";
-import { StyledCard } from "../styles/CardStyles/StyledCard";
-import { StyledCardImg } from "../styles/CardStyles/StyledCardImg";
-import { FakeSpinnerContainer, FlexContainer } from "../styles/Containers";
+import React from "react";
 import { UserAuth } from "../context/AuthContext";
-import { StyledLink } from "../styles/StyledLink";
-import { LikeButton } from "./LikeButton";
+import { RecipesGroup } from "./RecipesGroup";
 
 export const NewestRecipes = () => {
-    const {recipes, isLoading, user} = UserAuth()
-    const checkDate = (date) => {
-        return new Date(date)
-    }
-
-    //exemplary array soon to be replaced with array from firebase
-    const [likedRecipes, setLikedRecipes] = useState([])
-
-    //exemplary function for saving recipe data in firebase
-    const handleShowData = (data) => {
-        setLikedRecipes(prev => [...prev, data])
-        console.log(likedRecipes);
-    }
-
-    const checkIfExists = (data) => {
-        return likedRecipes.some(recipe => data === recipe._id)
-    }
+    const {recipes} = UserAuth()
+    const checkDate = (date) => new Date(date)
 
     const sorted = [...recipes].sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt))
        
     return (
-        <Container>
-            <h2 style={{textAlign: "center", padding: 60}}>Najnowsze przepisy</h2>
-            <Row xs={1} md={2} className="g-4" style={{paddingBottom: 20}}>
-                {sorted.splice(0, 4).map((recipe, idx) => (
-                    <StyledCol key={recipe._id || idx}>
-                        {isLoading
-                        ? <>
-                            <StyledCard>
-                                <FakeSpinnerContainer>
-                                    <Spinner />
-                                </FakeSpinnerContainer>
-                                <CardBody>
-                                    <Placeholder as={Card.Title} animation="glow">
-                                        <Placeholder xs={9} />
-                                    </Placeholder>
-                                    <Placeholder as={Card.Text} animation="glow">
-                                        <Placeholder xs={6} />
-                                    </Placeholder>
-                                </CardBody>                            
-                            </StyledCard>
-                        </>
-                        :   <>
-                                {/* StyledCardWrapper */}
-                                <div style={{position: "relative", height: '100%'}}> 
-                                    {user 
-                                        ?   <LikeButton
-                                                id={recipe._id} 
-                                                disabled={checkIfExists(recipe._id)}
-                                                onClick={() => handleShowData(recipe)} 
-                                                top="0" 
-                                                right="14px" /> : ''}
-                                    <StyledLink to={`/recipes/${recipe._id}`}>
-                                        <StyledCard>
-                                            
-                                            <StyledCardImg variant="top" src={recipe.image} />
-                                            <Card.Body>
-                                            <Card.Title>{recipe.name}</Card.Title>
-                                            <Card.Text>
-                                                {`Liczba polubień: ${recipe.likes}`}
-                                            </Card.Text>
-                                            </Card.Body>
-                                        </StyledCard>
-                                    </StyledLink>
-                                </div>
-                            </>}
-                    </StyledCol>   
-                ))}
-            </Row>
-            <FlexContainer justify="center">
-                <Button variant="dark">Zobacz więcej</Button>
-            </FlexContainer>
-        </Container>
+        <RecipesGroup title="Najnowsze przepisy" array={sorted} />
     )
 }

@@ -7,9 +7,14 @@ import { SpinnerContainer } from "../styles/Containers"
 import { LikeButton } from "./LikeButton"
 
 export const SingleRecipe = () => {
-    const {recipes, isLoading, user} = UserAuth()
+    const {recipes, isLoading, user, checkIfExists, setLikedRecipes} = UserAuth()
     const {recipeId} = useParams()
     const findRecipe = recipes.find(recipe => recipeId === recipe._id)
+
+    //exemplary function for saving recipe data in firebase (soon to be)
+    const handleShowData = (data) => {
+        setLikedRecipes(prev => [...prev, data])
+    }
     
     return (
         <section style={{paddingTop: 80}}>
@@ -27,7 +32,14 @@ export const SingleRecipe = () => {
                     <Col style={{display: "flex", justifyContent: "center", position: "relative"}}>
                         <StyledImage rounded src={findRecipe.image}/>
                         {user 
-                            ?   <LikeButton top="0" right="30px" rightTablet="180px" rightDesktop="200px" rightXl="220px" /> : ''}
+                            ?   <LikeButton
+                                    disabled={checkIfExists(findRecipe._id)}
+                                    onClick={() => handleShowData(findRecipe)} 
+                                    top="0" 
+                                    right="30px" 
+                                    rightTablet="180px" 
+                                    rightDesktop="200px" 
+                                    rightXl="220px" /> : ''}
                     </Col>
                 </Row>
                 <Row style={{justifyContent: "center"}}>

@@ -22,6 +22,13 @@ export const AuthContextProvider = ({children}) => {
     //checks if user is logged
     const [loading, setLoading] = useState(true)
 
+    //liked recipes
+    const [likedRecipes, setLikedRecipes] = useState([])
+
+    const checkIfExists = (data) => {
+        return likedRecipes.some(recipe => data === recipe._id)
+    }
+
     const createUser = (displayName, email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
             .then(userCredentials => {
@@ -66,7 +73,16 @@ export const AuthContextProvider = ({children}) => {
     }, [])
 
     return (
-        <userContext.Provider value={{recipes, isLoading, user, createUser, login, signout}}>
+        <userContext.Provider value={{
+            recipes, 
+            isLoading, 
+            user, 
+            createUser, 
+            login, 
+            signout, 
+            likedRecipes, 
+            setLikedRecipes, 
+            checkIfExists}}>
             {!loading && children}
         </userContext.Provider>
     )
