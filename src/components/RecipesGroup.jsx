@@ -10,7 +10,7 @@ import { StyledLink } from "../styles/StyledLink";
 import { LikeButton } from "./LikeButton";
 import { UserAuth } from "../context/AuthContext";
 
-export const RecipesGroup = ({title, array}) => {
+export const RecipesGroup = ({title, array, onClick}) => {
     const {user, isLoading, setLikedRecipes, checkIfExists} = UserAuth()
 
     //handle liked recipes in firebase (soon to be)
@@ -68,7 +68,7 @@ export const RecipesGroup = ({title, array}) => {
                 ))}
             </Row>
             <FlexContainer justify="center">
-                <Button variant="dark">Zobacz więcej</Button>
+                <Button onClick={onClick} variant="dark">Zobacz więcej</Button>
             </FlexContainer>
         </Container>
     )

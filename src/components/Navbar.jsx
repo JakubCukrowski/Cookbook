@@ -9,6 +9,8 @@ export const CustomNavbar = () => {
   const {user, signout} = UserAuth()
   const navigate = useNavigate()
 
+  const pathname = window.location.pathname
+
   const handleSignOut = async () => {
     try {
       await signout()
@@ -22,7 +24,8 @@ export const CustomNavbar = () => {
   return (
     <>
       <Navbar 
-        fixed="top"
+        fixed={pathname === '/' ? 'top' : ''}
+        sticky={pathname !== '/' ? 'top' : ''}
         variant="dark" 
         bg="dark" 
         expand="lg">

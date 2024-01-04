@@ -10,6 +10,7 @@ import { SignUp } from "./components/SignUp";
 import { SignIn } from "./components/SignIn";
 import { Dashboard } from "./components/Dashboard";
 import { NotFound } from "./components/NotFound";
+import { NewestRecipesPage } from "./components/NewestRecipesPage";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
             </>}/>
             <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/newest-recipes" element={<NewestRecipesPage />} />
           </Route>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />

@@ -50,14 +50,9 @@ export const Hero = () => {
 
     //close the results on focus out
     const handleFocusOut = () => {
-        const timeoutId = setTimeout(() => {
-            setIsFocused(false)
-            setQueryText("")
-            setQueryResults([])
-            setActiveIndex("")
-        }, 100);
-
-        return () => clearTimeout(timeoutId)        
+        setIsFocused(false)     
+        setQueryResults([])
+        setActiveIndex("") 
     }
 
     //handle mouse over

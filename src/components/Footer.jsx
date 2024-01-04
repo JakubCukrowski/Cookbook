@@ -14,8 +14,7 @@ export const Footer = () => {
                     <Col>
                         <h4>Przepisowa pasja</h4>
                         <p style={{fontSize: 12}}>
-                            Jedzenie to sztuka, która tworzy 
-                            niepowtarzalne chwile pełne smaku i doznań kulinarnych.
+                            Zainspiruj się
                         </p>
                     </Col>
                     <Col>

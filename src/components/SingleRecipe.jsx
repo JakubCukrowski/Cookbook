@@ -17,7 +17,7 @@ export const SingleRecipe = () => {
     }
     
     return (
-        <section style={{paddingTop: 80}}>
+        <section>
             {isLoading 
             ? <SpinnerContainer>
                 <Spinner/> 
