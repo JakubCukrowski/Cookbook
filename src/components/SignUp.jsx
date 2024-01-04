@@ -164,7 +164,7 @@ export const SignUp = () => {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formGroupPassword">
                             <Form.Label>Hasło</Form.Label>
-                            <Alert show={inputErrors.password && userCredentials.password < 6} variant="danger">
+                            <Alert show={inputErrors.password && userCredentials.password.length < 6} variant="danger">
                                 Hasło jest za krótkie
                             </Alert>
                             <Alert show={
