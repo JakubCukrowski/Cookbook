@@ -9,13 +9,19 @@ import { FakeSpinnerContainer, FlexContainer } from "../styles/Containers";
 import { StyledLink } from "../styles/StyledLink";
 import { LikeButton } from "./LikeButton";
 import { UserAuth } from "../context/AuthContext";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 export const RecipesGroup = ({title, array, onClick}) => {
     const {user, isLoading, setLikedRecipes, checkIfExists} = UserAuth()
 
     //handle liked recipes in firebase (soon to be)
-    const handleShowData = (data) => {
-        setLikedRecipes(prev => [...prev, data])
+    const handleSaveData = async (data) => {
+        const userRef = doc(db, 'users', 'pU42m05rK6lANNsxa80c')
+
+        await updateDoc(userRef, {
+            liked: data
+        })
     }
 
     return (
@@ -46,7 +52,7 @@ export const RecipesGroup = ({title, array, onClick}) => {
                                     {user 
                                         ?   <LikeButton 
                                                 disabled={checkIfExists(recipe._id)}
-                                                onClick={() => handleShowData(recipe)} 
+                                                onClick={() => handleSaveData(recipe)} 
                                                 top="0" 
                                                 right="14px" /> 
                                         : ''}

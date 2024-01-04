@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { FlexContainer } from '../styles/Containers';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faL } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../styles/StyledLink";
 import { StyledForm } from "../styles/StyledForm";
 import { UserAuth } from "../context/AuthContext";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { StyledSignSection } from "../styles/SignStyles/StyledSignSection";
 
 export const SignUp = () => {
-    const {createUser} = UserAuth()
+    const {createUser, user} = UserAuth()
     const navigate = useNavigate()
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     const [userCredentials, setUserCredentials] = useState({
