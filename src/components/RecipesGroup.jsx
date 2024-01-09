@@ -9,22 +9,9 @@ import { FakeSpinnerContainer, FlexContainer } from "../styles/Containers";
 import { StyledLink } from "../styles/StyledLink";
 import { LikeButton } from "./LikeButton";
 import { UserAuth } from "../context/AuthContext";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
 
 export const RecipesGroup = ({title, array, onClick}) => {
-    const {user, isLoading, setLikedRecipes, checkIfExists} = UserAuth()
-
-    //handle liked recipes in firebase (soon to be)
-    const handleSaveData = async (data) => {
-        const userRef = doc(db, 'users', user.uid)
-
-        await updateDoc(userRef, {
-            liked: arrayUnion(data)
-        })
-
-        setLikedRecipes(prev => [...prev, data])
-    }
+    const {isLoading, checkIfExists} = UserAuth()
 
     return (
         <Container>
@@ -51,10 +38,9 @@ export const RecipesGroup = ({title, array, onClick}) => {
                         :   <>
                                 {/* StyledCardWrapper */}
                                 <div style={{position: "relative", height: '100%'}}> 
-                                    {user 
+                                    {checkIfExists(recipe._id) 
                                         ?   <LikeButton 
                                                 disabled={checkIfExists(recipe._id)}
-                                                onClick={() => handleSaveData(recipe)} 
                                                 top="0" 
                                                 right="14px" /> 
                                         : ''}
