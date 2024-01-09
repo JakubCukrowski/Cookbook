@@ -50,9 +50,13 @@ export const Hero = () => {
 
     //close the results on focus out
     const handleFocusOut = () => {
-        setIsFocused(false)     
-        setQueryResults([])
-        setActiveIndex("") 
+        const timeoutId = setTimeout(() => {
+            setIsFocused(false)     
+            setQueryResults([])
+            setActiveIndex("") 
+        }, 100);
+
+        return () => clearTimeout(timeoutId)
     }
 
     //handle mouse over
@@ -106,7 +110,7 @@ export const Hero = () => {
                         {queryResults.map((recipe, index) => 
                         <li key={index}>
                             <Link
-                            onMouseEnter={() => handleMouseEnter(index)} 
+                                onMouseEnter={() => handleMouseEnter(index)} 
                                 className={activeIndex === index ? "active" : null} 
                                 tabIndex="1" 
                                 to={`/recipes/${recipe._id}`}>
