@@ -5,14 +5,22 @@ import { StyledImage } from "../styles/StyledImage"
 import { StyledH2 } from "../styles/StyledH2"
 import { SpinnerContainer } from "../styles/Containers"
 import { LikeButton } from "./LikeButton"
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 export const SingleRecipe = () => {
     const {recipes, isLoading, user, checkIfExists, setLikedRecipes} = UserAuth()
     const {recipeId} = useParams()
     const findRecipe = recipes.find(recipe => recipeId === recipe._id)
 
-    //exemplary function for saving recipe data in firebase (soon to be)
-    const handleShowData = (data) => {
+    //handle liked recipes in firebase
+    const handleSaveData = async (data) => {
+        const userRef = doc(db, 'users', user.uid)
+
+        await updateDoc(userRef, {
+            liked: arrayUnion(data)
+        })
+
         setLikedRecipes(prev => [...prev, data])
     }
     
@@ -34,7 +42,7 @@ export const SingleRecipe = () => {
                         {user 
                             ?   <LikeButton
                                     disabled={checkIfExists(recipeId)}
-                                    onClick={() => handleShowData(findRecipe)} 
+                                    onClick={() => handleSaveData(findRecipe)} 
                                     top="0" 
                                     right="30px" 
                                     rightTablet="180px" 
