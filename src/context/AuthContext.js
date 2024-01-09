@@ -7,7 +7,7 @@ import {
     updateProfile} 
 from "firebase/auth";
 import { auth, db } from '../firebase';
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc } from "firebase/firestore";
 
 const userContext = createContext()
 
@@ -30,6 +30,7 @@ export const AuthContextProvider = ({children}) => {
         return likedRecipes.some(recipe => data === recipe._id)
     }
 
+    //create user in firebase with firestore data
     const createUser = (displayName, email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
             .then(async userCredentials => {
@@ -49,6 +50,7 @@ export const AuthContextProvider = ({children}) => {
         return signInWithEmailAndPassword(auth, email, password)
     }
 
+    //logs out logged user
     const signout = () => {
         return signOut(auth)
     }
@@ -69,6 +71,7 @@ export const AuthContextProvider = ({children}) => {
         
     }, [])
 
+    //on user state change 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser)
@@ -77,6 +80,19 @@ export const AuthContextProvider = ({children}) => {
 
         return () => unsubscribe
     }, [])
+
+    //blocked liked recipes by user
+    useEffect(() => {
+        const getLikedRecipes = async () => {
+            const docRef = doc(db, 'users', user.uid)
+            const docSnap = await getDoc(docRef)
+            setLikedRecipes(docSnap.data().liked);
+        }
+
+        if (user) {
+            getLikedRecipes()
+        }
+    }, [user])
 
     return (
         <userContext.Provider value={{

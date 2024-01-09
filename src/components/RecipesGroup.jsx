@@ -9,7 +9,7 @@ import { FakeSpinnerContainer, FlexContainer } from "../styles/Containers";
 import { StyledLink } from "../styles/StyledLink";
 import { LikeButton } from "./LikeButton";
 import { UserAuth } from "../context/AuthContext";
-import { doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 export const RecipesGroup = ({title, array, onClick}) => {
@@ -17,11 +17,13 @@ export const RecipesGroup = ({title, array, onClick}) => {
 
     //handle liked recipes in firebase (soon to be)
     const handleSaveData = async (data) => {
-        const userRef = doc(db, 'users', 'pU42m05rK6lANNsxa80c')
+        const userRef = doc(db, 'users', user.uid)
 
         await updateDoc(userRef, {
-            liked: data
+            liked: arrayUnion(data)
         })
+
+        setLikedRecipes(prev => [...prev, data])
     }
 
     return (
