@@ -33,7 +33,7 @@ export const SingleRecipe = () => {
                         <StyledImage rounded src={findRecipe.image}/>
                         {user 
                             ?   <LikeButton
-                                    disabled={checkIfExists(findRecipe._id)}
+                                    disabled={checkIfExists(recipeId)}
                                     onClick={() => handleShowData(findRecipe)} 
                                     top="0" 
                                     right="30px" 
