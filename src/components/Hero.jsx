@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyledHeroSection } from "../styles/HeroStyles/StyledHeroSection";
 import heroBackgroundImage from '../images/heroImage.jpg'
 import { StyledInput } from "../styles/HeroStyles/StyledInput";
@@ -20,6 +20,7 @@ export const Hero = () => {
     const [isFocused, setIsFocused] = useState(false)
     const [activeIndex, setActiveIndex] = useState("")
     const navigate = useNavigate();
+    const ulRef = useRef(null)
 
     const handleInputValue = (e) => {
         setQueryText(e.target.value);
@@ -36,11 +37,26 @@ export const Hero = () => {
         if (e.key === "ArrowDown" && activeIndex === "") {
             setActiveIndex(0)
 
+            //all of offsetheight, getelementbyid, ref current is useful for following the active link in searchbox
+
+            console.log(document.getElementById(`recipe-0`));
+            console.log(ulRef.current.offsetHeight);
+
         } else if (e.key === "ArrowDown" && activeIndex >= 0 && activeIndex < queryResults.length - 1 ) {
             setActiveIndex(prev => prev + 1)
 
+            console.log(document.getElementById(`recipe-${activeIndex + 1}`));
+
+            // if (ulRef.current) {
+            //     ulRef.current.scrollTop += 30; 
+            // }
+
         } else if (e.key === "ArrowUp" && activeIndex > 0) {
             setActiveIndex(prev => prev - 1)
+
+            // if (ulRef.current) {
+            //     ulRef.current.scrollTop -= 30; 
+            // }
         }
 
         if (e.key === "Enter" && queryResults.length > 0 && activeIndex !== "") {
@@ -72,7 +88,7 @@ export const Hero = () => {
 
         const fuse = new Fuse(recipes, {
             keys: ['name'],
-            threshold: 0.4,
+            threshold: 1,
             includeMatches: true
         })
 
@@ -106,12 +122,13 @@ export const Hero = () => {
                     </SearchBarWrapper>
                     {queryText.length > 2 
                     && queryResults.length > 0
-                    ? <StyledSearchedRecipes>
+                    ? <StyledSearchedRecipes ref={ulRef}> 
                         {queryResults.map((recipe, index) => 
                         <li key={index}>
                             <Link
                                 onMouseEnter={() => handleMouseEnter(index)} 
-                                className={activeIndex === index ? "active" : null} 
+                                className={activeIndex === index ? "active" : null}
+                                id={`recipe-${index}`} 
                                 tabIndex="1" 
                                 to={`/recipes/${recipe._id}`}>
                                 {recipe.name}
