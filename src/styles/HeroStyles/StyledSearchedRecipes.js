@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StyledSearchedRecipes = styled.ul`
     background-color: white;
     width: calc(100% - 80px);
-    max-height: 180px;
+    max-height: 200px;
     border: 1px solid;
     text-align: left;
     list-style: none;
