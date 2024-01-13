@@ -2,6 +2,10 @@ import styled from "styled-components";
 import { Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+export const StyledNavbar = styled(Navbar)`
+    margin-bottom: 30px;
+`
+
 export const StyledLink = styled(Link)`
     font-family: 'Gloria Hallelujah', cursive;
     font-size: 1.4rem;

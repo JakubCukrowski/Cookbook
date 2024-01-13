@@ -37,7 +37,8 @@ export const AuthContextProvider = ({children}) => {
                 const userDoc = await setDoc(doc(db, "users", userCredentials.user.uid), {
                                 username: displayName,
                                 email: email,
-                                liked: []
+                                liked: [],
+                                userRecipes: []
                             }) 
                 return updateProfile(userCredentials.user, {
                     displayName: displayName 
