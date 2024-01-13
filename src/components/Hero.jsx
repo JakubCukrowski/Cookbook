@@ -19,8 +19,16 @@ export const Hero = () => {
     const {recipes} = UserAuth()
     const [isFocused, setIsFocused] = useState(false)
     const [activeIndex, setActiveIndex] = useState("")
+    const [count, setCount] = useState(0)
     const navigate = useNavigate();
     const ulRef = useRef(null)
+    const linkRefs = useRef([])
+
+    const addLinkRef = (el) => {
+        if (el && !linkRefs.current.includes(el)) {
+            linkRefs.current.push(el)
+        }
+    }
 
     const handleInputValue = (e) => {
         setQueryText(e.target.value);
@@ -28,7 +36,6 @@ export const Hero = () => {
 
     //logic for keys down/up/enter
     const handleKeyPress = (e) => {
-
         //prevent from moving cursor to beginning/end of the sentence/word
         if (e.key === "ArrowDown" || e.key === "ArrowUp") {
             e.preventDefault()
@@ -37,31 +44,38 @@ export const Hero = () => {
         if (e.key === "ArrowDown" && activeIndex === "") {
             setActiveIndex(0)
 
-            //all of offsetheight, getelementbyid, ref current is useful for following the active link in searchbox
-
-            console.log(document.getElementById(`recipe-0`));
-            console.log(ulRef.current.offsetHeight);
+            setCount(prev => prev + linkRefs.current[0].offsetHeight)
+            
 
         } else if (e.key === "ArrowDown" && activeIndex >= 0 && activeIndex < queryResults.length - 1 ) {
             setActiveIndex(prev => prev + 1)
 
-            console.log(document.getElementById(`recipe-${activeIndex + 1}`));
+            setCount(prev => prev + linkRefs.current[activeIndex].offsetHeight)
 
-            // if (ulRef.current) {
-            //     ulRef.current.scrollTop += 30; 
-            // }
+            if (count > ulRef.current.offsetHeight - linkRefs.current[activeIndex].offsetHeight) {
+                ulRef.current.scrollTop += ulRef.current.offsetHeight
+            }
+            
 
         } else if (e.key === "ArrowUp" && activeIndex > 0) {
             setActiveIndex(prev => prev - 1)
 
-            // if (ulRef.current) {
-            //     ulRef.current.scrollTop -= 30; 
-            // }
+            setCount(prev => prev - linkRefs.current[activeIndex].offsetHeight)
+
+
+            if (count <= ulRef.current.offsetHeight - document.getElementById(`recipe-${activeIndex - 1}`).offsetHeight) {
+                ulRef.current.scrollTop -= ulRef.current.offsetHeight
+            }
+        }
+        
+        if (e.key === "Backspace") {
+            linkRefs.current = []
         }
 
         if (e.key === "Enter" && queryResults.length > 0 && activeIndex !== "") {
             navigate(`/recipes/${queryResults[activeIndex]._id}`)
         }
+
     }
 
     //close the results on focus out
@@ -78,6 +92,7 @@ export const Hero = () => {
     //handle mouse over
     const handleMouseEnter = (index) => {
         setActiveIndex(index)
+        setCount((index + 1) * linkRefs.current[index].offsetHeight)
     }
 
     //useEffect handles fuse.js library. It looks for names in API
@@ -120,12 +135,13 @@ export const Hero = () => {
                             <FontAwesomeIcon icon={faMagnifyingGlass}/>
                         </Button>
                     </SearchBarWrapper>
-                    {queryText.length > 2 
+                    {queryText.length > 0 
                     && queryResults.length > 0
                     ? <StyledSearchedRecipes ref={ulRef}> 
                         {queryResults.map((recipe, index) => 
                         <li key={index}>
                             <Link
+                                ref={addLinkRef}
                                 onMouseEnter={() => handleMouseEnter(index)} 
                                 className={activeIndex === index ? "active" : null}
                                 id={`recipe-${index}`} 
