@@ -11,20 +11,24 @@ export const Footer = () => {
         <StyledFooter>
             <Container>
                 <Row>
-                    <Col>
+                    <Col style={{textAlign: "center"}}>
                         <h4>Przepisowa pasja</h4>
                         <p style={{fontSize: 12}}>
                             Zainspiruj się
                         </p>
                     </Col>
-                    <Col>
+                    <Col style={{textAlign: "center"}}>
                         <h4>Social media</h4>
-                        <Link><FontAwesomeIcon icon={faFacebook}/></Link>
-                        <Link><FontAwesomeIcon icon={faInstagram}/></Link>
-                        <Link><FontAwesomeIcon icon={faTwitter}/></Link>
+                        <div style={{display: "flex", justifyContent: "center", gap: 16}}>
+                            <Link><FontAwesomeIcon icon={faFacebook} size="2xl"/></Link>
+                            <Link><FontAwesomeIcon icon={faInstagram} size="2xl"/></Link>
+                            <Link><FontAwesomeIcon icon={faTwitter} size="2xl"/></Link>
+                        </div>
                     </Col>
-                    <Col>
-                        <h4>Kontakt</h4>
+                    <Col style={{textAlign: "center"}}>
+                        <h4>Support</h4>
+                        <p>Telefon: 600-400-200</p>
+                        <p>email: support@example.com</p>
                     </Col>
                 </Row>
             </Container>

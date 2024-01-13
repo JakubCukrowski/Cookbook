@@ -7,6 +7,6 @@ export const PopularRecipes = () => {
     const popular = [...recipes].sort((a, b) => b.likes - a.likes)
     
     return (
-        <RecipesGroup title="Najpopularniejsze przepisy" array={popular} />
+        <RecipesGroup title="Najpopularniejsze przepisy" array={popular} marginBottom={80}/>
     )
 }

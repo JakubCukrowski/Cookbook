@@ -10,7 +10,7 @@ import { StyledLink } from "../styles/StyledLink";
 import { LikeButton } from "./LikeButton";
 import { UserAuth } from "../context/AuthContext";
 
-export const RecipesGroup = ({title, array, onClick}) => {
+export const RecipesGroup = ({title, array, onClick, marginBottom}) => {
     const {isLoading, checkIfExists} = UserAuth()
 
     return (
@@ -62,7 +62,7 @@ export const RecipesGroup = ({title, array, onClick}) => {
                 ))}
             </Row>
             <FlexContainer justify="center">
-                <Button onClick={onClick} variant="dark">Zobacz więcej</Button>
+                <Button style={{marginBottom: marginBottom}} onClick={onClick} variant="dark">Zobacz więcej</Button>
             </FlexContainer>
         </Container>
     )
