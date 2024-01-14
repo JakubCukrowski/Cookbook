@@ -18,8 +18,14 @@ export const Dashboard = () => {
   return (
     <>
       {user !== null ? (
-        <section style={{ maxWidth: "100%" }}>
-          <Container>
+        <Container>
+          <section
+            style={{
+              maxWidth: "100%",
+              marginBottom: 30,
+            }}
+          >
+            <h2 style={{textAlign: "center"}}>Twój profil</h2>
             <DataWrapper>
               <img
                 style={{ padding: 10 }}
@@ -55,7 +61,7 @@ export const Dashboard = () => {
                 />
                 <DashboardElement
                   spanTitle={"Hasło"}
-                  strongTitle={<StyledLink to={'/'}>Zmień hasło</StyledLink>}
+                  strongTitle={<StyledLink to={"/"}>Zmień hasło</StyledLink>}
                 />
               </Container>
             </DataWrapper>
@@ -67,12 +73,14 @@ export const Dashboard = () => {
               </DataWrapper>
               <DataWrapper>
                 <h2>Polubione przepisy</h2>
-                <div style={{textAlign: "center"}}>
+                <div style={{ textAlign: "center" }}>
                   {likedRecipes.map((recipe, index) => {
                     return (
                       <StyledLink key={index} to={`/recipes/${recipe._id}`}>
                         {recipe.name}
-                        <Row style={{justifyContent: "center", marginBottom: 10}}>
+                        <Row
+                          style={{ justifyContent: "center", marginBottom: 10 }}
+                        >
                           <Col xs={6} md={4}>
                             <Image src={recipe.image} thumbnail />
                           </Col>
@@ -83,8 +91,8 @@ export const Dashboard = () => {
                 </div>
               </DataWrapper>
             </div>
-          </Container>
-        </section>
+          </section>
+        </Container>
       ) : (
         <div
           style={{

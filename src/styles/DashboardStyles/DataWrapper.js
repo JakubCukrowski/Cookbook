@@ -7,9 +7,9 @@ export const DataWrapper = styled.div`
     align-items: center;
     width: 100%;
     gap: 12px;
-    padding: 50px 0;
-    border: 1px solid rgb(33, 37, 41);
-    border-radius: 6px;
+    padding: 50px 4px;
+    background-color: rgba(33, 37, 41, 0.1);
+    border-radius: 10px;
     margin-bottom: 50px;
 
     img {
