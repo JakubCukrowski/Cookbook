@@ -11,12 +11,14 @@ import { SignIn } from "./components/SignIn";
 import { Dashboard } from "./components/Dashboard";
 import { NotFound } from "./components/NotFound";
 import { NewestRecipesPage } from "./components/NewestRecipesPage";
+import { GlobalStyle } from "./styles/GlobalStyles";
 
 function App() {
 
   return (
     <AuthContextProvider>
       <BrowserRouter>
+        <GlobalStyle />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={
