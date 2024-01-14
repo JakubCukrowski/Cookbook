@@ -25,6 +25,7 @@ export const Hero = () => {
     const linkRefs = useRef([])
 
     const addLinkRef = (el) => {
+        //if element exsists and it's not included in linkrefs array, it's pushed to the array
         if (el && !linkRefs.current.includes(el)) {
             linkRefs.current.push(el)
         }
@@ -103,7 +104,7 @@ export const Hero = () => {
 
         const fuse = new Fuse(recipes, {
             keys: ['name'],
-            threshold: 1,
+            threshold: 0.4,
             includeMatches: true
         })
 
