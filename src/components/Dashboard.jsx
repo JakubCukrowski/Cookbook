@@ -7,10 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { DashboardElement } from "./DashboardElement";
 import { StyledLink } from "../styles/StyledLink";
-
-import Col from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image";
-import Row from "react-bootstrap/Row";
+import { DashboardLikedRecipes } from "./DashboardLikedRecipes";
 
 export const Dashboard = () => {
   const { user, likedRecipes } = UserAuth();
@@ -25,7 +22,7 @@ export const Dashboard = () => {
               marginBottom: 30,
             }}
           >
-            <h2 style={{textAlign: "center"}}>Twój profil</h2>
+            <h2 style={{ textAlign: "center" }}>Twój profil</h2>
             <DataWrapper>
               <img
                 style={{ padding: 10 }}
@@ -52,11 +49,13 @@ export const Dashboard = () => {
                 <DashboardElement
                   spanTitle={"Nazwa użytkownika: "}
                   strongTitle={user.displayName}
+                  inputName='username'
                   isButton={true}
                 />
                 <DashboardElement
                   spanTitle={"Email: "}
                   strongTitle={user.email}
+                  inputName='email'
                   isButton={true}
                 />
                 <DashboardElement
@@ -76,16 +75,12 @@ export const Dashboard = () => {
                 <div style={{ textAlign: "center" }}>
                   {likedRecipes.map((recipe, index) => {
                     return (
-                      <StyledLink key={index} to={`/recipes/${recipe._id}`}>
-                        {recipe.name}
-                        <Row
-                          style={{ justifyContent: "center", marginBottom: 10 }}
-                        >
-                          <Col xs={6} md={4}>
-                            <Image src={recipe.image} thumbnail />
-                          </Col>
-                        </Row>
-                      </StyledLink>
+                      <DashboardLikedRecipes
+                        key={index}
+                        linkTo={recipe._id}
+                        recipeName={recipe.name}
+                        recipeImage={recipe.image}
+                      />
                     );
                   })}
                 </div>
