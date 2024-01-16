@@ -49,13 +49,13 @@ export const Dashboard = () => {
                 <DashboardElement
                   spanTitle={"Nazwa użytkownika: "}
                   strongTitle={user.displayName}
-                  inputName='username'
+                  inputName="username"
                   isButton={true}
                 />
                 <DashboardElement
                   spanTitle={"Email: "}
                   strongTitle={user.email}
-                  inputName='email'
+                  inputName="email"
                   isButton={true}
                 />
                 <DashboardElement
@@ -73,16 +73,20 @@ export const Dashboard = () => {
               <DataWrapper>
                 <h2>Polubione przepisy</h2>
                 <div style={{ textAlign: "center" }}>
-                  {likedRecipes.map((recipe, index) => {
-                    return (
-                      <DashboardLikedRecipes
-                        key={index}
-                        linkTo={recipe._id}
-                        recipeName={recipe.name}
-                        recipeImage={recipe.image}
-                      />
-                    );
-                  })}
+                  {likedRecipes.length > 0 ? (
+                    likedRecipes.map((recipe, index) => {
+                      return (
+                        <DashboardLikedRecipes
+                          key={index}
+                          linkTo={recipe._id}
+                          recipeName={recipe.name}
+                          recipeImage={recipe.image}
+                        />
+                      );
+                    })
+                  ) : (
+                    <p>Nie polubiłeś żadnego przepisu</p>
+                  )}
                 </div>
               </DataWrapper>
             </div>

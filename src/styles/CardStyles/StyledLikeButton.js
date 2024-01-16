@@ -17,7 +17,11 @@ export const StyledLikeButton = styled.button`
     transition: 200ms;
 
     &:hover {
-        color: red;
+        color: tomato;
+    }
+
+    &.liked {
+        color: tomato;
     }
 
     &:focus {
