@@ -7,7 +7,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { setDoc, doc, getDoc } from "firebase/firestore";
+import { setDoc, doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
 
 const userContext = createContext();
 
@@ -33,6 +33,20 @@ export const AuthContextProvider = ({ children }) => {
 
   const checkIfExists = (data) => {
     return likedRecipes.some((recipe) => data === recipe._id);
+  };
+
+  //dislike recipe
+  const dislikeRecipe = async (data) => {
+    const newLikedRecipes = likedRecipes.filter(
+      (recipe) => data !== recipe._id
+    );
+    setLikedRecipes(newLikedRecipes);
+
+    const clickedRecipe = likedRecipes.find(recipe => data === recipe._id)
+    const docRef = doc(db, "users", user.uid);
+    await updateDoc(docRef, {
+      liked: arrayRemove(clickedRecipe)
+    })
   };
 
   //create user in firebase with firestore data
@@ -114,6 +128,7 @@ export const AuthContextProvider = ({ children }) => {
         likedRecipes,
         setLikedRecipes,
         checkIfExists,
+        dislikeRecipe
       }}
     >
       {!loading && children}
