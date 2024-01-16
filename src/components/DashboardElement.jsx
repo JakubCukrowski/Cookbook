@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import { updateProfile } from "firebase/auth";
+import { updateEmail, updateProfile } from "firebase/auth";
 import { UserAuth } from "../context/AuthContext";
 
 export const DashboardElement = ({
@@ -14,13 +14,16 @@ export const DashboardElement = ({
   const { user } = UserAuth();
   const [inputVisible, setInputVisible] = useState(false);
 
+  //states when changing user data
   const [username, setUsername] = useState("");
   const [userEmail, setUserEmail] = useState("");
 
+  //replaces user credentials with inputs to change them
   const handleEdit = () => {
     setInputVisible(true);
   };
 
+  // handles states
   const handleUpdate = (e) => {
     if (inputName === "username") {
       setUsername(e.target.value);
@@ -29,6 +32,7 @@ export const DashboardElement = ({
     }
   };
 
+  //after confirmation button clicked
   const handleUpdateButton = () => {
     if (inputName === "username") {
       updateProfile(user, {
@@ -36,12 +40,14 @@ export const DashboardElement = ({
       });
       setInputVisible(false)
     } else {
-      updateProfile(user, {
-        email: userEmail,
-      });
+      updateEmail(user, userEmail);
       setInputVisible(false)
     }
   };
+
+  useEffect(() => {
+    
+  })
 
   return (
     <>
