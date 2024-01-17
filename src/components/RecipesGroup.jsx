@@ -11,7 +11,7 @@ import { LikeButton } from "./LikeButton";
 import { UserAuth } from "../context/AuthContext";
 
 export const RecipesGroup = ({title, array, onClick, marginBottom}) => {
-    const {isLoading, checkIfExists, dislikeRecipe} = UserAuth()
+    const {isLoading, checkIfExists} = UserAuth()
 
     return (
         <Container>
@@ -41,7 +41,6 @@ export const RecipesGroup = ({title, array, onClick, marginBottom}) => {
                                     {checkIfExists(recipe._id) 
                                         ?   <LikeButton 
                                                 className={checkIfExists(recipe._id) ? 'liked' : null}
-                                                onClick={() => dislikeRecipe(recipe._id)}
                                                 top="0" 
                                                 right="14px" /> 
                                         : ''}
