@@ -128,7 +128,8 @@ export const AuthContextProvider = ({ children }) => {
         likedRecipes,
         setLikedRecipes,
         checkIfExists,
-        dislikeRecipe
+        dislikeRecipe,
+        URL
       }}
     >
       {!loading && children}

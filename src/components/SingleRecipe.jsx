@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { json, useParams } from "react-router-dom";
 import { Col, Row, Container, Spinner } from "react-bootstrap";
 import { UserAuth } from "../context/AuthContext";
 import { StyledImage } from "../styles/StyledImage";
@@ -7,7 +7,7 @@ import { SpinnerContainer } from "../styles/Containers";
 import { LikeButton } from "./LikeButton";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import { BootstrapModal } from "./BootstrapModal";
+import { useState } from "react";
 
 export const SingleRecipe = () => {
   const {
@@ -17,9 +17,11 @@ export const SingleRecipe = () => {
     checkIfExists,
     setLikedRecipes,
     dislikeRecipe,
+    URL,
   } = UserAuth();
   const { recipeId } = useParams();
   const findRecipe = recipes.find((recipe) => recipeId === recipe._id);
+  const [likesCounter, setLikesCounter] = useState(null)
 
   //handle liked recipes in firebase
   const handleSaveData = async (data) => {
@@ -30,6 +32,21 @@ export const SingleRecipe = () => {
     });
 
     setLikedRecipes((prev) => [...prev, data]);
+    updateLikesCount(recipeId);
+  };
+
+  const updateLikesCount = async (id) => {
+    await fetch(`${URL}/${id}`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then((response) => response.json())
+      .then((response) => setLikesCounter(response.likes))
+      .catch((err) => console.error(err));
+
+      console.log(likesCounter);
   };
 
   return (
