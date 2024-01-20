@@ -12,7 +12,7 @@ import anonImage from '../images/anon-chef1.png'
 import { LoggedUserImage } from "../styles/LoggedUserImage";
 
 export const CustomNavbar = () => {
-  const { user, signout } = UserAuth();
+  const { user, signout, userImage } = UserAuth();
   const navigate = useNavigate();
 
   const pathname = window.location.pathname;
@@ -45,7 +45,7 @@ export const CustomNavbar = () => {
                   <Nav.Item>
                     <Link className="nav-link" to="/dashboard">
                       Zalogowany: {user.displayName}{" "}
-                      <LoggedUserImage src={anonImage} alt="profile_image" />
+                      <LoggedUserImage src={userImage ? userImage : anonImage} alt="profile_image" />
                     </Link>
                   </Nav.Item>
                 </>

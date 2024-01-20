@@ -8,6 +8,8 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { setDoc, doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
+import { storage } from "../firebase";
+import { ref } from "firebase/storage";
 
 const userContext = createContext();
 
@@ -116,6 +118,13 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, [user]);
 
+  //storage
+  const recipeImagesRef = ref(storage, 'recipes')
+  const profileImagesRef = ref(storage, `/profile/${user?.uid}/profile_photo`)
+
+  //user image
+  const [userImage, setUserImage] = useState(null);
+
   return (
     <userContext.Provider
       value={{
@@ -129,7 +138,11 @@ export const AuthContextProvider = ({ children }) => {
         setLikedRecipes,
         checkIfExists,
         dislikeRecipe,
-        URL
+        URL,
+        recipeImagesRef,
+        profileImagesRef,
+        userImage,
+        setUserImage
       }}
     >
       {!loading && children}
