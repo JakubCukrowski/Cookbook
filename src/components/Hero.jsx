@@ -104,7 +104,7 @@ export const Hero = () => {
 
         const fuse = new Fuse(recipes, {
             keys: ['name'],
-            threshold: 0.4,
+            threshold: 0.3,
             includeMatches: true
         })
 
@@ -136,7 +136,7 @@ export const Hero = () => {
                             <FontAwesomeIcon icon={faMagnifyingGlass}/>
                         </Button>
                     </SearchBarWrapper>
-                    {queryText.length > 0 
+                    {queryText.length >= 2 
                     && queryResults.length > 0
                     ? <StyledSearchedRecipes ref={ulRef}> 
                         {queryResults.map((recipe, index) => 

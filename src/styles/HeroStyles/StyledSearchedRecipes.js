@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StyledSearchedRecipes = styled.ul`
     background-color: white;
     width: calc(100% - 80px);
-    height: 200px;
+    max-height: 200px;
     border: 1px solid;
     text-align: left;
     list-style: none;
@@ -16,7 +16,7 @@ export const StyledSearchedRecipes = styled.ul`
     scroll-behavior: smooth;
 
     @media (min-width: 992px) {
-        height: 260px;
+        max-height: 260px;
     }
 
     
