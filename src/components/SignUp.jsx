@@ -118,7 +118,7 @@ export const SignUp = () => {
 
                     const timeoutId = setTimeout(() => {
                         window.location.reload(true)
-                    }, 1000);
+                    }, 1800);
 
                     return () => clearTimeout(timeoutId)
                 } catch (error) {

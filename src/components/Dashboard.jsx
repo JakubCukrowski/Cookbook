@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { Container, Spinner, Button } from "react-bootstrap";
 import { DataWrapper } from "../styles/DashboardStyles/DataWrapper";
@@ -9,12 +9,35 @@ import { StyledLink } from "../styles/StyledLink";
 import { DashboardLikedRecipes } from "./DashboardLikedRecipes";
 import { uploadBytes, ref } from "firebase/storage";
 import { storage } from "../firebase";
+import { BootstrapModal } from "./BootstrapModal";
 
 export const Dashboard = () => {
-  const { user, likedRecipes, userImage, setIsUserImageUploaded } = UserAuth();
+  const { user, likedRecipes, userImage, isUserImageUploaded, setIsUserImageUploaded, displayName } = UserAuth();
+  const [currentProgress, setCurrentProgress] = useState(0)
+  const [profileImageRef, setProfileImageRef] = useState('')
 
-  const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`);
+  //interval for progress bar
+  useEffect(() => {
+    if (isUserImageUploaded) {
+      const IntervalID = setInterval(() => {
+        setCurrentProgress(prev => prev + 5)
+      }, 50);
+  
+      return () => clearInterval(IntervalID)
+    } else {
+      setCurrentProgress(0)
+    }
+  }, [isUserImageUploaded])
 
+  useEffect(() => {
+    if (user) {
+      setProfileImageRef(ref(storage, `profile/${user.uid}/profile_photo`))
+    }
+  }, [user])
+
+  // const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`);
+
+  //upload photo logic with timeout to make modal dissapear
   const uploadPhoto = async (e) => {
     await uploadBytes(profileImageRef, e.target.files[0]).then((snapshot) =>
       console.log(snapshot)
@@ -23,14 +46,15 @@ export const Dashboard = () => {
 
     const timeoutID = setTimeout(() => {
       setIsUserImageUploaded(false)
-    }, 1500);
+    }, 2000);
 
     return () => clearTimeout(timeoutID)
   };
+  
 
   return (
     <>
-      {user !== null ? (
+      {user !== null && profileImageRef !== '' ? (
         <Container>
           <section
             style={{
@@ -38,6 +62,7 @@ export const Dashboard = () => {
               marginBottom: 30,
             }}
           >
+            {isUserImageUploaded ? <BootstrapModal title={'Pomyślnie zmieniono zdjęcie'} progress={currentProgress}/> : null}
             <h2 style={{ textAlign: "center" }}>Twój profil</h2>
             <DataWrapper>
               <img
@@ -71,7 +96,7 @@ export const Dashboard = () => {
                 />
                 <DashboardElement
                   spanTitle={"Nazwa użytkownika: "}
-                  strongTitle={user.displayName}
+                  strongTitle={displayName}
                   inputName="username"
                   isButton={true}
                 />

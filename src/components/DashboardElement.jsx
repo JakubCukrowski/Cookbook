@@ -11,7 +11,7 @@ export const DashboardElement = ({
   isButton,
   inputName,
 }) => {
-  const { user } = UserAuth();
+  const { user, setDisplayName } = UserAuth();
   const [inputVisible, setInputVisible] = useState(false);
 
   //states when changing user data
@@ -39,6 +39,7 @@ export const DashboardElement = ({
         displayName: username,
       });
       setInputVisible(false)
+      setDisplayName(username)
     } else {
       updateEmail(user, userEmail);
       setInputVisible(false)
