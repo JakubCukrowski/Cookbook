@@ -43,6 +43,10 @@ export const AuthContextProvider = ({ children }) => {
   const [userImage, setUserImage] = useState(null);
   const [isUserImageUploaded, setIsUserImageUploaded] = useState(false);
 
+  //user data
+  const [displayName, setDisplayName] = useState('')
+
+  //check if recipe exists in the liked recipes array
   const checkIfExists = (data) => {
     return likedRecipes.some((recipe) => data === recipe._id);
   };
@@ -108,7 +112,7 @@ export const AuthContextProvider = ({ children }) => {
   //on user state change
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      setUser(currentUser)
       setLoading(false);
     });
 
@@ -120,11 +124,15 @@ export const AuthContextProvider = ({ children }) => {
     const getLikedRecipes = async () => {
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
-      setLikedRecipes(docSnap.data().liked);
+      
+      if (docSnap.data().liked.length > 0) {
+        setLikedRecipes(docSnap.data().liked);
+      } 
     };
 
     if (user) {
       getLikedRecipes();
+      setDisplayName(user.displayName)
     }
   }, [user]);
 
@@ -175,7 +183,10 @@ export const AuthContextProvider = ({ children }) => {
         dislikeRecipe,
         URL,
         userImage,
+        isUserImageUploaded,
         setIsUserImageUploaded,
+        displayName,
+        setDisplayName
       }}
     >
       {!loading && children}
