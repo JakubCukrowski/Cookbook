@@ -7,9 +7,15 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { setDoc, doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
+import {
+  setDoc,
+  doc,
+  getDoc,
+  updateDoc,
+  arrayRemove,
+} from "firebase/firestore";
 import { storage } from "../firebase";
-import { ref } from "firebase/storage";
+import { ref, getMetadata, getDownloadURL } from "firebase/storage";
 
 const userContext = createContext();
 
@@ -33,6 +39,10 @@ export const AuthContextProvider = ({ children }) => {
   //liked recipes
   const [likedRecipes, setLikedRecipes] = useState([]);
 
+  //user image state
+  const [userImage, setUserImage] = useState(null);
+  const [isUserImageUploaded, setIsUserImageUploaded] = useState(false);
+
   const checkIfExists = (data) => {
     return likedRecipes.some((recipe) => data === recipe._id);
   };
@@ -44,11 +54,11 @@ export const AuthContextProvider = ({ children }) => {
     );
     setLikedRecipes(newLikedRecipes);
 
-    const clickedRecipe = likedRecipes.find(recipe => data === recipe._id)
+    const clickedRecipe = likedRecipes.find((recipe) => data === recipe._id);
     const docRef = doc(db, "users", user.uid);
     await updateDoc(docRef, {
-      liked: arrayRemove(clickedRecipe)
-    })
+      liked: arrayRemove(clickedRecipe),
+    });
   };
 
   //create user in firebase with firestore data
@@ -118,12 +128,37 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, [user]);
 
-  //storage
-  const recipeImagesRef = ref(storage, 'recipes')
-  const profileImagesRef = ref(storage, `/profile/${user?.uid}/profile_photo`)
+  //check if profile photo exists logic
+  const checkIfProfilePhotoAvailable = async (id) => {
+    const profileImageRef = ref(storage, `/profile/${id}/profile_photo`);
+    const basicImageRef = ref(storage, "profile/anon-chef1.png");
 
-  //user image
-  const [userImage, setUserImage] = useState(null);
+    try {
+      await getMetadata(profileImageRef)
+        .then(() => {
+          getDownloadURL(profileImageRef).then((url) => {
+            setUserImage(url);
+          });
+        })
+        .catch((error) => {
+          if (error.code === "storage/object-not-found") {
+            getDownloadURL(basicImageRef).then((url) => {
+              setUserImage(url);
+            });
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //update the photo
+  useEffect(() => {
+    if (user) {
+      //user profile image storage
+      checkIfProfilePhotoAvailable(user.uid);
+    }
+  }, [user, isUserImageUploaded]);
 
   return (
     <userContext.Provider
@@ -139,10 +174,8 @@ export const AuthContextProvider = ({ children }) => {
         checkIfExists,
         dislikeRecipe,
         URL,
-        recipeImagesRef,
-        profileImagesRef,
         userImage,
-        setUserImage
+        setIsUserImageUploaded,
       }}
     >
       {!loading && children}
