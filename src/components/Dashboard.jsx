@@ -12,7 +12,7 @@ import { storage } from "../firebase";
 import { BootstrapModal } from "./BootstrapModal";
 
 export const Dashboard = () => {
-  const { user, likedRecipes, userImage, isUserImageUploaded, setIsUserImageUploaded, displayName } = UserAuth();
+  const { user, userImage, isUserImageUploaded, setIsUserImageUploaded, displayName } = UserAuth();
   const [currentProgress, setCurrentProgress] = useState(0)
   const [profileImageRef, setProfileImageRef] = useState('')
 
@@ -51,7 +51,6 @@ export const Dashboard = () => {
     return () => clearTimeout(timeoutID)
   };
   
-
   return (
     <>
       {user !== null && profileImageRef !== '' ? (
@@ -120,22 +119,7 @@ export const Dashboard = () => {
               </DataWrapper>
               <DataWrapper>
                 <h2>Polubione przepisy</h2>
-                <div style={{ textAlign: "center" }}>
-                  {likedRecipes.length > 0 ? (
-                    likedRecipes.map((recipe, index) => {
-                      return (
-                        <DashboardLikedRecipes
-                          key={index}
-                          linkTo={recipe._id}
-                          recipeName={recipe.name}
-                          recipeImage={recipe.image}
-                        />
-                      );
-                    })
-                  ) : (
-                    <p>Nie polubiłeś żadnego przepisu</p>
-                  )}
-                </div>
+                <p>Nie polubiłeś żadnego przepisu</p>
               </DataWrapper>
             </div>
           </section>

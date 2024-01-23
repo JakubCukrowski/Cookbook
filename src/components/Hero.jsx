@@ -38,44 +38,44 @@ export const Hero = () => {
     //logic for keys down/up/enter
     const handleKeyPress = (e) => {
         //prevent from moving cursor to beginning/end of the sentence/word
-        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-            e.preventDefault()
-        }
+        // if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        //     e.preventDefault()
+        // }
 
-        if (e.key === "ArrowDown" && activeIndex === "") {
-            setActiveIndex(0)
+        // if (e.key === "ArrowDown" && activeIndex === "") {
+        //     setActiveIndex(0)
 
-            setCount(prev => prev + linkRefs.current[0].offsetHeight)
+        //     setCount(prev => prev + linkRefs.current[0].offsetHeight)
             
 
-        } else if (e.key === "ArrowDown" && activeIndex >= 0 && activeIndex < queryResults.length - 1 ) {
-            setActiveIndex(prev => prev + 1)
+        // } else if (e.key === "ArrowDown" && activeIndex >= 0 && activeIndex < queryResults.length - 1 ) {
+        //     setActiveIndex(prev => prev + 1)
 
-            setCount(prev => prev + linkRefs.current[activeIndex].offsetHeight)
+        //     setCount(prev => prev + linkRefs.current[activeIndex].offsetHeight)
 
-            if (count > ulRef.current.offsetHeight - linkRefs.current[activeIndex].offsetHeight) {
-                ulRef.current.scrollTop += ulRef.current.offsetHeight
-            }
+        //     if (count > ulRef.current.offsetHeight - linkRefs.current[activeIndex].offsetHeight) {
+        //         ulRef.current.scrollTop += ulRef.current.offsetHeight
+        //     }
             
 
-        } else if (e.key === "ArrowUp" && activeIndex > 0) {
-            setActiveIndex(prev => prev - 1)
+        // } else if (e.key === "ArrowUp" && activeIndex > 0) {
+        //     setActiveIndex(prev => prev - 1)
 
-            setCount(prev => prev - linkRefs.current[activeIndex].offsetHeight)
+        //     setCount(prev => prev - linkRefs.current[activeIndex].offsetHeight)
 
 
-            if (count <= ulRef.current.offsetHeight - document.getElementById(`recipe-${activeIndex - 1}`).offsetHeight) {
-                ulRef.current.scrollTop -= ulRef.current.offsetHeight
-            }
-        }
+        //     if (count <= ulRef.current.offsetHeight - document.getElementById(`recipe-${activeIndex - 1}`).offsetHeight) {
+        //         ulRef.current.scrollTop -= ulRef.current.offsetHeight
+        //     }
+        // }
         
-        if (e.key === "Backspace") {
-            linkRefs.current = []
-        }
+        // if (e.key === "Backspace") {
+        //     linkRefs.current = []
+        // }
 
-        if (e.key === "Enter" && queryResults.length > 0 && activeIndex !== "") {
-            navigate(`/recipes/${queryResults[activeIndex]._id}`)
-        }
+        // if (e.key === "Enter" && queryResults.length > 0 && activeIndex !== "") {
+        //     navigate(`/recipes/${queryResults[activeIndex]._id}`)
+        // }
 
     }
 
@@ -147,7 +147,7 @@ export const Hero = () => {
                                 className={activeIndex === index ? "active" : null}
                                 id={`recipe-${index}`} 
                                 tabIndex="1" 
-                                to={`/recipes/${recipe._id}`}>
+                                to={`/recipes/${recipe.id}`}>
                                 {recipe.name}
                             </Link>
                         </li>)}
