@@ -7,7 +7,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { setDoc, doc, getDocs, collection } from "firebase/firestore";
+import { setDoc, doc, getDocs, collection, updateDoc } from "firebase/firestore";
 import { storage } from "../firebase";
 import { ref, getMetadata, getDownloadURL, listAll } from "firebase/storage";
 
@@ -112,7 +112,6 @@ export const AuthContextProvider = ({ children }) => {
 
   //donwload recipes from firebase
   useEffect(() => {
-    setIsLoading(false);
 
     const getRecipes = async () => {
       //get to the collection first
@@ -130,17 +129,22 @@ export const AuthContextProvider = ({ children }) => {
             response.items.map(async (itemRef) => {
               const recipeImageRef = ref(storage, `/recipe/${recipe.id}/${itemRef.name}`
               );
-              await getDownloadURL(recipeImageRef).then((url) => {
+              await getDownloadURL(recipeImageRef).then(async (url) => {
                 setRecipes((prev) => [
                   ...prev,
                   { ...recipe.data(), id: recipe.id, image: url },
                 ]);
+                
+                const recipeRef = doc(db, 'recipes', recipe.id)
+                await updateDoc(recipeRef, {
+                  image: url
+                })
+                setIsLoading(false);
               });
             });
           })
           .catch((error) => console.log(error));
       });
-
 
     };
 
