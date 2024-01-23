@@ -5,9 +5,9 @@ import { StyledImage } from "../styles/StyledImage";
 import { StyledH2 } from "../styles/StyledH2";
 import { SpinnerContainer } from "../styles/Containers";
 import { LikeButton } from "./LikeButton";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const SingleRecipe = () => {
   const {
@@ -20,38 +20,33 @@ export const SingleRecipe = () => {
     URL,
   } = UserAuth();
   const { recipeId } = useParams();
-  const findRecipe = recipes.find((recipe) => recipeId === recipe._id);
-  const [likesCounter, setLikesCounter] = useState(null)
+  const [searchedRecipe, setSearchedRecipe] = useState(null);
+  const [isFound, setIsFound] = useState(false);
+
+  useEffect(() => {
+    const getSingleDoc = async () => {
+      const docRef = doc(db, "recipes", recipeId);
+      const docSnap = await getDoc(docRef);
+      setSearchedRecipe(docSnap.data());
+      setIsFound(true)
+    };
+
+    return () => getSingleDoc()
+  }, []);
 
   //handle liked recipes in firebase
   const handleSaveData = async (data) => {
-    const userRef = doc(db, "users", user.uid);
-
-    await updateDoc(userRef, {
-      liked: arrayUnion(data),
-    });
-
-    setLikedRecipes((prev) => [...prev, data]);
-    updateLikesCount(recipeId);
-  };
-
-  const updateLikesCount = async (id) => {
-    await fetch(`${URL}/${id}`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then((response) => response.json())
-      .then((response) => setLikesCounter(response.likes))
-      .catch((err) => console.error(err));
-
-      console.log(likesCounter);
+    // const userRef = doc(db, "users", user.uid);
+    // await updateDoc(userRef, {
+    //   liked: arrayUnion(data),
+    // });
+    // setLikedRecipes((prev) => [...prev, data]);
+    // updateLikesCount(recipeId);
   };
 
   return (
     <section>
-      {isLoading ? (
+      {!isFound ? (
         <SpinnerContainer>
           <Spinner />
         </SpinnerContainer>
@@ -59,7 +54,7 @@ export const SingleRecipe = () => {
         <Container>
           <Row>
             <Col style={{ textAlign: "center", padding: "20px 0" }}>
-              <h1>{findRecipe.name}</h1>
+              <h1>{searchedRecipe.name}</h1>
             </Col>
           </Row>
           <Row style={{ marginBottom: 30 }}>
@@ -70,8 +65,8 @@ export const SingleRecipe = () => {
                 position: "relative",
               }}
             >
-              <StyledImage rounded src={findRecipe.image} />
-              {user ? (
+              <StyledImage rounded src={searchedRecipe.image} />
+              {/* {user ? (
                 <LikeButton
                   className={checkIfExists(recipeId) ? "liked" : ""}
                   onClick={
@@ -87,19 +82,19 @@ export const SingleRecipe = () => {
                 />
               ) : (
                 ""
-              )}
+              )} */}
             </Col>
           </Row>
           <Row style={{ justifyContent: "center" }}>
             <Col sm={5}>
               <StyledH2>Składniki</StyledH2>
-              {findRecipe.ingredients.map((ingredient, index) => (
+              {searchedRecipe.ingredients.map((ingredient, index) => (
                 <p key={index}>{ingredient}</p>
               ))}
             </Col>
             <Col sm={5}>
               <StyledH2>Jak przygotować</StyledH2>
-              {Object.entries(findRecipe.steps).map((value, index) => (
+              {Object.entries(searchedRecipe.steps).map((value, index) => (
                 <p key={index}>
                   {`${value[0]}.`}
                   <span> {value[1]}</span>
