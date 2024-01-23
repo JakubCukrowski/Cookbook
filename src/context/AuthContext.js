@@ -7,63 +7,30 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import {
-  setDoc,
-  doc,
-  getDoc,
-  updateDoc,
-  arrayRemove,
-} from "firebase/firestore";
+import { setDoc, doc, getDocs, collection } from "firebase/firestore";
 import { storage } from "../firebase";
-import { ref, getMetadata, getDownloadURL } from "firebase/storage";
+import { ref, getMetadata, getDownloadURL, listAll } from "firebase/storage";
 
 const userContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-  //fake recipes for awaiting api response (api goes to sleep after inactive)
-  const [recipes, setRecipes] = useState([
-    "recipe1",
-    "recipe2",
-    "recipe3",
-    "recipe4",
-  ]);
-
-  //checks if recipes are loaded
-  const [isLoading, setIsLoading] = useState(true);
-  const URL = "https://food-api-7ukw.onrender.com/api/recipes";
   const [user, setUser] = useState(null);
 
   //checks if user is logged
   const [loading, setLoading] = useState(true);
-
-  //liked recipes
-  const [likedRecipes, setLikedRecipes] = useState([]);
 
   //user image state
   const [userImage, setUserImage] = useState(null);
   const [isUserImageUploaded, setIsUserImageUploaded] = useState(false);
 
   //user data
-  const [displayName, setDisplayName] = useState('')
+  const [displayName, setDisplayName] = useState("");
 
-  //check if recipe exists in the liked recipes array
-  const checkIfExists = (data) => {
-    return likedRecipes.some((recipe) => data === recipe._id);
-  };
+  //recipes from firebase
+  const [recipes, setRecipes] = useState([]);
 
-  //dislike recipe
-  const dislikeRecipe = async (data) => {
-    const newLikedRecipes = likedRecipes.filter(
-      (recipe) => data !== recipe._id
-    );
-    setLikedRecipes(newLikedRecipes);
-
-    const clickedRecipe = likedRecipes.find((recipe) => data === recipe._id);
-    const docRef = doc(db, "users", user.uid);
-    await updateDoc(docRef, {
-      liked: arrayRemove(clickedRecipe),
-    });
-  };
+  //checks if recipes are loaded
+  const [isLoading, setIsLoading] = useState(true);
 
   //create user in firebase with firestore data
   const createUser = (displayName, email, password) => {
@@ -94,45 +61,20 @@ export const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  //fetching recipes and logging in
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      await fetch(URL)
-        .then((response) => response.json())
-        .then((response) => {
-          setRecipes(response);
-          setIsLoading(false);
-        })
-        .catch((err) => console.log(err));
-    };
-
-    fetchRecipes();
-  }, []);
-
   //on user state change
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
+      setUser(currentUser);
       setLoading(false);
     });
 
     return () => unsubscribe;
   }, []);
 
-  //blocked liked recipes by user
+  //set display name for dashboard and navbar
   useEffect(() => {
-    const getLikedRecipes = async () => {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.data().liked.length > 0) {
-        setLikedRecipes(docSnap.data().liked);
-      } 
-    };
-
     if (user) {
-      getLikedRecipes();
-      setDisplayName(user.displayName)
+      setDisplayName(user.displayName);
     }
   }, [user]);
 
@@ -168,6 +110,43 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, [user, isUserImageUploaded]);
 
+  //donwload recipes from firebase
+  useEffect(() => {
+    setIsLoading(false);
+
+    const getRecipes = async () => {
+      //get to the collection first
+      const recipesRef = collection(db, "recipes");
+      const recipesFromFirebase = await getDocs(recipesRef);
+
+
+      //copy array of recipes to the state, then add recipe.id and recipe url, usable for adding recipe
+      recipesFromFirebase.forEach(async (recipe) => {
+
+        const listRef = ref(storage, `recipe/${recipe.id}`);
+
+        await listAll(listRef)
+          .then((response) => {
+            response.items.map(async (itemRef) => {
+              const recipeImageRef = ref(storage, `/recipe/${recipe.id}/${itemRef.name}`
+              );
+              await getDownloadURL(recipeImageRef).then((url) => {
+                setRecipes((prev) => [
+                  ...prev,
+                  { ...recipe.data(), id: recipe.id, image: url },
+                ]);
+              });
+            });
+          })
+          .catch((error) => console.log(error));
+      });
+
+
+    };
+
+    return () => getRecipes();
+  }, []);
+
   return (
     <userContext.Provider
       value={{
@@ -177,16 +156,12 @@ export const AuthContextProvider = ({ children }) => {
         createUser,
         login,
         signout,
-        likedRecipes,
-        setLikedRecipes,
-        checkIfExists,
-        dislikeRecipe,
         URL,
         userImage,
         isUserImageUploaded,
         setIsUserImageUploaded,
         displayName,
-        setDisplayName
+        setDisplayName,
       }}
     >
       {!loading && children}

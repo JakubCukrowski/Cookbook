@@ -11,14 +11,14 @@ import { LikeButton } from "./LikeButton";
 import { UserAuth } from "../context/AuthContext";
 
 export const RecipesGroup = ({title, array, onClick, marginBottom}) => {
-    const {isLoading, checkIfExists} = UserAuth()
+    const {isLoading} = UserAuth()
 
     return (
         <Container>
             <h2 style={{textAlign: "center", padding: 60}}>{title}</h2>
             <Row xs={1} md={2} className="g-4" style={{paddingBottom: 20}}>
                 {array.slice(0, 4).map((recipe, idx) => (
-                    <StyledCol key={recipe._id || idx}>
+                    <StyledCol key={recipe.id || idx}>
                         {isLoading
                         ? <>
                             <StyledCard>
@@ -38,13 +38,7 @@ export const RecipesGroup = ({title, array, onClick, marginBottom}) => {
                         :   <>
                                 {/* StyledCardWrapper */}
                                 <div style={{position: "relative", height: '100%'}}> 
-                                    {checkIfExists(recipe._id) 
-                                        ?   <LikeButton 
-                                                className={checkIfExists(recipe._id) ? 'liked' : null}
-                                                top="0" 
-                                                right="14px" /> 
-                                        : ''}
-                                    <StyledLink to={`/recipes/${recipe._id}`}>
+                                    <StyledLink to={`/recipes/${recipe.id}`}>
                                         <StyledCard>
                                             
                                             <StyledCardImg variant="top" src={recipe.image} />
