@@ -122,34 +122,38 @@ export const AuthContextProvider = ({ children }) => {
       //copy array of recipes to the state, then add recipe.id and recipe url, usable for adding recipe
       recipesFromFirebase.forEach(async (recipe) => {
 
-        const listRef = ref(storage, `recipe/${recipe.id}`);
+        setRecipes(prev => [...prev, {...recipe.data(), id: recipe.id}])
 
-        await listAll(listRef)
-          .then((response) => {
-            response.items.map(async (itemRef) => {
-              const recipeImageRef = ref(storage, `/recipe/${recipe.id}/${itemRef.name}`
-              );
-              await getDownloadURL(recipeImageRef).then(async (url) => {
-                setRecipes((prev) => [
-                  ...prev,
-                  { ...recipe.data(), id: recipe.id, image: url },
-                ]);
+        // const listRef = ref(storage, `recipe/${recipe.id}`);
+
+        // await listAll(listRef)
+        //   .then((response) => {
+        //     response.items.map(async (itemRef) => {
+        //       const recipeImageRef = ref(storage, `/recipe/${recipe.id}/${itemRef.name}`
+        //       );
+        //       await getDownloadURL(recipeImageRef).then(async (url) => {
+        //         setRecipes((prev) => [
+        //           ...prev,
+        //           { ...recipe.data(), id: recipe.id, image: url },
+        //         ]);
                 
-                const recipeRef = doc(db, 'recipes', recipe.id)
-                await updateDoc(recipeRef, {
-                  image: url
-                })
-                setIsLoading(false);
-              });
-            });
-          })
-          .catch((error) => console.log(error));
+        //         const recipeRef = doc(db, 'recipes', recipe.id)
+        //         await updateDoc(recipeRef, {
+        //           image: url
+        //         })
+        //         setIsLoading(false);
+        //       });
+        //     });
+        //   })
+        //   .catch((error) => console.log(error));
       });
 
     };
 
     return () => getRecipes();
   }, []);
+
+  console.log(recipes);
 
   return (
     <userContext.Provider
