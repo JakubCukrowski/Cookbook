@@ -116,7 +116,9 @@ export const AuthContextProvider = ({ children }) => {
     const getRecipes = async () => {
       //get to the collection first
       const recipesRef = collection(db, "recipes");
+      console.log('recipesRef: ', recipesRef);
       const recipesFromFirebase = await getDocs(recipesRef);
+      console.log(('recipesFromFirebase: ', recipesFromFirebase));
 
 
       //copy array of recipes to the state, then add recipe.id and recipe url, usable for adding recipe
@@ -152,8 +154,6 @@ export const AuthContextProvider = ({ children }) => {
 
     return () => getRecipes();
   }, []);
-
-  console.log(recipes);
 
   return (
     <userContext.Provider
