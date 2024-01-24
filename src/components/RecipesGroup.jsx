@@ -12,7 +12,6 @@ import { UserAuth } from "../context/AuthContext";
 
 export const RecipesGroup = ({title, array, onClick, marginBottom}) => {
     const {isLoading} = UserAuth()
-    console.log('executed from recipes group');
 
     return (
         <Container>
