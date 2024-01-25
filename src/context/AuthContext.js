@@ -113,9 +113,7 @@ export const AuthContextProvider = ({ children }) => {
   //donwload recipes from firebase
   useEffect(() => {
 
-    console.log('From use effect');
     const getRecipes = async () => {
-      console.log("From function");
       //get to the collection first
       const recipesRef = collection(db, "recipes");
       const recipesFromFirebase = await getDocs(recipesRef);
