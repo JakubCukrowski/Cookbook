@@ -19,7 +19,7 @@ export const RecipesGroup = ({title, array, onClick, marginBottom}) => {
             <Row xs={1} md={2} className="g-4" style={{paddingBottom: 20}}>
                 {array.slice(0, 4).map((recipe, idx) => (
                     <StyledCol key={recipe.id || idx}>
-                        {!isLoading
+                        {isLoading
                         ? <>
                             <StyledCard>
                                 <FakeSpinnerContainer>
