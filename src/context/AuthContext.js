@@ -114,43 +114,43 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
 
     console.log('From use effect');
-    const getRecipes = async () => {
+    const getRecipes = () => {
       console.log("From function");
       //get to the collection first
-    //   const recipesRef = collection(db, "recipes");
-    //   const recipesFromFirebase = await getDocs(recipesRef);
+      // const recipesRef = collection(db, "recipes");
+      // const recipesFromFirebase = await getDocs(recipesRef);
 
 
-    //   //copy array of recipes to the state, then add recipe.id and recipe url, usable for adding recipe
-    //   recipesFromFirebase.forEach(async (recipe) => {
+      // //copy array of recipes to the state, then add recipe.id and recipe url, usable for adding recipe
+      // recipesFromFirebase.forEach(async (recipe) => {
 
-    //     const listRef = ref(storage, `recipe/${recipe.id}`);
+      //   const listRef = ref(storage, `recipe/${recipe.id}`);
 
-    //     await listAll(listRef)
-    //       .then((response) => {
-    //         response.items.map(async (itemRef) => {
-    //           const recipeImageRef = ref(storage, `/recipe/${recipe.id}/${itemRef.name}`
-    //           );
-    //           await getDownloadURL(recipeImageRef).then(async (url) => {
-    //             setRecipes((prev) => [
-    //               ...prev,
-    //               { ...recipe.data(), id: recipe.id, image: url },
-    //             ]);
+      //   await listAll(listRef)
+      //     .then((response) => {
+      //       response.items.map(async (itemRef) => {
+      //         const recipeImageRef = ref(storage, `/recipe/${recipe.id}/${itemRef.name}`
+      //         );
+      //         await getDownloadURL(recipeImageRef).then(async (url) => {
+      //           setRecipes((prev) => [
+      //             ...prev,
+      //             { ...recipe.data(), id: recipe.id, image: url },
+      //           ]);
                 
-    //             const recipeRef = doc(db, 'recipes', recipe.id)
-    //             await updateDoc(recipeRef, {
-    //               image: url
-    //             })
-    //             setIsLoading(false);
-    //           });
-    //         });
-    //       })
-    //       .catch((error) => console.log(error));
-    //   });
+      //           const recipeRef = doc(db, 'recipes', recipe.id)
+      //           await updateDoc(recipeRef, {
+      //             image: url
+      //           })
+      //           setIsLoading(false);
+      //         });
+      //       });
+      //     })
+      //     .catch((error) => console.log(error));
+      // });
 
     };
 
-    getRecipes();
+    return () => getRecipes();
   }, []);
 
   return (
