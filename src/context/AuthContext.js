@@ -150,7 +150,7 @@ export const AuthContextProvider = ({ children }) => {
 
     };
 
-    return () => getRecipes();
+    getRecipes();
   }, []);
 
   return (
