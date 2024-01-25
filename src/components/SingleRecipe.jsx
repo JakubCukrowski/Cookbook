@@ -1,24 +1,15 @@
-import { json, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Col, Row, Container, Spinner } from "react-bootstrap";
-import { UserAuth } from "../context/AuthContext";
 import { StyledImage } from "../styles/StyledImage";
 import { StyledH2 } from "../styles/StyledH2";
 import { SpinnerContainer } from "../styles/Containers";
 import { LikeButton } from "./LikeButton";
-import { arrayUnion, doc, updateDoc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useEffect, useState } from "react";
 
 export const SingleRecipe = () => {
-  const {
-    recipes,
-    isLoading,
-    user,
-    checkIfExists,
-    setLikedRecipes,
-    dislikeRecipe,
-    URL,
-  } = UserAuth();
+  
   const { recipeId } = useParams();
   const [searchedRecipe, setSearchedRecipe] = useState(null);
   const [isFound, setIsFound] = useState(false);
@@ -31,7 +22,7 @@ export const SingleRecipe = () => {
       setIsFound(true)
     };
 
-    return () => getSingleDoc()
+    getSingleDoc()
   }, []);
 
   //handle liked recipes in firebase
