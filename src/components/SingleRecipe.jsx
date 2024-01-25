@@ -16,7 +16,6 @@ export const SingleRecipe = () => {
 
   useEffect(() => {
     const getSingleDoc = async () => {
-      console.log("from effect - single recipe");
       const docRef = doc(db, "recipes", recipeId);
       const docSnap = await getDoc(docRef);
       setSearchedRecipe(docSnap.data());
