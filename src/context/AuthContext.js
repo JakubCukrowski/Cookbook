@@ -114,7 +114,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
 
     console.log('From use effect');
-    const getRecipes = () => {
+    const getRecipes = async () => {
       console.log("From function");
       //get to the collection first
       // const recipesRef = collection(db, "recipes");
