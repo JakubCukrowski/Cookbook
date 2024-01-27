@@ -10,30 +10,40 @@ import { DashboardLikedRecipes } from "./DashboardLikedRecipes";
 import { uploadBytes, ref } from "firebase/storage";
 import { storage } from "../firebase";
 import { BootstrapModal } from "./BootstrapModal";
+import { AddRecipe } from "./AddRecipe";
 
 export const Dashboard = () => {
-  const { user, userImage, isUserImageUploaded, setIsUserImageUploaded, displayName } = UserAuth();
-  const [currentProgress, setCurrentProgress] = useState(0)
-  const [profileImageRef, setProfileImageRef] = useState('')
+  const {
+    user,
+    userImage,
+    isUserImageUploaded,
+    setIsUserImageUploaded,
+    displayName,
+  } = UserAuth();
+  const [currentProgress, setCurrentProgress] = useState(0);
+  const [profileImageRef, setProfileImageRef] = useState("");
+
+  //to show new recipe form
+  const [isClicked, setIsClicked] = useState(false);
 
   //interval for progress bar
   useEffect(() => {
     if (isUserImageUploaded) {
       const IntervalID = setInterval(() => {
-        setCurrentProgress(prev => prev + 5)
+        setCurrentProgress((prev) => prev + 5);
       }, 50);
-  
-      return () => clearInterval(IntervalID)
+
+      return () => clearInterval(IntervalID);
     } else {
-      setCurrentProgress(0)
+      setCurrentProgress(0);
     }
-  }, [isUserImageUploaded])
+  }, [isUserImageUploaded]);
 
   useEffect(() => {
     if (user) {
-      setProfileImageRef(ref(storage, `profile/${user.uid}/profile_photo`))
+      setProfileImageRef(ref(storage, `profile/${user.uid}/profile_photo`));
     }
-  }, [user])
+  }, [user]);
 
   // const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`);
 
@@ -45,15 +55,15 @@ export const Dashboard = () => {
     setIsUserImageUploaded(true);
 
     const timeoutID = setTimeout(() => {
-      setIsUserImageUploaded(false)
+      setIsUserImageUploaded(false);
     }, 2000);
 
-    return () => clearTimeout(timeoutID)
+    return () => clearTimeout(timeoutID);
   };
-  
+
   return (
     <>
-      {user !== null && profileImageRef !== '' ? (
+      {user !== null && profileImageRef !== "" ? (
         <Container>
           <section
             style={{
@@ -61,7 +71,12 @@ export const Dashboard = () => {
               marginBottom: 30,
             }}
           >
-            {isUserImageUploaded ? <BootstrapModal title={'Pomyślnie zmieniono zdjęcie'} progress={currentProgress}/> : null}
+            {isUserImageUploaded ? (
+              <BootstrapModal
+                title={"Pomyślnie zmieniono zdjęcie"}
+                progress={currentProgress}
+              />
+            ) : null}
             <h2 style={{ textAlign: "center" }}>Twój profil</h2>
             <DataWrapper>
               <img
@@ -114,8 +129,14 @@ export const Dashboard = () => {
             <div>
               <DataWrapper>
                 <h2>Twoje przepisy</h2>
-                <p>Aktualnie nie dodałeś żadnego przepisu</p>
-                <Button>{<FontAwesomeIcon icon={faPlus} />} Dodaj</Button>
+                {isClicked ? <AddRecipe /> : (
+                  <>
+                    <p>Aktualnie nie dodałeś żadnego przepisu</p>
+                    <Button onClick={() => setIsClicked(true)}>
+                      {<FontAwesomeIcon icon={faPlus} />} Dodaj
+                    </Button>
+                  </>
+                )}
               </DataWrapper>
               <DataWrapper>
                 <h2>Polubione przepisy</h2>
