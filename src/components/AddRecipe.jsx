@@ -1,25 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RecipeDetails } from "./RecipeDetails";
 import { Ingredients } from "./Ingredients";
 import { Preparation } from "./Preparation";
 import { Button, Container, Form } from "react-bootstrap";
 import { DataWrapper } from "../styles/DataWrapper";
+import { UserAuth } from "../context/AuthContext";
 
 export const AddRecipe = () => {
+  const { user } = UserAuth();
+
   const [newRecipeDetails, setNewRecipeDetails] = useState({
     addedBy: "",
     category: "",
     createdAt: "",
     image: "",
-    ingredients: ['', '', ''],
+    ingredients: ["", "", ""],
     likes: 0,
     name: "",
     preparationTime: "",
     difficulty: "",
     description: "",
-    preparationSteps: {0: '', 1: '', 2: ''},
+    preparationSteps: { 0: "", 1: "", 2: "" },
   });
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      setNewRecipeDetails((prev) => {
+        return {
+          ...prev,
+          addedBy: user.uid,
+        };
+      });
+    }
+  }, []);
 
   //recipe details component functions
   const updateRecipeName = (value) => {
@@ -82,7 +95,10 @@ export const AddRecipe = () => {
     setNewRecipeDetails((prev) => {
       return {
         ...prev,
-        preparationSteps: {...prev.preparationSteps, [Object.keys(prev.preparationSteps).length]: ''},
+        preparationSteps: {
+          ...prev.preparationSteps,
+          [Object.keys(prev.preparationSteps).length]: "",
+        },
       };
     });
   };
@@ -95,6 +111,8 @@ export const AddRecipe = () => {
       };
     });
   };
+
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   const currentStep = [
     <RecipeDetails
@@ -109,10 +127,15 @@ export const AddRecipe = () => {
       handleIngredients={handleIngredients}
       handleIngredientsArray={handleIngredientsArray}
     />,
-    <Preparation details={newRecipeDetails} addNextStep={addNextStep} handleStepsObject={handleStepsObject}/>,
+    <Preparation
+      details={newRecipeDetails}
+      addNextStep={addNextStep}
+      handleStepsObject={handleStepsObject}
+    />,
   ];
 
-  const handleNext = () => {
+  const handleNext = (e) => {
+    e.preventDefault();
     if (
       currentStepIndex <
       currentStep.indexOf(currentStep[currentStep.length - 1])
@@ -121,7 +144,8 @@ export const AddRecipe = () => {
     }
   };
 
-  const handlePrevious = () => {
+  const handlePrevious = (e) => {
+    e.preventDefault();
     if (currentStepIndex > 0) {
       setCurrentStepIndex((prev) => prev - 1);
     }
@@ -169,13 +193,13 @@ export const AddRecipe = () => {
                   currentStepIndex <
                   currentStep.indexOf(currentStep[currentStep.length - 1])
                     ? handleNext
-                    : () => console.log("koniec")
+                    : () => console.log(newRecipeDetails)
                 }
               >
                 {currentStepIndex <
-                  currentStep.indexOf(currentStep[currentStep.length - 1])
-                    ? 'Dalej'
-                    : 'Gotowe!'}
+                currentStep.indexOf(currentStep[currentStep.length - 1])
+                  ? "Dalej"
+                  : "Gotowe!"}
               </Button>
             </div>
           </div>

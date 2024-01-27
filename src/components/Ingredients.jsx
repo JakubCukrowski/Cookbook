@@ -8,21 +8,18 @@ export const Ingredients = ({
   handleIngredients,
   handleIngredientsArray,
 }) => {
-
-    const handleInputChange = (e, index) => {
-        const newIngredientsArray = details.ingredients;
-        newIngredientsArray[index] = e.target.value;
-        handleIngredientsArray(newIngredientsArray)
-    }
+  const handleInputChange = (e, index) => {
+    const newIngredientsArray = details.ingredients;
+    newIngredientsArray[index] = e.target.value;
+    handleIngredientsArray(newIngredientsArray);
+  };
 
   return (
     <>
       <p>Dodaj składniki</p>
       {details.ingredients.map((_, index) => (
         <FormGroup className="mb-3" key={index}>
-          <Form.Label htmlFor={`ingredient${index + 1}`}>
-            Składnik
-          </Form.Label>
+          <Form.Label htmlFor={`ingredient${index + 1}`}>Składnik</Form.Label>
           <Form.Control
             value={details.ingredients[index]}
             id={`ingredient${index + 1}`}
@@ -30,7 +27,7 @@ export const Ingredients = ({
           />
         </FormGroup>
       ))}
-      <Button style={{marginTop: 20}} onClick={() => handleIngredients()}>
+      <Button style={{ marginTop: 20 }} onClick={() => handleIngredients()}>
         <FontAwesomeIcon icon={faPlus} /> Dodaj kolejny
       </Button>
     </>
