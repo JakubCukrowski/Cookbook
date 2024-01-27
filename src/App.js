@@ -12,6 +12,7 @@ import { Dashboard } from "./components/Dashboard";
 import { NotFound } from "./components/NotFound";
 import { NewestRecipesPage } from "./components/NewestRecipesPage";
 import { GlobalStyle } from "./styles/GlobalStyles";
+import { AddRecipe } from "./components/AddRecipe";
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
             </>}/>
             <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/add-recipe" element={<AddRecipe />}/>
             <Route path="/newest-recipes" element={<NewestRecipesPage />} />
           </Route>
           <Route path="/signup" element={<SignUp />} />

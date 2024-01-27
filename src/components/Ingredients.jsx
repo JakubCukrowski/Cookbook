@@ -21,7 +21,7 @@ export const Ingredients = ({
       {details.ingredients.map((_, index) => (
         <FormGroup className="mb-3" key={index}>
           <Form.Label htmlFor={`ingredient${index + 1}`}>
-            Nowy składnik
+            Składnik
           </Form.Label>
           <Form.Control
             value={details.ingredients[index]}
@@ -31,7 +31,7 @@ export const Ingredients = ({
         </FormGroup>
       ))}
       <Button style={{marginTop: 20}} onClick={() => handleIngredients()}>
-        <FontAwesomeIcon icon={faPlus} /> Dodaj
+        <FontAwesomeIcon icon={faPlus} /> Dodaj kolejny
       </Button>
     </>
   );
