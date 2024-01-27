@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { Container, Spinner, Button } from "react-bootstrap";
-import { DataWrapper } from "../styles/DashboardStyles/DataWrapper";
+import { DataWrapper } from "../styles/DataWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { DashboardElement } from "./DashboardElement";
@@ -10,7 +10,6 @@ import { DashboardLikedRecipes } from "./DashboardLikedRecipes";
 import { uploadBytes, ref } from "firebase/storage";
 import { storage } from "../firebase";
 import { BootstrapModal } from "./BootstrapModal";
-import { AddRecipe } from "./AddRecipe";
 
 export const Dashboard = () => {
   const {
@@ -129,14 +128,8 @@ export const Dashboard = () => {
             <div>
               <DataWrapper>
                 <h2>Twoje przepisy</h2>
-                {isClicked ? <AddRecipe /> : (
-                  <>
-                    <p>Aktualnie nie dodałeś żadnego przepisu</p>
-                    <Button onClick={() => setIsClicked(true)}>
-                      {<FontAwesomeIcon icon={faPlus} />} Dodaj
-                    </Button>
-                  </>
-                )}
+                <p>Aktualnie nie dodałeś żadnego przepisu</p>
+                <StyledLink to={'/add-recipe'}>{<FontAwesomeIcon icon={faPlus} />} Dodaj przepis</StyledLink>
               </DataWrapper>
               <DataWrapper>
                 <h2>Polubione przepisy</h2>

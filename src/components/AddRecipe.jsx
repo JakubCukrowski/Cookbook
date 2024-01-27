@@ -3,20 +3,21 @@ import { RecipeDetails } from "./RecipeDetails";
 import { Ingredients } from "./Ingredients";
 import { Preparation } from "./Preparation";
 import { Button, Container, Form } from "react-bootstrap";
+import { DataWrapper } from "../styles/DataWrapper";
 
 export const AddRecipe = () => {
   const [newRecipeDetails, setNewRecipeDetails] = useState({
-    addedBy: '',
-    category: '',
-    createdAt: '',
-    image: '',
-    ingredients: [],
+    addedBy: "",
+    category: "",
+    createdAt: "",
+    image: "",
+    ingredients: ['', '', ''],
     likes: 0,
     name: "",
     preparationTime: "",
     difficulty: "",
     description: "",
-    preparationSteps: [],
+    preparationSteps: {0: '', 1: '', 2: ''},
   });
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
@@ -57,25 +58,43 @@ export const AddRecipe = () => {
     });
   };
 
-  /////////////////////
-
+  //ingredients logic
   const handleIngredients = () => {
     setNewRecipeDetails((prev) => {
       return {
         ...prev,
-        ingredients: [...prev.ingredients, ''],
+        ingredients: [...prev.ingredients, ""],
       };
     });
   };
 
   const handleIngredientsArray = (array) => {
-    setNewRecipeDetails(prev => {
+    setNewRecipeDetails((prev) => {
       return {
         ...prev,
-        ingredients: array
-      }
-    })
-  }
+        ingredients: array,
+      };
+    });
+  };
+
+  //steps logic
+  const addNextStep = () => {
+    setNewRecipeDetails((prev) => {
+      return {
+        ...prev,
+        preparationSteps: {...prev.preparationSteps, [Object.keys(prev.preparationSteps).length]: ''},
+      };
+    });
+  };
+
+  const handleStepsObject = (object) => {
+    setNewRecipeDetails((prev) => {
+      return {
+        ...prev,
+        preparationSteps: object,
+      };
+    });
+  };
 
   const currentStep = [
     <RecipeDetails
@@ -90,7 +109,7 @@ export const AddRecipe = () => {
       handleIngredients={handleIngredients}
       handleIngredientsArray={handleIngredientsArray}
     />,
-    <Preparation details={newRecipeDetails} />,
+    <Preparation details={newRecipeDetails} addNextStep={addNextStep} handleStepsObject={handleStepsObject}/>,
   ];
 
   const handleNext = () => {
@@ -110,39 +129,58 @@ export const AddRecipe = () => {
 
   return (
     <Container>
-        <p style={{textAlign: "center"}}>Dodaj przepis {currentStepIndex + 1} / 3</p>
-      <Form className="new-recipe-form">
-        {currentStep[currentStepIndex]}
-      </Form>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "center",
-          width: "100%",
-          marginTop: 50
-        }}
-      >
-        <div
-          style={{
-            width: "50%",
-            display: "flex",
-            justifyContent: "flex-start",
-          }}
-        >
-          {currentStepIndex > 0 ? (
-            <Button onClick={handlePrevious}>Wstecz</Button>
-          ) : null}
-        </div>
-        <div
-          style={{ width: "50%", display: "flex", justifyContent: "flex-end" }}
-        >
-          {currentStepIndex <
-          currentStep.indexOf(currentStep[currentStep.length - 1]) ? (
-            <Button onClick={handleNext}>Dalej</Button>
-          ) : null}
-        </div>
-      </div>
+      <DataWrapper>
+        <Container>
+          <h2 style={{ textAlign: "center", marginBottom: 20 }}>
+            Dodaj przepis {currentStepIndex + 1} / 3
+          </h2>
+          <Form className="new-recipe-form">
+            {currentStep[currentStepIndex]}
+          </Form>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+              width: "100%",
+              marginTop: 50,
+            }}
+          >
+            <div
+              style={{
+                width: "50%",
+                display: "flex",
+                justifyContent: "flex-start",
+              }}
+            >
+              {currentStepIndex > 0 ? (
+                <Button onClick={handlePrevious}>Wstecz</Button>
+              ) : null}
+            </div>
+            <div
+              style={{
+                width: "50%",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Button
+                onClick={
+                  currentStepIndex <
+                  currentStep.indexOf(currentStep[currentStep.length - 1])
+                    ? handleNext
+                    : () => console.log("koniec")
+                }
+              >
+                {currentStepIndex <
+                  currentStep.indexOf(currentStep[currentStep.length - 1])
+                    ? 'Dalej'
+                    : 'Gotowe!'}
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </DataWrapper>
     </Container>
   );
 };
