@@ -4,11 +4,16 @@ import React from "react";
 import { Button, Form, FormGroup } from "react-bootstrap";
 
 export const Preparation = ({ details, addNextStep, handleStepsObject }) => {
-
-    const handleInputChange = (e, step) => {
-        const newStepsObject = details.preparationSteps
-        Object.values(newStepsObject)[step] = e.target.value
-    }
+  const handleInputChange = (e, step) => {
+    const newStepsObject = details.preparationSteps;
+    // Object.values(newStepsObject)[0] = e.target.value;
+    Object.keys(newStepsObject).forEach(key => {
+      if (key === step) {
+        newStepsObject[key] = e.target.value
+      }
+    })
+    handleStepsObject(newStepsObject)
+  };
 
   return (
     <>
@@ -17,11 +22,13 @@ export const Preparation = ({ details, addNextStep, handleStepsObject }) => {
         return (
           <FormGroup key={step[0]} className="mb-3">
             <Form.Label>Krok {parseInt(step[0]) + 1}</Form.Label>
-            <Form.Control onChange={handleInputChange} />
+            <Form.Control onChange={(e) => handleInputChange(e, step[0])} />
           </FormGroup>
         );
       })}
-      <Button onClick={() => addNextStep()}><FontAwesomeIcon icon={faPlus} /> Dodaj kolejny</Button>
+      <Button onClick={() => addNextStep()}>
+        <FontAwesomeIcon icon={faPlus} /> Dodaj kolejny
+      </Button>
     </>
   );
 };

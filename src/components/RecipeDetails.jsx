@@ -8,6 +8,7 @@ export const RecipeDetails = ({
   diffLevel,
   desc,
 }) => {
+  
   return (
     <>
       <div className="recipe-details">
@@ -15,7 +16,7 @@ export const RecipeDetails = ({
           <Form.Label htmlFor="recipe_name">Nazwa przepisu</Form.Label>
           <Form.Control
             name="recipeName"
-            value={details.recipeName}
+            value={details.name}
             type="text"
             id="recipe_name"
             onChange={(e) => updateName(e.target.value)}
@@ -28,6 +29,7 @@ export const RecipeDetails = ({
         <FormGroup className="mb-3">
           <Form.Label htmlFor="preparation_time">Czas przygotowania</Form.Label>
           <Form.Select
+            value={details.preparationTime}
             name="preparationTime"
             id="preparation_time"
             onChange={(e) => prepTime(e.target.value)}
@@ -42,6 +44,7 @@ export const RecipeDetails = ({
         <FormGroup className="mb-3">
           <Form.Label htmlFor="difficulty_level">Stopień trudności</Form.Label>
           <Form.Select
+            value={details.difficulty}
             name="difficulty"
             id="difficulty_level"
             onChange={(e) => diffLevel(e.target.value)}
@@ -56,7 +59,7 @@ export const RecipeDetails = ({
             Kilka słów o przepisie (opcjonalnie)
           </Form.Label>
           <Form.Control
-          style={{resize: "none"}}
+            style={{ resize: "none" }}
             as="textarea"
             rows={4}
             name="description"
