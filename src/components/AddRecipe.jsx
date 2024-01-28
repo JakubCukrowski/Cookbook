@@ -7,6 +7,10 @@ import { DataWrapper } from "../styles/DataWrapper";
 import { UserAuth } from "../context/AuthContext";
 import profanity from "../profanity.json";
 import { useNavigate } from "react-router-dom";
+import { collection, updateDoc, addDoc, doc } from "firebase/firestore";
+import { db } from "../firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase";
 
 export const AddRecipe = () => {
   const { user } = UserAuth();
@@ -57,7 +61,7 @@ export const AddRecipe = () => {
         category: value,
       };
     });
-  }
+  };
 
   //recipe details component functions
   const updateRecipeName = (value) => {
@@ -207,25 +211,29 @@ export const AddRecipe = () => {
       });
     }
 
-    if (newRecipeDetails.image === '') {
+    if (newRecipeDetails.image === "") {
       setNewRecipeErrors((prev) => {
         return { ...prev, imageError: true };
       });
     }
 
-    if (newRecipeDetails.category === '' || newRecipeDetails.category === 'default') {
-      setNewRecipeErrors(prev => {
-        return {...prev, categoryError: true}
-      })
+    if (
+      newRecipeDetails.category === "" ||
+      newRecipeDetails.category === "default"
+    ) {
+      setNewRecipeErrors((prev) => {
+        return { ...prev, categoryError: true };
+      });
     }
-    
-    if (currentStepIndex < currentStep.indexOf(currentStep[currentStep.length - 1])
-      && newRecipeDetails.name.length >= 8
-      && newRecipeDetails.image !== '') {
+
+    if (
+      currentStepIndex <
+        currentStep.indexOf(currentStep[currentStep.length - 1]) &&
+      newRecipeDetails.name.length >= 8 &&
+      newRecipeDetails.image !== ""
+    ) {
       setCurrentStepIndex((prev) => prev + 1);
     }
-
-
   };
 
   //previous step logic
@@ -237,16 +245,50 @@ export const AddRecipe = () => {
   };
 
   //submit form
-  // const handleSubmitForm = () => {
-  //   if (newRecipeDetails.name.length === 0) {
-  //     setNewRecipeErrors(prev => {
-  //       return {
-  //         ...prev,
-  //         nameError: true
-  //       }
-  //     })
-  //   }
-  // }
+  const handleSubmitForm = async (e) => {
+    const currentDate = Date.now();
+    e.preventDefault();
+
+    //set document in firestore
+    const docRef = await addDoc(collection(db, "recipes"), {
+      addedBy: newRecipeDetails.addedBy,
+      category: newRecipeDetails.category,
+      createdAt: currentDate,
+      ingredients: newRecipeDetails.ingredients,
+      likes: newRecipeDetails.likes,
+      name: newRecipeDetails.name,
+      preparationTime: newRecipeDetails.preparationTime,
+      difficulty: newRecipeDetails.difficulty,
+      description: newRecipeDetails.description,
+      steps: newRecipeDetails.preparationSteps,
+    });
+
+    //create a storage for the image
+    const recipesRef = ref(
+      storage,
+      `recipe/${docRef.id}/${newRecipeDetails.image.name}`
+    );
+
+    //upload the image
+    await uploadBytes(recipesRef, newRecipeDetails.image).then((snapshot) =>
+      console.log(snapshot)
+    );
+
+
+    //set the image url to document in firestore
+    const currentRecipeRef = ref(storage, `/recipe/${docRef.id}/${newRecipeDetails.image.name}`);
+
+    const timeout = setTimeout(async () => {
+      await getDownloadURL(currentRecipeRef).then(url => {
+        updateDoc(doc(db, 'recipes', docRef.id), {
+          image: url
+        })
+      })
+      console.log('dupa');
+    }, 2000)
+
+    return () => clearTimeout(timeout)
+  };
 
   return (
     <Container>
@@ -255,7 +297,7 @@ export const AddRecipe = () => {
           <h2 style={{ textAlign: "center", marginBottom: 20 }}>
             Dodaj przepis {currentStepIndex + 1} / 3
           </h2>
-          <Form className="new-recipe-form">
+          <Form className="new-recipe-form" onSubmit={handleSubmitForm}>
             {currentStep[currentStepIndex]}
 
             <div
