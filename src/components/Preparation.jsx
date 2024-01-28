@@ -22,7 +22,7 @@ export const Preparation = ({ details, addNextStep, handleStepsObject }) => {
         return (
           <FormGroup key={step[0]} className="mb-3">
             <Form.Label>Krok {parseInt(step[0]) + 1}</Form.Label>
-            <Form.Control onChange={(e) => handleInputChange(e, step[0])} />
+            <Form.Control as='textarea' style={{resize: "none"}} rows={4} onChange={(e) => handleInputChange(e, step[0])} />
           </FormGroup>
         );
       })}
