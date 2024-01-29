@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
-import { Container, Spinner, Button } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import { DataWrapper } from "../styles/DataWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { DashboardElement } from "./DashboardElement";
 import { StyledLink } from "../styles/StyledLink";
-import { DashboardLikedRecipes } from "./DashboardLikedRecipes";
+import { DashboardRecipes } from "./DashboardRecipes";
 import { uploadBytes, ref } from "firebase/storage";
 import { storage } from "../firebase";
 import { BootstrapModal } from "./BootstrapModal";
@@ -18,12 +18,11 @@ export const Dashboard = () => {
     isUserImageUploaded,
     setIsUserImageUploaded,
     displayName,
+    recipes,
   } = UserAuth();
   const [currentProgress, setCurrentProgress] = useState(0);
   const [profileImageRef, setProfileImageRef] = useState("");
-
-  //to show new recipe form
-  const [isClicked, setIsClicked] = useState(false);
+  const [userRecipes, setUserRecipes] = useState([]);
 
   //interval for progress bar
   useEffect(() => {
@@ -44,8 +43,6 @@ export const Dashboard = () => {
     }
   }, [user]);
 
-  // const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`);
-
   //upload photo logic with timeout to make modal dissapear
   const uploadPhoto = async (e) => {
     await uploadBytes(profileImageRef, e.target.files[0]).then((snapshot) =>
@@ -59,6 +56,13 @@ export const Dashboard = () => {
 
     return () => clearTimeout(timeoutID);
   };
+
+  useEffect(() => {
+    const filterUserRecipes = recipes.filter(
+      (recipe) => recipe.addedBy === user.uid
+    );
+    setUserRecipes(filterUserRecipes);
+  }, [recipes]);
 
   return (
     <>
@@ -128,8 +132,23 @@ export const Dashboard = () => {
             <div>
               <DataWrapper>
                 <h2>Twoje przepisy</h2>
-                <p>Aktualnie nie dodałeś żadnego przepisu</p>
-                <StyledLink to={'/add-recipe'}>{<FontAwesomeIcon icon={faPlus} />} Dodaj przepis</StyledLink>
+                {userRecipes.length === 0 ? (
+                  <p>Aktualnie nie dodałeś żadnego przepisu</p>
+                ) : (
+                  <>
+                    {userRecipes.map((recipe, index) => (
+                      <DashboardRecipes
+                        key={index}
+                        linkTo={recipe.id}
+                        recipeName={recipe.name}
+                        recipeImage={recipe.image}
+                      />
+                    ))}
+                  </>
+                )}
+                <StyledLink to={"/add-recipe"}>
+                  {<FontAwesomeIcon icon={faPlus} />} Dodaj przepis
+                </StyledLink>
               </DataWrapper>
               <DataWrapper>
                 <h2>Polubione przepisy</h2>
