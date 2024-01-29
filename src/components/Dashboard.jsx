@@ -10,6 +10,8 @@ import { DashboardRecipes } from "./DashboardRecipes";
 import { uploadBytes, ref } from "firebase/storage";
 import { storage } from "../firebase";
 import { BootstrapModal } from "./BootstrapModal";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase";
 
 export const Dashboard = () => {
   const {
@@ -57,12 +59,14 @@ export const Dashboard = () => {
     return () => clearTimeout(timeoutID);
   };
 
+  //cos nie tak z tym useeffectem do poprawy
+
   useEffect(() => {
-    const filterUserRecipes = recipes.filter(
-      (recipe) => recipe.addedBy === user.uid
-    );
-    setUserRecipes(filterUserRecipes);
-  }, [recipes]);
+    const recipesQuery = query(collection(db, 'recipes'), where('addedBy', '==', user.uid))
+    onSnapshot(recipesQuery, (querySnapshot) => {
+      querySnapshot.forEach(snapshot => setUserRecipes(prev => [...prev, snapshot.data()]))
+    })
+  }, []);
 
   return (
     <>
