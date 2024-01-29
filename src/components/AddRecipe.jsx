@@ -282,17 +282,13 @@ export const AddRecipe = () => {
       `/recipe/${docRef.id}/${newRecipeDetails.image.name}`
     );
 
-    const timeout = setTimeout(async () => {
-      await getDownloadURL(currentRecipeRef).then((url) => {
-        updateDoc(doc(db, "recipes", docRef.id), {
-          image: url,
-        });
+    await getDownloadURL(currentRecipeRef).then((url) => {
+      updateDoc(doc(db, "recipes", docRef.id), {
+        image: url,
       });
-    }, 2000);
+    });
 
     handleAddedRecipe();
-
-    return () => clearTimeout(timeout);
   };
 
   return (

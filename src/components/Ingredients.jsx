@@ -14,8 +14,8 @@ export const Ingredients = ({
     handleIngredientsArray(newIngredientsArray);
   };
 
-  const handleDeleteInput = (index) => {
-    const filtered = details.ingredients.filter(
+  const handleDeleteInput = (index, array) => {
+    const filtered = array.filter(
       (_, i) => i !== index
     );
     handleIngredientsArray(filtered);
@@ -35,7 +35,7 @@ export const Ingredients = ({
             />
             {details.ingredients.length > 1 ? (
               <button
-                onClick={() => handleDeleteInput(index)}
+                onClick={() => handleDeleteInput(index, details.ingredients)}
                 style={{
                   position: "absolute",
                   top: "50%",
