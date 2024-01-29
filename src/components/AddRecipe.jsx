@@ -13,7 +13,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase";
 
 export const AddRecipe = () => {
-  const { user } = UserAuth();
+  const { user, handleAddedRecipe } = UserAuth();
 
   const [newRecipeDetails, setNewRecipeDetails] = useState({
     addedBy: "",
@@ -230,7 +230,9 @@ export const AddRecipe = () => {
       currentStepIndex <
         currentStep.indexOf(currentStep[currentStep.length - 1]) &&
       newRecipeDetails.name.length >= 8 &&
-      newRecipeDetails.image !== ""
+      newRecipeDetails.image !== "" &&
+      newRecipeDetails.category !== "" &&
+      newRecipeDetails.category !== "default"
     ) {
       setCurrentStepIndex((prev) => prev + 1);
     }
@@ -274,20 +276,23 @@ export const AddRecipe = () => {
       console.log(snapshot)
     );
 
-
     //set the image url to document in firestore
-    const currentRecipeRef = ref(storage, `/recipe/${docRef.id}/${newRecipeDetails.image.name}`);
+    const currentRecipeRef = ref(
+      storage,
+      `/recipe/${docRef.id}/${newRecipeDetails.image.name}`
+    );
 
     const timeout = setTimeout(async () => {
-      await getDownloadURL(currentRecipeRef).then(url => {
-        updateDoc(doc(db, 'recipes', docRef.id), {
-          image: url
-        })
-      })
-      console.log('dupa');
-    }, 2000)
+      await getDownloadURL(currentRecipeRef).then((url) => {
+        updateDoc(doc(db, "recipes", docRef.id), {
+          image: url,
+        });
+      });
+    }, 2000);
 
-    return () => clearTimeout(timeout)
+    handleAddedRecipe();
+
+    return () => clearTimeout(timeout);
   };
 
   return (

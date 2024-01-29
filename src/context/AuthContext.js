@@ -32,6 +32,9 @@ export const AuthContextProvider = ({ children }) => {
   //checks if recipes are loaded
   const [isLoading, setIsLoading] = useState(true);
 
+  //state to re render recipes
+  const [isRecipeAdded, setIsRecipeAdded] = useState(false)
+
   //create user in firebase with firestore data
   const createUser = (displayName, email, password) => {
     return createUserWithEmailAndPassword(auth, email, password)
@@ -149,7 +152,17 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     getRecipes();
-  }, []);
+  }, [isRecipeAdded]);
+
+  //function to handle state or added recipe
+  const handleAddedRecipe = () => {
+    setIsRecipeAdded(true)
+
+    const timeout = setTimeout(() => {
+      setIsRecipeAdded(false)
+
+    }, 1000)
+  }
 
   return (
     <userContext.Provider
@@ -166,6 +179,8 @@ export const AuthContextProvider = ({ children }) => {
         setIsUserImageUploaded,
         displayName,
         setDisplayName,
+        handleAddedRecipe,
+        isRecipeAdded
       }}
     >
       {!loading && children}
