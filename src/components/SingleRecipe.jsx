@@ -87,7 +87,7 @@ export const SingleRecipe = () => {
               <StyledH2>Jak przygotować</StyledH2>
               {Object.entries(searchedRecipe.steps).map((value, index) => (
                 <p key={index}>
-                  {`${value[0]}.`}
+                  {`${parseInt(value[0]) + 1}.`}
                   <span> {value[1]}</span>
                 </p>
               ))}
