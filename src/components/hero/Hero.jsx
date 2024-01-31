@@ -16,8 +16,7 @@ import { StyledH1 } from "./StyledH1";
 
 export const Hero = () => {
     const [queryText, setQueryText] = useState('')
-    const [queryResults, setQueryResults] = useState([])
-    const {recipes} = UserAuth()
+    const {recipes, updateQueryResults, queryResults} = UserAuth()
     const [isFocused, setIsFocused] = useState(false)
     const [activeIndex, setActiveIndex] = useState("")
     const [count, setCount] = useState(0)
@@ -75,7 +74,7 @@ export const Hero = () => {
         }
 
         if (e.key === "Enter" && queryResults.length > 0 && activeIndex !== "") {
-            navigate(`/recipes/${queryResults[activeIndex]._id}`)
+            navigate(`/recipes/${queryResults[activeIndex].id}`)
         }
 
     }
@@ -84,7 +83,6 @@ export const Hero = () => {
     const handleFocusOut = () => {
         const timeoutId = setTimeout(() => {
             setIsFocused(false)     
-            setQueryResults([])
             setActiveIndex("") 
         }, 100);
 
@@ -97,10 +95,10 @@ export const Hero = () => {
         setCount((index + 1) * linkRefs.current[index].offsetHeight)
     }
 
-    //useEffect handles fuse.js library. It looks for names in API
+    //useEffect handles fuse.js library.
     useEffect(() => {
         if (!queryText) {
-            setQueryResults([])
+            updateQueryResults([])
         }
 
         const fuse = new Fuse(recipes, {
@@ -112,7 +110,7 @@ export const Hero = () => {
         //results are pushed to queryresults state
         const result = fuse.search(queryText).map(res => res.item)
 
-        setQueryResults(result)
+        updateQueryResults(result)
     }, [queryText])
 
     return (
@@ -128,17 +126,21 @@ export const Hero = () => {
                         onChange={handleInputValue}
                         onFocus={() => setIsFocused(true)} 
                         onBlur={handleFocusOut}
-                        type="text" 
+                        type="search" 
                         placeholder={isFocused ? "Wpisz nazwę potrawy, lub składnik" : "Znajdź przepis"}
                         name="searchbar" 
                         value={queryText}
                     />
-                        <Button>
+                        <Button onClick={(e) => {
+                            e.preventDefault()
+                            navigate(`/search?querry=${queryText}`)
+                        }}>
                             <FontAwesomeIcon icon={faMagnifyingGlass}/>
                         </Button>
                     </SearchBarWrapper>
                     {queryText.length >= 2 
                     && queryResults.length > 0
+                    && isFocused
                     ? <StyledSearchedRecipes ref={ulRef}> 
                         {queryResults.map((recipe, index) => 
                         <li key={index}>

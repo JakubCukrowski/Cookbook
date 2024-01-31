@@ -35,6 +35,9 @@ export const AuthContextProvider = ({ children }) => {
   //state to re render recipes
   const [isRecipeAdded, setIsRecipeAdded] = useState(false)
 
+  //query results when searching for recipe/inredient etc
+  const [queryResults, setQueryResults] = useState([])
+
   //create user in firebase with firestore data
   const createUser = (displayName, email, password) => {
     return createUserWithEmailAndPassword(auth, email, password)
@@ -164,6 +167,11 @@ export const AuthContextProvider = ({ children }) => {
     }, 1000)
   }
 
+  //logic for query results 
+  const updateQueryResults = (array) => {
+    setQueryResults(array)
+  }
+
   return (
     <userContext.Provider
       value={{
@@ -180,7 +188,9 @@ export const AuthContextProvider = ({ children }) => {
         displayName,
         setDisplayName,
         handleAddedRecipe,
-        isRecipeAdded
+        isRecipeAdded,
+        updateQueryResults,
+        queryResults
       }}
     >
       {!loading && children}
