@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { updateEmail, updateProfile } from "firebase/auth";
 import { UserAuth } from "../../context/AuthContext";
+import { ElementContainer } from "./ElementContainer";
+import { ElementWrapper } from "./ElementWrapper";
 
 export const DashboardElement = ({
   spanTitle,
@@ -38,38 +40,21 @@ export const DashboardElement = ({
       updateProfile(user, {
         displayName: username,
       });
-      setInputVisible(false)
-      setDisplayName(username)
+      setInputVisible(false);
+      setDisplayName(username);
     } else {
       updateEmail(user, userEmail);
-      setInputVisible(false)
+      setInputVisible(false);
     }
   };
 
-  useEffect(() => {
-    
-  })
+  useEffect(() => {});
 
   return (
     <>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "10px 0",
-        }}
-      >
+      <ElementContainer>
         <span>{spanTitle}</span>
-        <div
-          style={{
-            display: "flex",
-            gap: 10,
-            alignItems: "center",
-            justifyContent: "flex-end",
-          }}
-        >
+        <ElementWrapper>
           {inputVisible ? (
             <input
               style={{ width: "70%" }}
@@ -92,8 +77,8 @@ export const DashboardElement = ({
               </Button>
             )
           ) : null}
-        </div>
-      </div>
+        </ElementWrapper>
+      </ElementContainer>
     </>
   );
 };

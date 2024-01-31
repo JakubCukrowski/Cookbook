@@ -19,7 +19,7 @@ export const Footer = () => {
                     </Col>
                     <Col style={{textAlign: "center"}}>
                         <h4>Social media</h4>
-                        <div style={{display: "flex", justifyContent: "center", gap: 16}}>
+                        <div className="links_container">
                             <Link><FontAwesomeIcon icon={faFacebook} size="2xl"/></Link>
                             <Link><FontAwesomeIcon icon={faInstagram} size="2xl"/></Link>
                             <Link><FontAwesomeIcon icon={faTwitter} size="2xl"/></Link>

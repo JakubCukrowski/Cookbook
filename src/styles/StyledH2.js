@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const StyledH2 = styled.h2`
     text-align: center;
-    padding: 60px;
+    padding: 30px;
 `
 
 export const SingleRecipeH2 = styled(StyledH2)`

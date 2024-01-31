@@ -55,3 +55,8 @@ export const FakeSpinnerContainer = styled.div`
         height: 250px;
     }
 `
+
+export const PaddingContainer = styled(Container)`
+    padding-top: 50px;
+    padding-bottom: 50px;
+`

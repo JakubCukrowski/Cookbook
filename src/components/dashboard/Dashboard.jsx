@@ -15,6 +15,7 @@ import { db } from "../../firebase";
 import { DashboardImage } from "./DashboardImage";
 import { DashboardSection } from "./DashboardSection";
 import { SpinnerContainer } from "../../styles/Containers";
+import { StyledH2 } from '../../styles/StyledH2'
 
 export const Dashboard = () => {
   const {
@@ -62,8 +63,6 @@ export const Dashboard = () => {
     return () => clearTimeout(timeoutID);
   };
 
-  //cos nie tak z tym useeffectem do poprawy
-
   useEffect(() => {
     const recipesQuery = query(
       collection(db, "recipes"),
@@ -87,18 +86,18 @@ export const Dashboard = () => {
                 progress={currentProgress}
               />
             ) : null}
-            <h2 style={{ textAlign: "center" }}>Twój profil</h2>
+            <StyledH2>Twój profil</StyledH2>
             <DataWrapper>
               <DashboardImage src={userImage} alt="profile_image" />
               <Container>
-                <label style={{ cursor: "pointer" }} htmlFor="addFile">
+                <label className="add_pointer" htmlFor="addFile">
                   <FontAwesomeIcon icon={faPenToSquare} /> Zmień zdjęcie
                 </label>
                 <input
                   type="file"
                   onChange={uploadPhoto}
                   id="addFile"
-                  style={{ alignSelf: "flex-end", display: "none" }}
+                  className="recipe_image_input"
                 />
               </Container>
               <Container>
