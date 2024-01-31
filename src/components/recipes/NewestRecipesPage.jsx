@@ -1,10 +1,11 @@
 import React from "react";
+import { StyledH2 } from "../../styles/StyledH2";
 
 export const NewestRecipesPage = () => {
 
     return (
         <section>
-            <h1>Najnowsze przepisy</h1>
+            <StyledH2>Najnowsze przepisy</StyledH2>
         </section>
     )
 }

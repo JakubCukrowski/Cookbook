@@ -11,6 +11,9 @@ import { collection, updateDoc, addDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
+import { PaddingContainer } from "../../styles/Containers";
+import { ButtonsContainer } from "./ButtonsContainer";
+import { ButtonWrapper } from "./ButtonWrapper";
 
 export const AddRecipe = () => {
   const { user, handleAddedRecipe } = UserAuth();
@@ -292,53 +295,33 @@ export const AddRecipe = () => {
   };
 
   return (
-    <Container>
+    <PaddingContainer>
       <DataWrapper>
         <Container>
-          <h2 style={{ textAlign: "center", marginBottom: 20 }}>
+          <h2 style={{ textAlign: "center", paddingBottom: 50 }}>
             Dodaj przepis {currentStepIndex + 1} / 3
           </h2>
           <Form className="new-recipe-form" onSubmit={handleSubmitForm}>
             {currentStep[currentStepIndex]}
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-around",
-                alignItems: "center",
-                width: "100%",
-                marginTop: 50,
-              }}
-            >
-              <div
-                style={{
-                  width: "50%",
-                  display: "flex",
-                  justifyContent: "flex-start",
-                }}
-              >
+            <ButtonsContainer>
+              <ButtonWrapper justify="flex-start">
                 {currentStepIndex > 0 ? (
                   <Button onClick={handlePrevious}>Wstecz</Button>
                 ) : null}
-              </div>
-              <div
-                style={{
-                  width: "50%",
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              >
+              </ButtonWrapper>
+              <ButtonWrapper justify="flex-end">
                 {currentStepIndex <
                 currentStep.indexOf(currentStep[currentStep.length - 1]) ? (
                   <Button onClick={handleNext}>Dalej</Button>
                 ) : (
                   <input type="submit" value="Gotowe!" />
                 )}
-              </div>
-            </div>
+              </ButtonWrapper>
+            </ButtonsContainer>
           </Form>
         </Container>
       </DataWrapper>
-    </Container>
+    </PaddingContainer>
   );
 };

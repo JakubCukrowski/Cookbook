@@ -3,7 +3,7 @@ import { Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export const StyledNavbar = styled(Navbar)`
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
 `
 
 export const StyledLink = styled(Link)`

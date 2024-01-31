@@ -27,7 +27,7 @@ export const RecipeDetails = ({
 
   //upload image on change
   const onImageChange = (e) => {
-    updateImage(e.target.files[0])
+    updateImage(e.target.files[0]);
   };
 
   return (
@@ -54,21 +54,9 @@ export const RecipeDetails = ({
           <Alert variant="danger">Musisz podać nazwę</Alert>
         ) : null}
         <FormGroup
-          className="mb-3"
+          className={`mb-3 form_group_sfg ${errors.imageError && details.image === '' ? 'form_group_error' : null}`}
           onDrop={details.image === "" ? (e) => handleOnDrop(e) : null}
           onDragOver={handleDragOver}
-          style={{
-            backgroundColor: "white",
-            textAlign: "center",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "10px 0",
-            cursor: "pointer",
-            borderRadius: 8,
-            boxShadow: "0 0 4px rgb(0, 0, 0)",
-          }}
         >
           {details.image === "" ? (
             <>

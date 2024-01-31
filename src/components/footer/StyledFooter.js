@@ -8,4 +8,10 @@ export const StyledFooter = styled.footer`
     p {
         margin: 8px 0;
     }
+
+    .links_container {
+        display: flex;
+        justify-content: center;
+        gap: 16px
+    }
 `
