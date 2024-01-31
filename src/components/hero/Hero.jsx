@@ -1,17 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyledHeroSection } from "../styles/HeroStyles/StyledHeroSection";
-import heroBackgroundImage from '../images/heroImage.jpg'
-import { StyledInput } from "../styles/HeroStyles/StyledInput";
-import { HeroFlexContainer, PopularButtonsContainer } from "../styles/Containers";
-import { SearchBarContainer } from "../styles/HeroStyles/SearchBarContainer";
+import { StyledHeroSection } from "./StyledHeroSection";
+import heroBackgroundImage from '../../images/heroImage.jpg'
+import { StyledInput } from "./StyledInput";
+import { HeroFlexContainer, PopularButtonsContainer } from "../../styles/Containers";
+import { SearchBarContainer } from "./SearchBarContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import {Button } from "react-bootstrap";
-import { SearchBarWrapper } from "../styles/HeroStyles/SearchBarWrapper";
-import { StyledSearchedRecipes } from "../styles/HeroStyles/StyledSearchedRecipes";
-import { UserAuth } from "../context/AuthContext";
+import { SearchBarWrapper } from "./SearchBarWrapper";
+import { StyledSearchedRecipes } from "./StyledSearchedRecipes";
+import { UserAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import Fuse from 'fuse.js'
+import { StyledH1 } from "./StyledH1";
 
 export const Hero = () => {
     const [queryText, setQueryText] = useState('')
@@ -116,7 +117,7 @@ export const Hero = () => {
 
     return (
         <StyledHeroSection backgroundimage={heroBackgroundImage}> 
-            <h1 style={{textAlign: "center"}}>Cześć, na co masz dzisiaj ochotę?</h1>
+            <StyledH1>Cześć, na co masz dzisiaj ochotę?</StyledH1>
             <HeroFlexContainer direction="column" justify="center" align="center" fluid>
 
                 <SearchBarContainer>

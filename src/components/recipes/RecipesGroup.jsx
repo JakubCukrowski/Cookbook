@@ -2,20 +2,22 @@ import React from "react";
 import {Button, CardBody, Container, Placeholder, Spinner } from "react-bootstrap";
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
-import { StyledCol } from "../styles/CardStyles/StyledCol";
-import { StyledCard } from "../styles/CardStyles/StyledCard";
-import { StyledCardImg } from "../styles/CardStyles/StyledCardImg";
-import { FakeSpinnerContainer, FlexContainer } from "../styles/Containers";
-import { StyledLink } from "../styles/StyledLink";
-import { LikeButton } from "./LikeButton";
-import { UserAuth } from "../context/AuthContext";
+import { StyledCol } from "./StyledCol";
+import { StyledCard } from "./StyledCard";
+import { StyledCardImg } from "./StyledCardImg";
+import { FakeSpinnerContainer, FlexContainer } from "../../styles/Containers";
+import { StyledLink } from "../../styles/StyledLink";
+import { LikeButton } from "../LikeButton";
+import { UserAuth } from "../../context/AuthContext";
+import { StyledH2 } from "../../styles/StyledH2";
+import { StyledCardWrapper } from "./StyledCardWrapper";
 
 export const RecipesGroup = ({title, array, onClick, marginBottom}) => {
     const {isLoading} = UserAuth()
 
     return (
         <Container>
-            <h2 style={{textAlign: "center", padding: 60}}>{title}</h2>
+            <StyledH2>{title}</StyledH2>
             <Row xs={1} md={2} className="g-4" style={{paddingBottom: 20}}>
                 {array.slice(0, 4).map((recipe, idx) => (
                     <StyledCol key={recipe.id || idx}>
@@ -36,8 +38,7 @@ export const RecipesGroup = ({title, array, onClick, marginBottom}) => {
                             </StyledCard>
                         </>
                         :   <>
-                                {/* StyledCardWrapper */}
-                                <div style={{position: "relative", height: '100%'}}> 
+                                <StyledCardWrapper> 
                                     <StyledLink to={`/recipes/${recipe.id}`}>
                                         <StyledCard>
                                             
@@ -50,7 +51,7 @@ export const RecipesGroup = ({title, array, onClick, marginBottom}) => {
                                             </Card.Body>
                                         </StyledCard>
                                     </StyledLink>
-                                </div>
+                                </StyledCardWrapper>
                             </>}
                     </StyledCol>   
                 ))}

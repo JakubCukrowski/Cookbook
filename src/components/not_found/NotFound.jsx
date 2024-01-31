@@ -1,7 +1,7 @@
 import React from "react";
-import { StyledNotFoundSection } from "../styles/NotFound/StyledNotFoundSection";
+import { StyledNotFoundSection } from "./StyledNotFoundSection";
 import { Image } from "react-bootstrap";
-import { StyledLink } from "../styles/StyledLink";
+import { StyledLink } from "../../styles/StyledLink";
 
 export const NotFound = () => {
 

@@ -1,7 +1,7 @@
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { StyledLikeButton } from "../styles/CardStyles/StyledLikeButton";
+import { StyledLikeButton } from "./recipes/StyledLikeButton";
 
 export const LikeButton = ({top, right, rightTablet, rightDesktop, rightXl, onClick, id, className, disabled}) => {
 
