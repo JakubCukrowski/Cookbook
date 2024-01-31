@@ -10,7 +10,7 @@ import { SignUp } from "./components/user_credenitals/SignUp";
 import { SignIn } from "./components/user_credenitals/SignIn";
 import { Dashboard } from "./components/dashboard/Dashboard";
 import { NotFound } from "./components/not_found/NotFound";
-import { NewestRecipesPage } from "./components/recipes/NewestRecipesPage";
+import { RecipesPage } from "./components/recipes/RecipesPage";
 import { GlobalStyle } from "./styles/GlobalStyles";
 import { AddRecipe } from "./components/recipes/AddRecipe";
 import { PrivateRoute } from "./components/private_route/PrivateRoute";
@@ -33,6 +33,7 @@ function App() {
               }
             />
             <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
+            <Route path="/search" element={<RecipesPage />} />
             <Route
               path="/dashboard"
               element={
@@ -49,11 +50,10 @@ function App() {
                 </PrivateRoute>
               }
             />
-            <Route path="/newest-recipes" element={<NewestRecipesPage />} />
           </Route>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="*" element={<NotFound />} />
+          {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>
