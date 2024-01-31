@@ -3,14 +3,14 @@ import { RecipeDetails } from "./RecipeDetails";
 import { Ingredients } from "./Ingredients";
 import { Preparation } from "./Preparation";
 import { Button, Container, Form } from "react-bootstrap";
-import { DataWrapper } from "../styles/DataWrapper";
-import { UserAuth } from "../context/AuthContext";
-import profanity from "../profanity.json";
+import { DataWrapper } from "../../styles/DataWrapper";
+import { UserAuth } from "../../context/AuthContext";
+import profanity from "../../profanity.json";
 import { useNavigate } from "react-router-dom";
 import { collection, updateDoc, addDoc, doc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "../firebase";
+import { storage } from "../../firebase";
 
 export const AddRecipe = () => {
   const { user, handleAddedRecipe } = UserAuth();

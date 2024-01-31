@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import { Col, Row, Container, Spinner } from "react-bootstrap";
-import { StyledImage } from "../styles/StyledImage";
-import { StyledH2 } from "../styles/StyledH2";
-import { SpinnerContainer } from "../styles/Containers";
-import { LikeButton } from "./LikeButton";
+import { StyledImage } from "../../styles/StyledImage";
+import { SingleRecipeH2 } from "../../styles/StyledH2";
+import { SpinnerContainer } from "../../styles/Containers";
+import { LikeButton } from "../LikeButton";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { useEffect, useState } from "react";
 
 export const SingleRecipe = () => {
@@ -78,13 +78,13 @@ export const SingleRecipe = () => {
           </Row>
           <Row style={{ justifyContent: "center" }}>
             <Col sm={5}>
-              <StyledH2>Składniki</StyledH2>
+              <SingleRecipeH2>Składniki</SingleRecipeH2>
               {searchedRecipe.ingredients.map((ingredient, index) => (
                 <p key={index}>{ingredient}</p>
               ))}
             </Col>
             <Col sm={5}>
-              <StyledH2>Jak przygotować</StyledH2>
+              <SingleRecipeH2>Jak przygotować</SingleRecipeH2>
               {Object.entries(searchedRecipe.steps).map((value, index) => (
                 <p key={index}>
                   {`${parseInt(value[0]) + 1}.`}

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { FlexContainer } from '../styles/Containers';
+import { FlexContainer } from '../../styles/Containers';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { StyledLink } from "../styles/StyledLink";
-import { StyledForm } from "../styles/StyledForm";
-import { UserAuth } from "../context/AuthContext";
+import { StyledLink } from "../../styles/StyledLink";
+import { StyledForm } from "./StyledForm";
+import { UserAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { StyledSignSection } from "../styles/SignStyles/StyledSignSection";
+import { StyledSignSection } from "./StyledSignSection";
 
 export const SignUp = () => {
     const {createUser, user} = UserAuth()

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { UserAuth } from "../context/AuthContext";
+import { UserAuth } from "../../context/AuthContext";
 import { RecipesGroup } from "./RecipesGroup";
 import { useNavigate } from "react-router-dom";
 

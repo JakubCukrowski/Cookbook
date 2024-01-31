@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { UserAuth } from "../context/AuthContext";
+import { UserAuth } from "../../context/AuthContext";
 import { Container, Spinner } from "react-bootstrap";
-import { DataWrapper } from "../styles/DataWrapper";
+import { DataWrapper } from "../../styles/DataWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { DashboardElement } from "./DashboardElement";
-import { StyledLink } from "../styles/StyledLink";
+import { StyledLink } from "../../styles/StyledLink";
 import { DashboardRecipes } from "./DashboardRecipes";
 import { uploadBytes, ref } from "firebase/storage";
-import { storage } from "../firebase";
-import { BootstrapModal } from "./BootstrapModal";
+import { storage } from "../../firebase";
+import { BootstrapModal } from "../BootstrapModal";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
+import { DashboardImage } from "./DashboardImage";
+import { DashboardSection } from "./DashboardSection";
+import { SpinnerContainer } from "../../styles/Containers";
 
 export const Dashboard = () => {
   const {
@@ -62,22 +65,22 @@ export const Dashboard = () => {
   //cos nie tak z tym useeffectem do poprawy
 
   useEffect(() => {
-    const recipesQuery = query(collection(db, 'recipes'), where('addedBy', '==', user.uid))
+    const recipesQuery = query(
+      collection(db, "recipes"),
+      where("addedBy", "==", user.uid)
+    );
     onSnapshot(recipesQuery, (querySnapshot) => {
-      querySnapshot.forEach(snapshot => setUserRecipes(prev => [...prev, snapshot.data()]))
-    })
+      querySnapshot.forEach((snapshot) =>
+        setUserRecipes((prev) => [...prev, snapshot.data()])
+      );
+    });
   }, []);
 
   return (
     <>
       {user !== null && profileImageRef !== "" ? (
         <Container>
-          <section
-            style={{
-              maxWidth: "100%",
-              marginBottom: 30,
-            }}
-          >
+          <DashboardSection>
             {isUserImageUploaded ? (
               <BootstrapModal
                 title={"Pomyślnie zmieniono zdjęcie"}
@@ -86,17 +89,7 @@ export const Dashboard = () => {
             ) : null}
             <h2 style={{ textAlign: "center" }}>Twój profil</h2>
             <DataWrapper>
-              <img
-                style={{
-                  padding: 10,
-                  width: 300,
-                  height: 300,
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-                src={userImage}
-                alt="profile_image"
-              />
+              <DashboardImage src={userImage} alt="profile_image" />
               <Container>
                 <label style={{ cursor: "pointer" }} htmlFor="addFile">
                   <FontAwesomeIcon icon={faPenToSquare} /> Zmień zdjęcie
@@ -159,20 +152,12 @@ export const Dashboard = () => {
                 <p>Nie polubiłeś żadnego przepisu</p>
               </DataWrapper>
             </div>
-          </section>
+          </DashboardSection>
         </Container>
       ) : (
-        <div
-          style={{
-            maxWidth: "100%",
-            minHeight: "100vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <SpinnerContainer>
           <Spinner />
-        </div>
+        </SpinnerContainer>
       )}
     </>
   );

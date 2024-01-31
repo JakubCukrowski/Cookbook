@@ -5,11 +5,11 @@ import {
   StyledLink,
   StyledNavbar,
   StyledNavbarColapse,
-} from "../styles/NavbarStyles/StyledNavbar";
+} from "./StyledNavbar";
 import { Link, useNavigate } from "react-router-dom";
-import { UserAuth } from "../context/AuthContext";
-import anonImage from '../images/anon-chef1.png'
-import { LoggedUserImage } from "../styles/LoggedUserImage";
+import { UserAuth } from "../../context/AuthContext";
+import anonImage from '../../images/anon-chef1.png'
+import { LoggedUserImage } from "./LoggedUserImage";
 
 export const CustomNavbar = () => {
   const { user, signout, userImage, displayName } = UserAuth();

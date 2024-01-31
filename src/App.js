@@ -1,18 +1,18 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
-import { Hero } from "./components/Hero";
-import {NewestRecipes} from './components/NewestRecipes'
-import {PopularRecipes} from './components/PopularRecipes'
-import { SingleRecipe } from "./components/SingleRecipe";
+import { Hero } from "./components/hero/Hero";
+import {NewestRecipes} from './components/recipes/NewestRecipes'
+import {PopularRecipes} from './components/recipes/PopularRecipes'
+import { SingleRecipe } from "./components/recipes/SingleRecipe";
 import { AuthContextProvider } from "./context/AuthContext";
-import { SignUp } from "./components/SignUp";
-import { SignIn } from "./components/SignIn";
-import { Dashboard } from "./components/Dashboard";
-import { NotFound } from "./components/NotFound";
-import { NewestRecipesPage } from "./components/NewestRecipesPage";
+import { SignUp } from "./components/user_credenitals/SignUp";
+import { SignIn } from "./components/user_credenitals/SignIn";
+import { Dashboard } from "./components/dashboard/Dashboard";
+import { NotFound } from "./components/not_found/NotFound";
+import { NewestRecipesPage } from "./components/recipes/NewestRecipesPage";
 import { GlobalStyle } from "./styles/GlobalStyles";
-import { AddRecipe } from "./components/AddRecipe";
+import { AddRecipe } from "./components/recipes/AddRecipe";
 
 function App() {
 

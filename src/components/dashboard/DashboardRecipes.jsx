@@ -1,5 +1,5 @@
 import React from "react";
-import { StyledLink } from "../styles/StyledLink";
+import { StyledLink } from "../../styles/StyledLink";
 import { Row, Col, Image } from "react-bootstrap";
 
 export const DashboardRecipes = ({ linkTo, recipeName, recipeImage }) => {

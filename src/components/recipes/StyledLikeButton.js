@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { LikeButton } from "../../components/LikeButton";
+import { LikeButton } from "../LikeButton";
 
 export const StyledLikeButton = styled.button`
     position: absolute;
