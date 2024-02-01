@@ -158,7 +158,7 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     getRecipes();
-  }, []);
+  }, [isRecipeAdded]);
 
   //function to handle state or added recipe
   const handleAddedRecipe = () => {
