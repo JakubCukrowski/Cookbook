@@ -37,6 +37,9 @@ export const AuthContextProvider = ({ children }) => {
 
   //query results when searching for recipe/inredient etc
   const [queryResults, setQueryResults] = useState([])
+  const [queryText, setQueryText] = useState('')
+
+  const pathname = window.location.pathname
 
   //create user in firebase with firestore data
   const createUser = (displayName, email, password) => {
@@ -172,6 +175,18 @@ export const AuthContextProvider = ({ children }) => {
     setQueryResults(array)
   }
 
+  const updateQueryText = (value) => {
+    setQueryText(value)
+  }
+
+  //clear querytext and queryresults
+  useEffect(() => {
+    if (pathname === '/') {
+      setQueryResults([])
+      setQueryText('')
+    }
+  }, [pathname])
+
   return (
     <userContext.Provider
       value={{
@@ -190,7 +205,9 @@ export const AuthContextProvider = ({ children }) => {
         handleAddedRecipe,
         isRecipeAdded,
         updateQueryResults,
-        queryResults
+        queryResults,
+        queryText,
+        updateQueryText
       }}
     >
       {!loading && children}
