@@ -292,6 +292,7 @@ export const AddRecipe = () => {
     });
 
     handleAddedRecipe();
+    navigate('/dashboard')
   };
 
   return (

@@ -121,12 +121,12 @@ export const AuthContextProvider = ({ children }) => {
 
   //donwload recipes from firebase
   useEffect(() => {
+    setRecipes([])
 
     const getRecipes = async () => {
       //get to the collection first
       const recipesRef = collection(db, "recipes");
       const recipesFromFirebase = await getDocs(recipesRef);
-
 
       //copy array of recipes to the state, then add recipe.id and recipe url, usable for adding recipe
       recipesFromFirebase.forEach(async (recipe) => {
@@ -158,7 +158,7 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     getRecipes();
-  }, [isRecipeAdded]);
+  }, []);
 
   //function to handle state or added recipe
   const handleAddedRecipe = () => {
@@ -168,6 +168,8 @@ export const AuthContextProvider = ({ children }) => {
       setIsRecipeAdded(false)
 
     }, 1000)
+
+    clearTimeout(timeout)
   }
 
   //logic for query results 
