@@ -15,8 +15,7 @@ import Fuse from 'fuse.js'
 import { StyledH1 } from "./StyledH1";
 
 export const Hero = () => {
-    const [queryText, setQueryText] = useState('')
-    const {recipes, updateQueryResults, queryResults} = UserAuth()
+    const {recipes, updateQueryResults, queryResults, queryText, updateQueryText} = UserAuth()
     const [isFocused, setIsFocused] = useState(false)
     const [activeIndex, setActiveIndex] = useState("")
     const [count, setCount] = useState(0)
@@ -32,7 +31,7 @@ export const Hero = () => {
     }
 
     const handleInputValue = (e) => {
-        setQueryText(e.target.value);
+        updateQueryText(e.target.value);
     }
 
     //logic for keys down/up/enter
@@ -133,7 +132,7 @@ export const Hero = () => {
                     />
                         <Button onClick={(e) => {
                             e.preventDefault()
-                            navigate(`/search?querry=${queryText}`)
+                            navigate(`/search?query=${queryText}`)
                         }}>
                             <FontAwesomeIcon icon={faMagnifyingGlass}/>
                         </Button>
