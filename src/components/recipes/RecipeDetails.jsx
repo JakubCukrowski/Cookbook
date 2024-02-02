@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Button, Form, FormGroup } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 
-
 //podzielic na mniejsze komponenty
 export const RecipeDetails = ({
   details,
@@ -37,6 +36,14 @@ export const RecipeDetails = ({
       <div className="recipe-details">
         <FormGroup className="mb-3">
           <Form.Label htmlFor="recipe_name">Nazwa przepisu</Form.Label>
+          {errors.nameError &&
+          details.name.length < 8 &&
+          details.name.length > 0 ? (
+            <Alert variant="danger">Nazwa przepisu jest za krótka</Alert>
+          ) : null}
+          {errors.nameError && details.name.length === 0 ? (
+            <Alert variant="danger">Musisz podać nazwę</Alert>
+          ) : null}
           <Form.Control
             isInvalid={errors.nameError && details.name.length < 8}
             name="recipeName"
@@ -47,16 +54,15 @@ export const RecipeDetails = ({
             onChange={(e) => updateName(e.target.value)}
           />
         </FormGroup>
-        {errors.nameError &&
-        details.name.length < 8 &&
-        details.name.length > 0 ? (
-          <Alert variant="danger">Nazwa przepisu jest za krótka</Alert>
-        ) : null}
-        {errors.nameError && details.name.length === 0 ? (
-          <Alert variant="danger">Musisz podać nazwę</Alert>
+        {details.image === "" && errors.imageError ? (
+          <Alert variant="danger">Musisz dodać zdjęcie</Alert>
         ) : null}
         <FormGroup
-          className={`mb-3 form_group_sfg ${errors.imageError && details.image === '' ? 'form_group_error' : null}`}
+          className={`mb-3 form_group_sfg ${
+            errors.imageError && details.image === ""
+              ? "form_group_error"
+              : null
+          }`}
           onDrop={details.image === "" ? (e) => handleOnDrop(e) : null}
           onDragOver={handleDragOver}
         >
@@ -94,9 +100,6 @@ export const RecipeDetails = ({
             </>
           )}
         </FormGroup>
-        {details.image === "" && errors.imageError ? (
-          <Alert variant="danger">Musisz dodać zdjęcie</Alert>
-        ) : null}
         <FormGroup className="mb-3">
           <Form.Label htmlFor="preparation_time">Czas przygotowania</Form.Label>
           <Form.Select
@@ -127,6 +130,10 @@ export const RecipeDetails = ({
         </FormGroup>
         <FormGroup className="mb-3">
           <Form.Label htmlFor="recipe_category">Wybierz kategorię</Form.Label>
+          {errors.categoryError &&
+          (details.category === "" || details.category === "default") ? (
+            <Alert variant="danger">Musisz wybrać kategorię</Alert>
+          ) : null}
           <Form.Select
             isInvalid={
               errors.categoryError &&
@@ -147,10 +154,6 @@ export const RecipeDetails = ({
             <option value="Napoje">Napoje</option>
           </Form.Select>
         </FormGroup>
-        {errors.categoryError &&
-        (details.category === "" || details.category === "default") ? (
-          <Alert variant="danger">Musisz wybrać kategorię</Alert>
-        ) : null}
         <FormGroup className="mb-3">
           <Form.Label htmlFor="recipe_description">
             Kilka słów o przepisie (opcjonalnie)
