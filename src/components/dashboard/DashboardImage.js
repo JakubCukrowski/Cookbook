@@ -1,9 +1,7 @@
 import styled from "styled-components";
 
 export const DashboardImage = styled.img`
-  padding: 10px;
-  width: 300px !important;
-  height: 300px;
-  border-radius: 50%;
+  height: 100%;
   object-fit: cover;
+  border-radius: 50%;
 `;

@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Button, Form, FormGroup } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 
+
+//podzielic na mniejsze komponenty
 export const RecipeDetails = ({
   details,
   updateName,

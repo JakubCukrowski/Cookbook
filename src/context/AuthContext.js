@@ -37,6 +37,7 @@ export const AuthContextProvider = ({ children }) => {
 
   //query results when searching for recipe/inredient etc
   const [queryResults, setQueryResults] = useState([])
+  //query
   const [queryText, setQueryText] = useState('')
 
   const pathname = window.location.pathname
@@ -51,7 +52,6 @@ export const AuthContextProvider = ({ children }) => {
             username: displayName,
             email: email,
             liked: [],
-            userRecipes: [],
           }
         );
         return updateProfile(userCredentials.user, {
@@ -75,10 +75,11 @@ export const AuthContextProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
+      console.log('dupa');
     });
 
-    return () => unsubscribe;
-  }, []);
+    return () => unsubscribe();
+  }, [setUser]);
 
   //set display name for dashboard and navbar
   useEffect(() => {
@@ -160,7 +161,7 @@ export const AuthContextProvider = ({ children }) => {
     getRecipes();
   }, [isRecipeAdded]);
 
-  //function to handle state or added recipe
+  //function to handle state and added recipe
   const handleAddedRecipe = () => {
     setIsRecipeAdded(true)
 
@@ -177,6 +178,7 @@ export const AuthContextProvider = ({ children }) => {
     setQueryResults(array)
   }
 
+  //logic for updating query
   const updateQueryText = (value) => {
     setQueryText(value)
   }
@@ -203,7 +205,7 @@ export const AuthContextProvider = ({ children }) => {
         isUserImageUploaded,
         setIsUserImageUploaded,
         displayName,
-        setDisplayName,
+        // setDisplayName,
         handleAddedRecipe,
         isRecipeAdded,
         updateQueryResults,
