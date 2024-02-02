@@ -18,6 +18,7 @@ import { SpinnerContainer } from "../../styles/Containers";
 import { StyledH2 } from "../../styles/StyledH2";
 import { DashboardImageWrapper } from "./DashboardImageWrapper";
 import { UpdateUserPhoto } from "./UpdateUserPhoto";
+import { Pagination } from "react-bootstrap";
 
 export const Dashboard = () => {
   const {
@@ -26,11 +27,20 @@ export const Dashboard = () => {
     isUserImageUploaded,
     setIsUserImageUploaded,
     displayName,
-    recipes,
   } = UserAuth();
+
+  //progress bar percentage
   const [currentProgress, setCurrentProgress] = useState(0);
+
+  //to download image from firebase
   const [profileImageRef, setProfileImageRef] = useState("");
+
+  //added by user recipes
   const [userRecipes, setUserRecipes] = useState([]);
+
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recipesPerPage, setRecipesPerPage] = useState(3);
 
   //interval for progress bar
   useEffect(() => {
@@ -77,6 +87,29 @@ export const Dashboard = () => {
     });
   }, []);
 
+  const lastRecipeIndex = currentPage * recipesPerPage;
+  const firstRecipeIndex = lastRecipeIndex - recipesPerPage;
+  const slicedRecipes = userRecipes.slice(firstRecipeIndex, lastRecipeIndex);
+
+  //bootstrap pagination
+
+  let items = [];
+  for (
+    let number = 1;
+    number <= Math.ceil(userRecipes.length / recipesPerPage);
+    number++
+  ) {
+    items.push(
+      <Pagination.Item
+        key={number}
+        active={number === currentPage}
+        onClick={() => setCurrentPage(number)}
+      >
+        {number}
+      </Pagination.Item>
+    );
+  }
+
   return (
     <>
       {user !== null && profileImageRef !== "" ? (
@@ -90,43 +123,54 @@ export const Dashboard = () => {
             ) : null}
             <StyledH2>Twój profil</StyledH2>
             <DataWrapper>
-              <DashboardImageWrapper>
-                <DashboardImage src={userImage} alt="profile_image" />
-                <UpdateUserPhoto onChange={uploadPhoto}/>
-              </DashboardImageWrapper>
-              <Container>
-                <DashboardElement
-                  spanTitle={"Utworzono: "}
-                  strongTitle={new Date(
-                    parseInt(user.metadata.createdAt)
-                  ).toLocaleDateString()}
-                />
-                <DashboardElement
-                  spanTitle={"Nazwa użytkownika: "}
-                  strongTitle={displayName}
-                  inputName="username"
-                  isButton={true}
-                />
-                <DashboardElement
-                  spanTitle={"Email: "}
-                  strongTitle={user.email}
-                  inputName="email"
-                  isButton={true}
-                />
-                <DashboardElement
-                  spanTitle={"Hasło"}
-                  strongTitle={<StyledLink to={"/"}>Zmień hasło</StyledLink>}
-                />
-              </Container>
+              {userImage !== null ? (
+                <>
+                  <DashboardImageWrapper>
+                    <DashboardImage src={userImage} alt="profile_image" />
+                    <UpdateUserPhoto onChange={uploadPhoto} />
+                  </DashboardImageWrapper>
+                  <Container>
+                    <DashboardElement
+                      spanTitle={"Utworzono: "}
+                      strongTitle={new Date(
+                        parseInt(user.metadata.createdAt)
+                      ).toLocaleDateString()}
+                    />
+                    <DashboardElement
+                      spanTitle={"Nazwa użytkownika: "}
+                      strongTitle={displayName}
+                      inputName="username"
+                    />
+                    <DashboardElement
+                      spanTitle={"Email: "}
+                      strongTitle={user.email}
+                      inputName="email"
+                      isButton={true}
+                      onClick={() => console.log("Dodaj funkcję zmiany maila!")}
+                    />
+                    <DashboardElement
+                      spanTitle={"Hasło"}
+                      strongTitle={
+                        <StyledLink to={"/"}>Zmień hasło</StyledLink>
+                      }
+                    />
+                  </Container>
+                </>
+              ) : (
+                <Spinner />
+              )}
             </DataWrapper>
             <div>
               <DataWrapper>
                 <h2>Twoje przepisy</h2>
+                <StyledLink to={"/add-recipe"}>
+                  {<FontAwesomeIcon icon={faPlus} />} Dodaj przepis
+                </StyledLink>
                 {userRecipes.length === 0 ? (
                   <p>Aktualnie nie dodałeś żadnego przepisu</p>
                 ) : (
                   <>
-                    {userRecipes.map((recipe, index) => (
+                    {slicedRecipes.map((recipe, index) => (
                       <DashboardRecipes
                         key={index}
                         linkTo={recipe.id}
@@ -136,9 +180,9 @@ export const Dashboard = () => {
                     ))}
                   </>
                 )}
-                <StyledLink to={"/add-recipe"}>
-                  {<FontAwesomeIcon icon={faPlus} />} Dodaj przepis
-                </StyledLink>
+                {userRecipes.length > 3 ? (
+                  <Pagination>{items}</Pagination>
+                ) : null}
               </DataWrapper>
               <DataWrapper>
                 <h2>Polubione przepisy</h2>
