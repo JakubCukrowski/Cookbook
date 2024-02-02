@@ -7,7 +7,13 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { setDoc, doc, getDocs, collection, updateDoc } from "firebase/firestore";
+import {
+  setDoc,
+  doc,
+  getDocs,
+  collection,
+  updateDoc,
+} from "firebase/firestore";
 import { storage } from "../firebase";
 import { ref, getMetadata, getDownloadURL, listAll } from "firebase/storage";
 
@@ -33,30 +39,30 @@ export const AuthContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   //state to re render recipes
-  const [isRecipeAdded, setIsRecipeAdded] = useState(false)
+  const [isRecipeAdded, setIsRecipeAdded] = useState(false);
 
   //query results when searching for recipe/inredient etc
-  const [queryResults, setQueryResults] = useState([])
+  const [queryResults, setQueryResults] = useState([]);
   //query
-  const [queryText, setQueryText] = useState('')
+  const [queryText, setQueryText] = useState("");
 
-  const pathname = window.location.pathname
+  const pathname = window.location.pathname;
 
   //create user in firebase with firestore data
   const createUser = (displayName, email, password) => {
     return createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredentials) => {
-        const userDoc = await setDoc(
-          doc(db, "users", userCredentials.user.uid),
-          {
-            username: displayName,
-            email: email,
-            liked: [],
-          }
-        );
-        return updateProfile(userCredentials.user, {
+        const userRef = doc(db, "users", userCredentials.user.uid);
+        await updateProfile(userCredentials.user, {
           displayName: displayName,
         });
+        const docRef = await setDoc(userRef, {
+          username: displayName,
+          email: email,
+          liked: [],
+        });
+        const updatedUser = {...userCredentials.user, displayName: displayName}
+        setUser(updatedUser)
       })
       .catch((error) => console.log(error));
   };
@@ -75,7 +81,6 @@ export const AuthContextProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
-      console.log('dupa');
     });
 
     return () => unsubscribe();
@@ -122,7 +127,7 @@ export const AuthContextProvider = ({ children }) => {
 
   //donwload recipes from firebase
   useEffect(() => {
-    setRecipes([])
+    setRecipes([]);
 
     const getRecipes = async () => {
       //get to the collection first
@@ -131,31 +136,31 @@ export const AuthContextProvider = ({ children }) => {
 
       //copy array of recipes to the state, then add recipe.id and recipe url, usable for adding recipe
       recipesFromFirebase.forEach(async (recipe) => {
-
         const listRef = ref(storage, `recipe/${recipe.id}`);
 
         await listAll(listRef)
           .then((response) => {
             response.items.map(async (itemRef) => {
-              const recipeImageRef = ref(storage, `/recipe/${recipe.id}/${itemRef.name}`
+              const recipeImageRef = ref(
+                storage,
+                `/recipe/${recipe.id}/${itemRef.name}`
               );
               await getDownloadURL(recipeImageRef).then(async (url) => {
                 setRecipes((prev) => [
                   ...prev,
                   { ...recipe.data(), id: recipe.id, image: url },
                 ]);
-                
-                const recipeRef = doc(db, 'recipes', recipe.id)
+
+                const recipeRef = doc(db, "recipes", recipe.id);
                 await updateDoc(recipeRef, {
-                  image: url
-                })
+                  image: url,
+                });
                 setIsLoading(false);
               });
             });
           })
           .catch((error) => console.log(error));
       });
-
     };
 
     getRecipes();
@@ -163,33 +168,32 @@ export const AuthContextProvider = ({ children }) => {
 
   //function to handle state and added recipe
   const handleAddedRecipe = () => {
-    setIsRecipeAdded(true)
+    setIsRecipeAdded(true);
 
     const timeout = setTimeout(() => {
-      setIsRecipeAdded(false)
+      setIsRecipeAdded(false);
+    }, 1000);
 
-    }, 1000)
+    clearTimeout(timeout);
+  };
 
-    clearTimeout(timeout)
-  }
-
-  //logic for query results 
+  //logic for query results
   const updateQueryResults = (array) => {
-    setQueryResults(array)
-  }
+    setQueryResults(array);
+  };
 
   //logic for updating query
   const updateQueryText = (value) => {
-    setQueryText(value)
-  }
+    setQueryText(value);
+  };
 
   //clear querytext and queryresults
   useEffect(() => {
-    if (pathname === '/') {
-      setQueryResults([])
-      setQueryText('')
+    if (pathname === "/") {
+      setQueryResults([]);
+      setQueryText("");
     }
-  }, [pathname])
+  }, [pathname]);
 
   return (
     <userContext.Provider
@@ -211,7 +215,7 @@ export const AuthContextProvider = ({ children }) => {
         updateQueryResults,
         queryResults,
         queryText,
-        updateQueryText
+        updateQueryText,
       }}
     >
       {!loading && children}

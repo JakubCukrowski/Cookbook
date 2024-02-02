@@ -41,7 +41,7 @@ export const SignIn = () => {
 
     return (
         <StyledSignSection>
-            <StyledLink color="white" style={{padding: 20}} to='/'><FontAwesomeIcon icon={faArrowLeft}/> Strona główna</StyledLink>
+            <StyledLink color="white" style={{padding: 20, alignSelf: "flex-start"}} to='/'><FontAwesomeIcon icon={faArrowLeft}/> Strona główna</StyledLink>
             <FlexContainer direction='column' align='center'>
                 <h2 style={{color: "white", padding: 26}}>Zaloguj się</h2>
                 <span style={{margin: 10}}>Nie masz konta? <StyledLink to='/signup'>Zarejestruj się</StyledLink></span>
