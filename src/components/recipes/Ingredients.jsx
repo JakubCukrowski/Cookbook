@@ -1,7 +1,8 @@
 import { faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Form, FormGroup } from "react-bootstrap";
+import { DeleteIngredientButton } from "./DeleteIngredientButton";
 
 export const Ingredients = ({
   details,
@@ -15,11 +16,9 @@ export const Ingredients = ({
   };
 
   const handleDeleteInput = (index, array) => {
-    const filtered = array.filter(
-      (_, i) => i !== index
-    );
+    const filtered = array.filter((_, i) => i !== index);
     handleIngredientsArray(filtered);
-  }
+  };
 
   return (
     <>
@@ -34,19 +33,11 @@ export const Ingredients = ({
               onChange={(e) => handleInputChange(e, index)}
             />
             {details.ingredients.length > 1 ? (
-              <button
+              <DeleteIngredientButton
                 onClick={() => handleDeleteInput(index, details.ingredients)}
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  right: "5%",
-                  transform: "translateY(-50%)",
-                  backgroundColor: "transparent",
-                  border: "none",
-                }}
               >
                 <FontAwesomeIcon icon={faTrashCan} color="rgba(0, 0, 0, 0.4)" />
-              </button>
+              </DeleteIngredientButton>
             ) : null}
           </div>
         </FormGroup>

@@ -3,7 +3,7 @@ import { UserAuth } from "../../context/AuthContext";
 import { Container, Spinner } from "react-bootstrap";
 import { DataWrapper } from "../../styles/DataWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { DashboardElement } from "./DashboardElement";
 import { StyledLink } from "../../styles/StyledLink";
 import { DashboardRecipes } from "./DashboardRecipes";
@@ -15,7 +15,9 @@ import { db } from "../../firebase";
 import { DashboardImage } from "./DashboardImage";
 import { DashboardSection } from "./DashboardSection";
 import { SpinnerContainer } from "../../styles/Containers";
-import { StyledH2 } from '../../styles/StyledH2'
+import { StyledH2 } from "../../styles/StyledH2";
+import { DashboardImageWrapper } from "./DashboardImageWrapper";
+import { UpdateUserPhoto } from "./UpdateUserPhoto";
 
 export const Dashboard = () => {
   const {
@@ -88,18 +90,10 @@ export const Dashboard = () => {
             ) : null}
             <StyledH2>Twój profil</StyledH2>
             <DataWrapper>
-              <DashboardImage src={userImage} alt="profile_image" />
-              <Container>
-                <label className="add_pointer" htmlFor="addFile">
-                  <FontAwesomeIcon icon={faPenToSquare} /> Zmień zdjęcie
-                </label>
-                <input
-                  type="file"
-                  onChange={uploadPhoto}
-                  id="addFile"
-                  className="recipe_image_input"
-                />
-              </Container>
+              <DashboardImageWrapper>
+                <DashboardImage src={userImage} alt="profile_image" />
+                <UpdateUserPhoto onChange={uploadPhoto}/>
+              </DashboardImageWrapper>
               <Container>
                 <DashboardElement
                   spanTitle={"Utworzono: "}
