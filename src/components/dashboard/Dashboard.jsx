@@ -81,17 +81,17 @@ export const Dashboard = () => {
       where("addedBy", "==", user.uid)
     );
     onSnapshot(recipesQuery, (querySnapshot) => {
-      querySnapshot.forEach((snapshot) => {
-        setUserRecipes((prev) => [...prev, {...snapshot.data(), id: snapshot.id}]);
+      querySnapshot.forEach((recipe) => {
+        setUserRecipes((prev) => [...prev, {...recipe.data(), id: recipe.id}]);
       });
     });
   }, []);
 
+  
+  //bootstrap pagination
   const lastRecipeIndex = currentPage * recipesPerPage;
   const firstRecipeIndex = lastRecipeIndex - recipesPerPage;
   const slicedRecipes = userRecipes.slice(firstRecipeIndex, lastRecipeIndex);
-
-  //bootstrap pagination
 
   let items = [];
   for (
