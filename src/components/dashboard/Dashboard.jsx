@@ -81,9 +81,9 @@ export const Dashboard = () => {
       where("addedBy", "==", user.uid)
     );
     onSnapshot(recipesQuery, (querySnapshot) => {
-      querySnapshot.forEach((snapshot) =>
-        setUserRecipes((prev) => [...prev, snapshot.data()])
-      );
+      querySnapshot.forEach((snapshot) => {
+        setUserRecipes((prev) => [...prev, {...snapshot.data(), id: snapshot.id}]);
+      });
     });
   }, []);
 

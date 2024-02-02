@@ -1,26 +1,21 @@
 import React from "react";
 import { StyledLink } from "../../styles/StyledLink";
-import { Row, Col, Image } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
 export const DashboardRecipes = ({ linkTo, recipeName, recipeImage }) => {
   return (
     <>
-      <span>{recipeName}</span>
-      <StyledLink to={`/recipes/${linkTo}`}>
-        <Row
-          style={{
-            justifyContent: "center",
-            marginBottom: 10,
-            flexDirection: "column",
-            alignItems: "center",
-            textAlign: "center",
-          }}
-        >
-          <Col xs={6} md={4}>
-            <Image src={recipeImage} thumbnail />
-          </Col>
-        </Row>
-      </StyledLink>
+      <div style={{paddingTop: 10, textAlign: "center"}}>
+        <span>{recipeName}</span>
+        <StyledLink to={`/recipes/${linkTo}`}>
+          <Container>
+            <img
+              src={recipeImage}
+              style={{ height: 260, width: 300, borderRadius: 6 }}
+            />
+          </Container>
+        </StyledLink>
+      </div>
     </>
   );
 };
