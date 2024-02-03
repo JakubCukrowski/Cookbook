@@ -9,17 +9,18 @@ export const Ingredients = ({
   handleIngredients,
   handleIngredientsArray,
   errors,
-  handleIngredientsErrors
+  handleIngredientsErrors,
+  gibberishCheck
 }) => {
-  // changes the value of ingredients array element, also clears the error 
+  // changes the value of ingredients array element, also clears the error
   const handleInputChange = (e, index) => {
     const newIngredientsArray = details.ingredients;
     newIngredientsArray[index] = e.target.value;
     handleIngredientsArray(newIngredientsArray);
 
     const newErrorsArray = errors.ingredientsErrors;
-    newErrorsArray[index] = false
-    handleIngredientsErrors(newErrorsArray)
+    newErrorsArray[index] = false;
+    handleIngredientsErrors(newErrorsArray);
   };
 
   //deletes input element
@@ -31,13 +32,13 @@ export const Ingredients = ({
   //deletes error from the errors array
   const clearInputError = (index, array) => {
     const filtered = array.filter((_, i) => i !== index);
-    handleIngredientsErrors(filtered)
-  }
+    handleIngredientsErrors(filtered);
+  };
 
   const handleDeleteButton = (index, firstArray, secondArray) => {
-    handleDeleteInput(index, firstArray)
-    clearInputError(index, secondArray)
-  }
+    handleDeleteInput(index, firstArray);
+    clearInputError(index, secondArray);
+  };
 
   return (
     <>
@@ -49,17 +50,36 @@ export const Ingredients = ({
           details.ingredients[index].length === 0 ? (
             <Alert variant="danger">Nie może być puste</Alert>
           ) : null}
+          {errors.ingredientsErrors[index] &&
+          details.ingredients[index].length > 0 &&
+          details.ingredients[index].length < 3 ? (
+            <Alert variant="danger">Składnik musi mieć przynajmniej 3 znaki</Alert>
+          ) : null}
+          {errors.ingredientsErrors[index] &&
+          details.ingredients[index].length >= 3 &&
+          details.ingredients[index].match(gibberishCheck) ? (
+            <Alert variant="danger">Próbujesz dodać coś co nie ma sensu</Alert>
+          ) : null}
           <div style={{ position: "relative", marginBottom: 10 }}>
             <Form.Control
               value={details.ingredients[index]}
-              isInvalid={errors.ingredientsErrors[index] &&
-          details.ingredients[index].length === 0}
+              isInvalid={
+                errors.ingredientsErrors[index] &&
+                details.ingredients[index].length === 0
+              }
               id={`ingredient${index + 1}`}
               onChange={(e) => handleInputChange(e, index)}
             />
             {details.ingredients.length > 1 ? (
-              <DeleteIngredientButton type="button"
-                onClick={() => handleDeleteButton(index, details.ingredients, errors.ingredientsErrors)}
+              <DeleteIngredientButton
+                type="button"
+                onClick={() =>
+                  handleDeleteButton(
+                    index,
+                    details.ingredients,
+                    errors.ingredientsErrors
+                  )
+                }
               >
                 <FontAwesomeIcon icon={faTrashCan} color="rgba(0, 0, 0, 0.4)" />
               </DeleteIngredientButton>

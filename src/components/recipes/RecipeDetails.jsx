@@ -9,7 +9,8 @@ export const RecipeDetails = ({
   details,
   errors,
   updateImage,
-  updateRecipeDetails
+  updateRecipeDetails,
+  gibberishCheck,
 }) => {
   const handleOnDrop = (ev) => {
     ev.preventDefault();
@@ -34,8 +35,12 @@ export const RecipeDetails = ({
           <Form.Label htmlFor="recipe_name">Nazwa przepisu</Form.Label>
           {errors.nameError &&
           details.name.length < 8 &&
-          details.name.length > 0 ? (
+          details.name.length > 0 &&
+          !details.name.match(gibberishCheck) ? (
             <Alert variant="danger">Nazwa przepisu jest za krótka</Alert>
+          ) : null}
+          {errors.nameError && details.name.match(gibberishCheck) ? (
+            <Alert variant="danger">Próbujesz dodać coś co nie ma sensu</Alert>
           ) : null}
           {errors.nameError && details.name.length === 0 ? (
             <Alert variant="danger">Musisz podać nazwę</Alert>
