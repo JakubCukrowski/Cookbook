@@ -48,6 +48,9 @@ export const AddRecipe = () => {
   //steps state
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
+  //gibberish regex
+  const gibberishCheck = /(.)\1{2,}/;
+
   //update user id while adding recipe
   useEffect(() => {
     if (user) {
@@ -172,6 +175,7 @@ export const AddRecipe = () => {
       errors={newRecipeErrors}
       updateImage={updateImage}
       updateRecipeDetails={updateRecipeDetails}
+      gibberishCheck={gibberishCheck}
     />,
     <Ingredients
       details={newRecipeDetails}
@@ -179,6 +183,7 @@ export const AddRecipe = () => {
       handleIngredientsArray={handleIngredientsArray}
       handleIngredientsErrors={handleIngredientsErrors}
       errors={newRecipeErrors}
+      gibberishCheck={gibberishCheck}
     />,
     <Preparation
       details={newRecipeDetails}
@@ -195,7 +200,10 @@ export const AddRecipe = () => {
       navigate("/");
     }
 
-    if (newRecipeDetails.name.length < 8) {
+    if (
+      newRecipeDetails.name.length < 8 ||
+      newRecipeDetails.name.match(gibberishCheck)
+    ) {
       setNewRecipeErrors((prev) => {
         return { ...prev, nameError: true };
       });
@@ -222,7 +230,8 @@ export const AddRecipe = () => {
       newRecipeDetails.name.length >= 8 &&
       newRecipeDetails.image !== "" &&
       newRecipeDetails.category !== "" &&
-      newRecipeDetails.category !== "default"
+      newRecipeDetails.category !== "default" &&
+      !newRecipeDetails.name.match(gibberishCheck)
     ) {
       setCurrentStepIndex((prev) => prev + 1);
     }
@@ -233,7 +242,12 @@ export const AddRecipe = () => {
     const newIngredientsErrors = newRecipeErrors.ingredientsErrors;
 
     for (let i = 0; i < newRecipeDetails.ingredients.length; i++) {
-      if (newRecipeDetails.ingredients[i].length === 0) {
+      if (
+        newRecipeDetails.ingredients[i].length === 0 ||
+        (newRecipeDetails.ingredients[i].length >= 1 &&
+          newRecipeDetails.ingredients[i].length <= 3) ||
+        newRecipeDetails.ingredients[i].match(gibberishCheck)
+      ) {
         newIngredientsErrors[i] = true;
       }
     }
