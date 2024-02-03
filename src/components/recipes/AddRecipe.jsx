@@ -26,8 +26,8 @@ export const AddRecipe = () => {
     ingredients: ["", "", ""],
     likes: 0,
     name: "",
-    preparationTime: "",
-    difficulty: "",
+    preparationTime: "15",
+    difficulty: "easy",
     description: "",
     preparationSteps: { 0: "", 1: "", 2: "" },
   });
@@ -35,7 +35,7 @@ export const AddRecipe = () => {
   const [newRecipeErrors, setNewRecipeErrors] = useState({
     categoryError: false,
     imageError: false,
-    ingredientsError: false,
+    ingredientsErrors: [false, false, false],
     nameError: false,
     preparationSteps: false,
   });
@@ -45,6 +45,10 @@ export const AddRecipe = () => {
 
   const navigate = useNavigate();
 
+  //steps state
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+  //update user id while adding recipe
   useEffect(() => {
     if (user) {
       setNewRecipeDetails((prev) => {
@@ -56,78 +60,51 @@ export const AddRecipe = () => {
     }
   }, []);
 
-  //update category
-  const updateCategory = (value) => {
+  //update category, name, preparation time, difficulty
+  const updateRecipeDetails = (e) => {
+    const { name, value } = e.target;
     setNewRecipeDetails((prev) => {
       return {
         ...prev,
-        category: value,
-      };
-    });
-  };
-
-  //recipe details component functions
-  const updateRecipeName = (value) => {
-    setNewRecipeDetails((prev) => {
-      return {
-        ...prev,
-        name: value,
+        name: name === "recipeName" ? value : prev.name,
+        category: name === "category" ? value : prev.category,
+        preparationTime:
+          name === "preparationTime" ? value : prev.preparationTime,
+        difficulty: name === "difficulty" ? value : prev.difficulty,
+        description: name === "description" ? value : prev.description,
       };
     });
 
-    setNewRecipeErrors((prev) => {
-      return {
-        ...prev,
-        nameError: false,
-      };
-    });
+    //name validation
+    if (name === "recipeName") {
+      setNewRecipeErrors((prev) => {
+        return {
+          ...prev,
+          nameError: false,
+        };
+      });
 
-    //handle swear words
-    const singleWord = value.toLowerCase().split(" ").join("");
+      //handle swear words
+      const singleWord = value.toLowerCase().split(" ").join("");
 
-    profanity.forEach((word) => {
-      if (singleWord.includes(word)) {
-        setProfanityArray((prev) => [...prev, word]);
+      profanity.forEach((word) => {
+        if (singleWord.includes(word)) {
+          setProfanityArray((prev) => [...prev, word]);
+        }
+      });
+
+      if (singleWord.length === 0) {
+        setProfanityArray([]);
       }
-    });
-
-    if (singleWord.length === 0) {
-      setProfanityArray([]);
     }
   };
 
+  //add image
   const updateImage = (value) => {
     return setNewRecipeDetails((prev) => {
       return {
         ...prev,
         image: value,
-      };
-    });
-  };
-
-  const updatePrepTime = (value) => {
-    setNewRecipeDetails((prev) => {
-      return {
-        ...prev,
-        preparationTime: value,
-      };
-    });
-  };
-
-  const updateDiffLevel = (value) => {
-    setNewRecipeDetails((prev) => {
-      return {
-        ...prev,
-        difficulty: value,
-      };
-    });
-  };
-
-  const updateDesc = (value) => {
-    setNewRecipeDetails((prev) => {
-      return {
-        ...prev,
-        description: value,
       };
     });
   };
@@ -140,6 +117,13 @@ export const AddRecipe = () => {
         ingredients: [...prev.ingredients, ""],
       };
     });
+
+    setNewRecipeErrors((prev) => {
+      return {
+        ...prev,
+        ingredientsErrors: [...prev.ingredientsErrors, false],
+      };
+    });
   };
 
   const handleIngredientsArray = (array) => {
@@ -147,6 +131,15 @@ export const AddRecipe = () => {
       return {
         ...prev,
         ingredients: array,
+      };
+    });
+  };
+
+  const handleIngredientsErrors = (array) => {
+    setNewRecipeErrors((prev) => {
+      return {
+        ...prev,
+        ingredientsErrors: array,
       };
     });
   };
@@ -173,25 +166,19 @@ export const AddRecipe = () => {
     });
   };
 
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-
-  //profanity
-
   const currentStep = [
     <RecipeDetails
       details={newRecipeDetails}
-      updateName={updateRecipeName}
-      prepTime={updatePrepTime}
-      diffLevel={updateDiffLevel}
-      desc={updateDesc}
       errors={newRecipeErrors}
       updateImage={updateImage}
-      updateCategory={updateCategory}
+      updateRecipeDetails={updateRecipeDetails}
     />,
     <Ingredients
       details={newRecipeDetails}
       handleIngredients={handleIngredients}
       handleIngredientsArray={handleIngredientsArray}
+      handleIngredientsErrors={handleIngredientsErrors}
+      errors={newRecipeErrors}
     />,
     <Preparation
       details={newRecipeDetails}
@@ -201,7 +188,7 @@ export const AddRecipe = () => {
   ];
 
   // next step logic
-  const handleNext = (e) => {
+  const validateFirstStep = (e) => {
     e.preventDefault();
     if (profanityArray.length > 0) {
       //tutaj będzie strona z errorem w przypadku podania wulgarnej nazwy przepisu
@@ -237,6 +224,28 @@ export const AddRecipe = () => {
       newRecipeDetails.category !== "" &&
       newRecipeDetails.category !== "default"
     ) {
+      setCurrentStepIndex((prev) => prev + 1);
+    }
+  };
+
+  const validateSecondStep = (e) => {
+    e.preventDefault();
+    const newIngredientsErrors = newRecipeErrors.ingredientsErrors;
+
+    for (let i = 0; i < newRecipeDetails.ingredients.length; i++) {
+      if (newRecipeDetails.ingredients[i].length === 0) {
+        newIngredientsErrors[i] = true;
+      }
+    }
+
+    setNewRecipeErrors((prev) => {
+      return {
+        ...prev,
+        ingredientsErrors: newIngredientsErrors,
+      };
+    });
+
+    if (newRecipeErrors.ingredientsErrors.every((error) => !error)) {
       setCurrentStepIndex((prev) => prev + 1);
     }
   };
@@ -292,7 +301,7 @@ export const AddRecipe = () => {
     });
 
     handleAddedRecipe();
-    navigate('/dashboard')
+    navigate("/dashboard");
   };
 
   return (
@@ -312,12 +321,19 @@ export const AddRecipe = () => {
                 ) : null}
               </ButtonWrapper>
               <ButtonWrapper justify="flex-end">
-                {currentStepIndex <
-                currentStep.indexOf(currentStep[currentStep.length - 1]) ? (
-                  <Button onClick={handleNext}>Dalej</Button>
-                ) : (
-                  <input type="submit" value="Gotowe!" />
-                )}
+                {currentStepIndex === 0 ? (
+                  <Button type="button" onClick={validateFirstStep}>
+                    Dalej
+                  </Button>
+                ) : null}
+                {currentStepIndex === 1 ? (
+                  <Button type="button" onClick={validateSecondStep}>
+                    Dalej
+                  </Button>
+                ) : null}
+                {currentStepIndex > 1 ? (
+                  <Button type="submit">Gotowe</Button>
+                ) : null}
               </ButtonWrapper>
             </ButtonsContainer>
           </Form>

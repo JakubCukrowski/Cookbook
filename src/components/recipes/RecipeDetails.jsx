@@ -7,13 +7,9 @@ import Alert from "react-bootstrap/Alert";
 //podzielic na mniejsze komponenty
 export const RecipeDetails = ({
   details,
-  updateName,
-  prepTime,
-  diffLevel,
-  desc,
   errors,
   updateImage,
-  updateCategory,
+  updateRecipeDetails
 }) => {
   const handleOnDrop = (ev) => {
     ev.preventDefault();
@@ -51,7 +47,7 @@ export const RecipeDetails = ({
             value={details.name}
             type="text"
             id="recipe_name"
-            onChange={(e) => updateName(e.target.value)}
+            onChange={(e) => updateRecipeDetails(e)}
           />
         </FormGroup>
         {details.image === "" && errors.imageError ? (
@@ -106,7 +102,7 @@ export const RecipeDetails = ({
             value={details.preparationTime}
             name="preparationTime"
             id="preparation_time"
-            onChange={(e) => prepTime(e.target.value)}
+            onChange={(e) => updateRecipeDetails(e)}
           >
             <option value="15">15 minut</option>
             <option value="30">30 minut</option>
@@ -121,7 +117,7 @@ export const RecipeDetails = ({
             value={details.difficulty}
             name="difficulty"
             id="difficulty_level"
-            onChange={(e) => diffLevel(e.target.value)}
+            onChange={(e) => updateRecipeDetails(e)}
           >
             <option value="easy">Łatwy</option>
             <option value="medium">Średni</option>
@@ -142,7 +138,7 @@ export const RecipeDetails = ({
             value={details.category}
             name="category"
             id="recipe_category"
-            onChange={(e) => updateCategory(e.target.value)}
+            onChange={(e) => updateRecipeDetails(e)}
           >
             <option value="default">wybierz</option>
             <option value="Dania główne">Dania główne</option>
@@ -165,7 +161,7 @@ export const RecipeDetails = ({
             name="description"
             id="recipe_description"
             value={details.description}
-            onChange={(e) => desc(e.target.value)}
+            onChange={(e) => updateRecipeDetails(e)}
           />
         </FormGroup>
       </div>
