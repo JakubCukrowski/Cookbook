@@ -37,7 +37,7 @@ export const AddRecipe = () => {
     imageError: false,
     ingredientsErrors: [false, false, false],
     nameError: false,
-    preparationSteps: false,
+    preparationStepsErrors: [false, false, false],
   });
 
   //gathers profanity words
@@ -46,7 +46,7 @@ export const AddRecipe = () => {
   const navigate = useNavigate();
 
   //steps state
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(2);
 
   //gibberish regex
   const gibberishCheck = /(.)\1{2,}/;
@@ -160,11 +160,21 @@ export const AddRecipe = () => {
     });
   };
 
+  //preparation stesp
   const handleStepsObject = (object) => {
     setNewRecipeDetails((prev) => {
       return {
         ...prev,
         preparationSteps: object,
+      };
+    });
+  };
+
+  const handleStepsErrors = (array) => {
+    setNewRecipeErrors((prev) => {
+      return {
+        ...prev,
+        preparationStepsErrors: array,
       };
     });
   };
@@ -189,6 +199,8 @@ export const AddRecipe = () => {
       details={newRecipeDetails}
       addNextStep={addNextStep}
       handleStepsObject={handleStepsObject}
+      errors={newRecipeErrors}
+      handleStepsErrors={handleStepsErrors}
     />,
   ];
 
@@ -274,49 +286,84 @@ export const AddRecipe = () => {
 
   //submit form
   const handleSubmitForm = async (e) => {
-    const currentDate = Date.now();
     e.preventDefault();
 
-    //set document in firestore
-    const docRef = await addDoc(collection(db, "recipes"), {
-      addedBy: newRecipeDetails.addedBy,
-      category: newRecipeDetails.category,
-      createdAt: currentDate,
-      ingredients: newRecipeDetails.ingredients,
-      likes: newRecipeDetails.likes,
-      name: newRecipeDetails.name,
-      preparationTime: newRecipeDetails.preparationTime,
-      difficulty: newRecipeDetails.difficulty,
-      description: newRecipeDetails.description,
-      steps: newRecipeDetails.preparationSteps,
+    const newPreparationErrors = newRecipeErrors.preparationStepsErrors;
+    const preparationStepsObject = Object.keys(
+      newRecipeDetails.preparationSteps
+    );
+    const mappedPreparationSteps = preparationStepsObject.map(
+      (step) => newRecipeDetails.preparationSteps[step]
+    );
+
+    for (let i = 0; i < mappedPreparationSteps.length; i++) {
+      if (
+        mappedPreparationSteps[i].length === 0 ||
+        (mappedPreparationSteps[i].length > 0 &&
+          mappedPreparationSteps[i].length < 15)
+      ) {
+        newPreparationErrors[i] = true;
+      }
+    }
+
+    setNewRecipeErrors((prev) => {
+      return {
+        ...prev,
+        preparationStepsErrors: newPreparationErrors,
+      };
     });
 
-    //create a storage for the image
-    const recipesRef = ref(
-      storage,
-      `recipe/${docRef.id}/${newRecipeDetails.image.name}`
-    );
+    // if () {
 
-    //upload the image
-    await uploadBytes(recipesRef, newRecipeDetails.image).then((snapshot) =>
-      console.log(snapshot)
-    );
+    // }
+    // else {
+    //   const currentDate = Date.now();
 
-    //set the image url to document in firestore
-    const currentRecipeRef = ref(
-      storage,
-      `/recipe/${docRef.id}/${newRecipeDetails.image.name}`
-    );
+    // //set document in firestore
+    // const docRef = await addDoc(collection(db, "recipes"), {
+    //   addedBy: newRecipeDetails.addedBy,
+    //   category: newRecipeDetails.category,
+    //   createdAt: currentDate,
+    //   ingredients: newRecipeDetails.ingredients,
+    //   likes: newRecipeDetails.likes,
+    //   name: newRecipeDetails.name,
+    //   preparationTime: newRecipeDetails.preparationTime,
+    //   difficulty: newRecipeDetails.difficulty,
+    //   description: newRecipeDetails.description,
+    //   steps: newRecipeDetails.preparationSteps,
+    // });
 
-    await getDownloadURL(currentRecipeRef).then((url) => {
-      updateDoc(doc(db, "recipes", docRef.id), {
-        image: url,
-      });
-    });
+    // //create a storage for the image
+    // const recipesRef = ref(
+    //   storage,
+    //   `recipe/${docRef.id}/${newRecipeDetails.image.name}`
+    // );
 
-    handleAddedRecipe();
-    navigate("/dashboard");
+    // //upload the image
+    // await uploadBytes(recipesRef, newRecipeDetails.image).then((snapshot) =>
+    //   console.log(snapshot)
+    // );
+
+    // //set the image url to document in firestore
+    // const currentRecipeRef = ref(
+    //   storage,
+    //   `/recipe/${docRef.id}/${newRecipeDetails.image.name}`
+    // );
+
+    // await getDownloadURL(currentRecipeRef).then((url) => {
+    //   updateDoc(doc(db, "recipes", docRef.id), {
+    //     image: url,
+    //   });
+    // });
+
+    // handleAddedRecipe();
+    // navigate("/dashboard");
+    // }
   };
+
+  Object.entries(newRecipeDetails.preparationSteps).map((entry) =>
+    console.log(entry[1])
+  );
 
   return (
     <PaddingContainer>
