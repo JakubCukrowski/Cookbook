@@ -7,33 +7,41 @@ import { LikeButton } from "../LikeButton";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useEffect, useState } from "react";
+import { storage } from "../../firebase";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 
 export const SingleRecipe = () => {
-  
   const { recipeId } = useParams();
   const [searchedRecipe, setSearchedRecipe] = useState(null);
   const [isFound, setIsFound] = useState(false);
+  const [authorName, setAuthorName] = useState(null);
+  const [authorProfilePhotoURL, setAuthorProfilePhotoURL] = useState("");
 
+  //donwload the recipe, get author name
   useEffect(() => {
-    const getSingleDoc = async () => {
-      const docRef = doc(db, "recipes", recipeId);
-      const docSnap = await getDoc(docRef);
-      setSearchedRecipe(docSnap.data());
-      setIsFound(true)
+    const getSingleRecipeData = async () => {
+      const recipeRef = doc(db, "recipes", recipeId);
+      const recipeSnap = await getDoc(recipeRef);
+      setSearchedRecipe(recipeSnap.data());
+      setIsFound(true);
+
+      const userRef = doc(db, "users", recipeSnap.data().addedBy);
+      const userSnap = await getDoc(userRef);
+      setAuthorName(userSnap.data().username);
+
+      const listRef = ref(storage, `/profile/${recipeSnap.data().addedBy}`);
+      await listAll(listRef).then((res) =>
+        res.items.forEach(
+          async (item) =>
+            await getDownloadURL(item).then((url) =>
+              setAuthorProfilePhotoURL(url)
+            )
+        )
+      );
     };
 
-    getSingleDoc()
+    getSingleRecipeData();
   }, []);
-
-  //handle liked recipes in firebase
-  const handleSaveData = async (data) => {
-    // const userRef = doc(db, "users", user.uid);
-    // await updateDoc(userRef, {
-    //   liked: arrayUnion(data),
-    // });
-    // setLikedRecipes((prev) => [...prev, data]);
-    // updateLikesCount(recipeId);
-  };
 
   return (
     <section>
@@ -51,29 +59,26 @@ export const SingleRecipe = () => {
           <Row style={{ marginBottom: 30 }}>
             <Col
               style={{
+                border: "1px solid red",
                 display: "flex",
                 justifyContent: "center",
                 position: "relative",
               }}
             >
-              <StyledImage rounded src={searchedRecipe.image} />
-              {/* {user ? (
-                <LikeButton
-                  className={checkIfExists(recipeId) ? "liked" : ""}
-                  onClick={
-                    checkIfExists(recipeId)
-                      ? () => dislikeRecipe(findRecipe._id)
-                      : () => handleSaveData(findRecipe)
-                  }
-                  top="0"
-                  right="30px"
-                  rightTablet="180px"
-                  rightDesktop="200px"
-                  rightXl="220px"
+              <div style={{position: "absolute", bottom: 0, right: 0}}>
+                <p>{authorName}</p>
+                <img
+                  style={{ width: 120, height: 120, borderRadius: "50%" }}
+                  src={authorProfilePhotoURL}
+                  alt="profile_photo"
                 />
-              ) : (
-                ""
-              )} */}
+              </div>
+              <StyledImage rounded src={searchedRecipe.image} />
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={5}>
+              <p>{searchedRecipe.description}</p>
             </Col>
           </Row>
           <Row style={{ justifyContent: "center" }}>
