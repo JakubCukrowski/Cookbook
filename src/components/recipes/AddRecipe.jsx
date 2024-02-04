@@ -106,10 +106,21 @@ export const AddRecipe = () => {
   const updateImage = (value) =>
     setNewRecipeDetails((prev) => ({ ...prev, image: value }));
 
-  //ingredients logic
+  //adds ingredients and relative error 
   const handleIngredients = () => {
-    setNewRecipeDetails((prev) => [...prev.ingredients, ""]);
-    setNewRecipeErrors((prev) => [...prev.ingredientsErrors, false]);
+    setNewRecipeDetails(prev => {
+      console.log(prev.ingredientsErrors);
+      return {
+        ...prev,
+        ingredients: [...prev.ingredients, '']
+      }
+    })
+    setNewRecipeErrors(prev => {
+      return {
+        ...prev,
+        ingredientsErrors: [...prev.ingredientsErrors, false]
+      }
+    })
   };
 
   const handleIngredientsArray = (array) =>

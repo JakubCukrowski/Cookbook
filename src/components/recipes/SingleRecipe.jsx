@@ -9,6 +9,10 @@ import { db } from "../../firebase";
 import { useEffect, useState } from "react";
 import { storage } from "../../firebase";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
+import { AuthorImageWrapper } from "./AuthorImageWrapper";
+import { RecipeDescription } from "./RecipeDescription";
+import { RecipeAuthor } from "./RecipeAuthor";
+import { RecipeAuthorWrapper } from "./RecipeAuthorWrapper";
 
 export const SingleRecipe = () => {
   const { recipeId } = useParams();
@@ -59,26 +63,27 @@ export const SingleRecipe = () => {
           <Row style={{ marginBottom: 30 }}>
             <Col
               style={{
-                border: "1px solid red",
                 display: "flex",
                 justifyContent: "center",
                 position: "relative",
               }}
             >
-              <div style={{position: "absolute", bottom: 0, right: 0}}>
-                <p>{authorName}</p>
-                <img
-                  style={{ width: 120, height: 120, borderRadius: "50%" }}
-                  src={authorProfilePhotoURL}
-                  alt="profile_photo"
-                />
-              </div>
               <StyledImage rounded src={searchedRecipe.image} />
             </Col>
           </Row>
           <Row>
-            <Col sm={5}>
-              <p>{searchedRecipe.description}</p>
+            <RecipeAuthorWrapper>
+              <AuthorImageWrapper>
+                <img src={authorProfilePhotoURL} alt="profile_photo" />
+              </AuthorImageWrapper>
+              <RecipeAuthor>{authorName}</RecipeAuthor>
+            </RecipeAuthorWrapper>
+          </Row>
+          <Row>
+            <Col sm={5} style={{ marginTop: 10 }}>
+              <RecipeDescription>
+                {searchedRecipe.description}
+              </RecipeDescription>
             </Col>
           </Row>
           <Row style={{ justifyContent: "center" }}>
