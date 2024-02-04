@@ -34,14 +34,20 @@ export const SingleRecipe = () => {
       setAuthorName(userSnap.data().username);
 
       const listRef = ref(storage, `/profile/${recipeSnap.data().addedBy}`);
-      await listAll(listRef).then((res) =>
-        res.items.forEach(
-          async (item) =>
-            await getDownloadURL(item).then((url) =>
-              setAuthorProfilePhotoURL(url)
-            )
-        )
-      );
+      const anonRef = ref(storage, "/profile/anon-chef1.png");
+      await listAll(listRef).then((res) => {
+        //check if user udated photo. If not sets url as anonymous photo
+        if (res.items.length === 0) {
+          getDownloadURL(anonRef).then(url => setAuthorProfilePhotoURL(url))
+        } else {
+          res.items.forEach(
+            (item) =>
+              getDownloadURL(item).then((url) =>
+                setAuthorProfilePhotoURL(url)
+              )
+          );
+        }
+      });
     };
 
     getSingleRecipeData();
