@@ -50,4 +50,12 @@ export const GlobalStyle = createGlobalStyle`
         position: fixed;
         top: 10%;
     }
-`
+
+    .position_fixed {
+        @media (min-width: 450px) {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    }
+`;

@@ -3,12 +3,14 @@ import { Container, Row, Col } from "react-bootstrap";
 import { StyledFooter } from "./StyledFooter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export const Footer = () => {
+    const location = useLocation()
+    const pathname = location.pathname
 
     return (
-        <StyledFooter>
+        <StyledFooter className={pathname === '/violation' ? 'position_fixed' : null}>
             <Container>
                 <Row>
                     <Col style={{textAlign: "center"}}>

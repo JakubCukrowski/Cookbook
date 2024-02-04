@@ -178,8 +178,7 @@ export const AddRecipe = () => {
   const validateFirstStep = (e) => {
     e.preventDefault();
     if (profanityArray.length > 0) {
-      //tutaj będzie strona z errorem w przypadku podania wulgarnej nazwy przepisu
-      navigate("/");
+      navigate("/violation");
     }
 
     if (
