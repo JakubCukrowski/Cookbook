@@ -10,7 +10,7 @@ export const Ingredients = ({
   handleIngredientsArray,
   errors,
   handleIngredientsErrors,
-  gibberishCheck
+  gibberishCheck,
 }) => {
   // changes the value of ingredients array element, also clears the error
   const handleInputChange = (e, index) => {
@@ -40,6 +40,8 @@ export const Ingredients = ({
     clearInputError(index, secondArray);
   };
 
+  console.log(errors.ingredientsErrors);
+
   return (
     <>
       <p>Dodaj składniki</p>
@@ -53,7 +55,9 @@ export const Ingredients = ({
           {errors.ingredientsErrors[index] &&
           details.ingredients[index].length > 0 &&
           details.ingredients[index].length < 3 ? (
-            <Alert variant="danger">Składnik musi mieć przynajmniej 3 znaki</Alert>
+            <Alert variant="danger">
+              Składnik musi mieć przynajmniej 3 znaki
+            </Alert>
           ) : null}
           {errors.ingredientsErrors[index] &&
           details.ingredients[index].length >= 3 &&
@@ -64,8 +68,14 @@ export const Ingredients = ({
             <Form.Control
               value={details.ingredients[index]}
               isInvalid={
-                errors.ingredientsErrors[index] &&
-                details.ingredients[index].length === 0
+                (errors.ingredientsErrors[index] &&
+                  details.ingredients[index].length === 0) ||
+                (errors.ingredientsErrors[index] &&
+                  details.ingredients[index].length > 0 &&
+                  details.ingredients[index].length < 3) ||
+                (errors.ingredientsErrors[index] &&
+                  details.ingredients[index].length >= 3 &&
+                  details.ingredients[index].match(gibberishCheck))
               }
               id={`ingredient${index + 1}`}
               onChange={(e) => handleInputChange(e, index)}
