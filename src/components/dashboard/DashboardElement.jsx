@@ -18,7 +18,7 @@ export const DashboardElement = ({
         <ElementWrapper>
           <strong>{strongTitle}</strong>
           {isButton ? (
-            <Button onClick={onClick}>
+            <Button variant="dark" onClick={onClick}>
               <FontAwesomeIcon icon={faPenToSquare} />
             </Button>
           ) : null}

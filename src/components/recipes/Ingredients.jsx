@@ -97,7 +97,7 @@ export const Ingredients = ({
           </div>
         </FormGroup>
       ))}
-      <Button style={{ marginTop: 20 }} onClick={() => handleIngredients()}>
+      <Button variant="dark" style={{ marginTop: 20 }} onClick={() => handleIngredients()}>
         <FontAwesomeIcon icon={faPlus} /> Dodaj kolejny
       </Button>
     </>

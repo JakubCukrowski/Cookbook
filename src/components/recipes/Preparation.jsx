@@ -50,7 +50,7 @@ export const Preparation = ({
           </FormGroup>
         );
       })}
-      <Button onClick={() => addNextStep()}>
+      <Button variant="dark" onClick={() => addNextStep()}>
         <FontAwesomeIcon icon={faPlus} /> Dodaj kolejny
       </Button>
     </>
