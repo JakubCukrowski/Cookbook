@@ -90,7 +90,7 @@ export const RecipeDetails = ({
           ) : (
             <>
               <p>Dodano plik: {details.image.name}</p>
-              <Button
+              <Button variant="dark"
                 onClick={() => {
                   updateImage("");
                   console.log("done");

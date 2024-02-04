@@ -1,30 +1,54 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import {
-  StyledLink,
-  StyledNavbar,
-  StyledNavbarColapse,
-} from "./StyledNavbar";
+import { StyledLink, StyledNavbar, StyledNavbarColapse } from "./StyledNavbar";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
-import anonImage from '../../images/anon-chef1.png'
+import anonImage from "../../images/anon-chef1.png";
 import { LoggedUserImage } from "./LoggedUserImage";
+import { Button } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import { BootstrapModal } from "../BootstrapModal";
+import { useEffect, useState } from "react";
 
 export const CustomNavbar = () => {
   const { user, signout, userImage, displayName } = UserAuth();
   const navigate = useNavigate();
+  const [loggedOut, setLoggedOut] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const pathname = window.location.pathname;
 
   const handleSignOut = async () => {
     try {
       await signout();
+      setLoggedOut(true);
       navigate("/");
+
+      const timeout = setTimeout(() => {
+        setLoggedOut(false);
+      }, 2000);
+
+      return () => clearTimeout(timeout);
     } catch (error) {
       console.log(error);
     }
   };
+
+  //show modal
+  useEffect(() => {
+    if (loggedOut) {
+      const interval = setInterval(() => {
+        setProgress((prev) => prev + 5);
+        console.log("dd");
+      }, 50);
+
+      return () => clearInterval(interval);
+    } else {
+      setProgress(0);
+    }
+  }, [loggedOut]);
 
   return (
     <>
@@ -45,8 +69,16 @@ export const CustomNavbar = () => {
                   <Nav.Item>
                     <Link className="nav-link" to="/dashboard">
                       Zalogowany: {displayName}{" "}
-                      <LoggedUserImage src={userImage ? userImage : anonImage} alt="profile_image" />
+                      <LoggedUserImage
+                        src={userImage ? userImage : anonImage}
+                        alt="profile_image"
+                      />
                     </Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Button onClick={handleSignOut} variant="danger">
+                      <FontAwesomeIcon icon={faPowerOff} /> Wyloguj
+                    </Button>
                   </Nav.Item>
                 </>
               ) : (
@@ -59,6 +91,9 @@ export const CustomNavbar = () => {
             </Nav>
           </StyledNavbarColapse>
         </Container>
+        {loggedOut ? (
+          <BootstrapModal title="Wylogowano pomyślnie" progress={progress} />
+        ) : null}
       </StyledNavbar>
     </>
   );

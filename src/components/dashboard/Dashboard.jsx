@@ -19,6 +19,7 @@ import { StyledH2 } from "../../styles/StyledH2";
 import { DashboardImageWrapper } from "./DashboardImageWrapper";
 import { UpdateUserPhoto } from "./UpdateUserPhoto";
 import { Pagination } from "react-bootstrap";
+import {CustomPaginationItem} from './CustomPaginationItem'
 
 export const Dashboard = () => {
   const {
@@ -100,13 +101,13 @@ export const Dashboard = () => {
     number++
   ) {
     items.push(
-      <Pagination.Item
+      <CustomPaginationItem
         key={number}
         active={number === currentPage}
         onClick={() => setCurrentPage(number)}
       >
         {number}
-      </Pagination.Item>
+      </CustomPaginationItem>
     );
   }
 

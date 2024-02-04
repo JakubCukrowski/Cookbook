@@ -46,7 +46,7 @@ export const AddRecipe = () => {
   const navigate = useNavigate();
 
   //steps state
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(2);
 
   //gibberish regex
   const gibberishCheck = /(.)\1{2,}/;
@@ -341,22 +341,22 @@ export const AddRecipe = () => {
             <ButtonsContainer>
               <ButtonWrapper justify="flex-start">
                 {currentStepIndex > 0 ? (
-                  <Button onClick={handlePrevious}>Wstecz</Button>
+                  <Button variant="dark" onClick={handlePrevious}>Wstecz</Button>
                 ) : null}
               </ButtonWrapper>
               <ButtonWrapper justify="flex-end">
                 {currentStepIndex === 0 ? (
-                  <Button type="button" onClick={validateFirstStep}>
+                  <Button variant="dark" type="button" onClick={validateFirstStep}>
                     Dalej
                   </Button>
                 ) : null}
                 {currentStepIndex === 1 ? (
-                  <Button type="button" onClick={validateSecondStep}>
+                  <Button variant="dark" type="button" onClick={validateSecondStep}>
                     Dalej
                   </Button>
                 ) : null}
                 {currentStepIndex > 1 ? (
-                  <Button type="submit">Gotowe</Button>
+                  <Button variant="dark" type="submit">Gotowe</Button>
                 ) : null}
               </ButtonWrapper>
             </ButtonsContainer>
