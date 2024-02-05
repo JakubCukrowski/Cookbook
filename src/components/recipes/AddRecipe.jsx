@@ -46,10 +46,13 @@ export const AddRecipe = () => {
   const navigate = useNavigate();
 
   //steps state
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(2);
 
   //gibberish regex
   const gibberishCheck = /(.)\1{2,}/;
+
+  //block submiting multiple times
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   //update user id while adding recipe
   useEffect(() => {
@@ -283,6 +286,7 @@ export const AddRecipe = () => {
     });
 
     if (newRecipeErrors.preparationStepsErrors.every((error) => !error)) {
+      setIsSubmitted(true)
       const currentDate = Date.now();
 
       //set document in firestore
@@ -355,7 +359,7 @@ export const AddRecipe = () => {
                   </Button>
                 ) : null}
                 {currentStepIndex > 1 ? (
-                  <Button variant="dark" type="submit">Gotowe</Button>
+                  <Button variant="dark" type="submit" disabled={isSubmitted}>Gotowe</Button>
                 ) : null}
               </ButtonWrapper>
             </ButtonsContainer>
