@@ -46,13 +46,16 @@ export const AddRecipe = () => {
   const navigate = useNavigate();
 
   //steps state
-  const [currentStepIndex, setCurrentStepIndex] = useState(2);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   //gibberish regex
   const gibberishCheck = /(.)\1{2,}/;
 
   //block submiting multiple times
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  //shows if image file is actually an image
+  const [isImage, setIsImage] = useState(null);
 
   //update user id while adding recipe
   useEffect(() => {
@@ -109,21 +112,26 @@ export const AddRecipe = () => {
   const updateImage = (value) =>
     setNewRecipeDetails((prev) => ({ ...prev, image: value }));
 
-  //adds ingredients and relative error 
+  //check if image 
+  const checkIfImage = (value) => {
+    setIsImage(value)
+  }
+
+  //adds ingredients and relative error
   const handleIngredients = () => {
-    setNewRecipeDetails(prev => {
+    setNewRecipeDetails((prev) => {
       console.log(prev.ingredientsErrors);
       return {
         ...prev,
-        ingredients: [...prev.ingredients, '']
-      }
-    })
-    setNewRecipeErrors(prev => {
+        ingredients: [...prev.ingredients, ""],
+      };
+    });
+    setNewRecipeErrors((prev) => {
       return {
         ...prev,
-        ingredientsErrors: [...prev.ingredientsErrors, false]
-      }
-    })
+        ingredientsErrors: [...prev.ingredientsErrors, false],
+      };
+    });
   };
 
   const handleIngredientsArray = (array) =>
@@ -159,6 +167,8 @@ export const AddRecipe = () => {
       updateImage={updateImage}
       updateRecipeDetails={updateRecipeDetails}
       gibberishCheck={gibberishCheck}
+      isImage={isImage}
+      checkIfImage={checkIfImage}
     />,
     <Ingredients
       details={newRecipeDetails}
@@ -215,7 +225,8 @@ export const AddRecipe = () => {
       newRecipeDetails.image !== "" &&
       newRecipeDetails.category !== "" &&
       newRecipeDetails.category !== "default" &&
-      !newRecipeDetails.name.match(gibberishCheck)
+      !newRecipeDetails.name.match(gibberishCheck) &&
+      isImage
     ) {
       setCurrentStepIndex((prev) => prev + 1);
     }
@@ -286,7 +297,7 @@ export const AddRecipe = () => {
     });
 
     if (newRecipeErrors.preparationStepsErrors.every((error) => !error)) {
-      setIsSubmitted(true)
+      setIsSubmitted(true);
       const currentDate = Date.now();
 
       //set document in firestore
@@ -310,9 +321,7 @@ export const AddRecipe = () => {
       );
 
       //upload the image
-      await uploadBytes(recipesRef, newRecipeDetails.image).then((snapshot) =>
-        console.log(snapshot)
-      );
+      await uploadBytes(recipesRef, newRecipeDetails.image)
 
       //set the image url to document in firestore
       const currentRecipeRef = ref(
@@ -344,22 +353,34 @@ export const AddRecipe = () => {
             <ButtonsContainer>
               <ButtonWrapper justify="flex-start">
                 {currentStepIndex > 0 ? (
-                  <Button variant="dark" onClick={handlePrevious}>Wstecz</Button>
+                  <Button variant="dark" onClick={handlePrevious}>
+                    Wstecz
+                  </Button>
                 ) : null}
               </ButtonWrapper>
               <ButtonWrapper justify="flex-end">
                 {currentStepIndex === 0 ? (
-                  <Button variant="dark" type="button" onClick={validateFirstStep}>
+                  <Button
+                    variant="dark"
+                    type="button"
+                    onClick={validateFirstStep}
+                  >
                     Dalej
                   </Button>
                 ) : null}
                 {currentStepIndex === 1 ? (
-                  <Button variant="dark" type="button" onClick={validateSecondStep}>
+                  <Button
+                    variant="dark"
+                    type="button"
+                    onClick={validateSecondStep}
+                  >
                     Dalej
                   </Button>
                 ) : null}
                 {currentStepIndex > 1 ? (
-                  <Button variant="dark" type="submit" disabled={isSubmitted}>Gotowe</Button>
+                  <Button variant="dark" type="submit">
+                    Gotowe
+                  </Button>
                 ) : null}
               </ButtonWrapper>
             </ButtonsContainer>
