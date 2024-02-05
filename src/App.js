@@ -14,6 +14,7 @@ import { RecipesPage } from "./components/recipes/RecipesPage";
 import { GlobalStyle } from "./styles/GlobalStyles";
 import { AddRecipe } from "./components/recipes/AddRecipe";
 import { PrivateRoute } from "./components/private_route/PrivateRoute";
+import { ProfanityViolation } from "./components/profanity/ProfanityViolation";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             />
             <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
             <Route path="/search" element={<RecipesPage />} />
+            <Route path="/violation" element={<ProfanityViolation />}/>
             <Route
               path="/dashboard"
               element={

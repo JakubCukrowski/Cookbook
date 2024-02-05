@@ -41,7 +41,6 @@ export const CustomNavbar = () => {
     if (loggedOut) {
       const interval = setInterval(() => {
         setProgress((prev) => prev + 5);
-        console.log("dd");
       }, 50);
 
       return () => clearInterval(interval);
