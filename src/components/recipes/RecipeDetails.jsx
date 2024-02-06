@@ -1,6 +1,6 @@
 import { faCamera, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, FormGroup } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 
@@ -11,6 +11,8 @@ export const RecipeDetails = ({
   updateImage,
   updateRecipeDetails,
   gibberishCheck,
+  isImage,
+  checkIfImage,
 }) => {
   const handleOnDrop = (ev) => {
     ev.preventDefault();
@@ -27,6 +29,24 @@ export const RecipeDetails = ({
   const onImageChange = (e) => {
     updateImage(e.target.files[0]);
   };
+
+  const imageTypes = [
+    "/image/apng",
+    "image/avif",
+    "image/gif",
+    "image/jpeg",
+    "image/png",
+    "image/svg+xml",
+    "image/webp",
+  ];
+
+  useEffect(() => {
+    if (!imageTypes.includes(details.image.type)) {
+      checkIfImage(false);
+    } else {
+      checkIfImage(true);
+    }
+  }, [details.image]);
 
   return (
     <>
@@ -57,6 +77,16 @@ export const RecipeDetails = ({
         </FormGroup>
         {details.image === "" && errors.imageError ? (
           <Alert variant="danger">Musisz dodać zdjęcie</Alert>
+        ) : null}
+        {imageTypes.includes(details.image.type) && isImage ? (
+          <Alert variant="success">Plik jest poprawny</Alert>
+        ) : null}
+        {!imageTypes.includes(details.image.type) &&
+        details.image.type !== undefined &&
+        !isImage ? (
+          <Alert variant="danger">
+            Sprawdź czy plik na pewno jest zdjęciem
+          </Alert>
         ) : null}
         <FormGroup
           className={`mb-3 form_group_sfg ${
@@ -90,10 +120,10 @@ export const RecipeDetails = ({
           ) : (
             <>
               <p>Dodano plik: {details.image.name}</p>
-              <Button variant="dark"
+              <Button
+                variant="dark"
                 onClick={() => {
                   updateImage("");
-                  console.log("done");
                 }}
               >
                 Zmień

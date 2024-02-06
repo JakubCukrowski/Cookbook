@@ -58,4 +58,22 @@ export const GlobalStyle = createGlobalStyle`
             width: 100%;
         }
     }
+
+    .tooltip-inner {
+        background-color: tomato;
+        font-size: 20px;
+        padding: 4px 10px;
+    }
+
+    .tooltip-arrow {
+        
+        &::before {
+            border-top-color: tomato !important;
+        }
+    }
+
+    .search-bar-error {
+        border: 2px solid tomato;
+        border-radius: 12px;
+    }
 `;
