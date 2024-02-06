@@ -4,7 +4,7 @@ import { StyledImage } from "../../styles/StyledImage";
 import { SingleRecipeH2 } from "../../styles/StyledH2";
 import { SpinnerContainer } from "../../styles/Containers";
 import { LikeButton } from "../LikeButton";
-import { doc, getDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useEffect, useState } from "react";
 import { storage } from "../../firebase";
@@ -13,15 +13,18 @@ import { AuthorImageWrapper } from "./AuthorImageWrapper";
 import { RecipeDescription } from "./RecipeDescription";
 import { RecipeAuthor } from "./RecipeAuthor";
 import { RecipeAuthorWrapper } from "./RecipeAuthorWrapper";
+import { UserAuth } from "../../context/AuthContext";
 
 export const SingleRecipe = () => {
   const { recipeId } = useParams();
+  const { user } = UserAuth();
   const [searchedRecipe, setSearchedRecipe] = useState(null);
   const [isFound, setIsFound] = useState(false);
   const [authorName, setAuthorName] = useState(null);
   const [authorProfilePhotoURL, setAuthorProfilePhotoURL] = useState("");
+  const [isLiked, setIsLiked] = useState(false)
 
-  //donwload the recipe, get author name
+  //donwload the recipe, get author name, check if liked by user
   useEffect(() => {
     const getSingleRecipeData = async () => {
       const recipeRef = doc(db, "recipes", recipeId);
@@ -38,20 +41,32 @@ export const SingleRecipe = () => {
       await listAll(listRef).then((res) => {
         //check if user udated photo. If not sets url as anonymous photo
         if (res.items.length === 0) {
-          getDownloadURL(anonRef).then(url => setAuthorProfilePhotoURL(url))
+          getDownloadURL(anonRef).then((url) => setAuthorProfilePhotoURL(url));
         } else {
-          res.items.forEach(
-            (item) =>
-              getDownloadURL(item).then((url) =>
-                setAuthorProfilePhotoURL(url)
-              )
+          res.items.forEach((item) =>
+            getDownloadURL(item).then((url) => setAuthorProfilePhotoURL(url))
           );
         }
       });
     };
 
     getSingleRecipeData();
+
+    const checkIfLiked = async () => {
+      const loggedUserRef = doc(db, "users", user.uid)
+      const userData = await getDoc(loggedUserRef)
+      setIsLiked(userData.data().liked.includes(recipeId))
+    }
+
+    checkIfLiked()
   }, []);
+
+  const handleLikeRecipe = async () => {
+    const userRef = doc(db, "users", user.uid);
+    await updateDoc(userRef, {
+      liked: arrayUnion(recipeId),
+    });
+  };
 
   return (
     <section>
@@ -84,6 +99,14 @@ export const SingleRecipe = () => {
               </AuthorImageWrapper>
               <RecipeAuthor>{authorName}</RecipeAuthor>
             </RecipeAuthorWrapper>
+            <Col>
+              {user ? (
+                <LikeButton
+                  onClick={handleLikeRecipe}
+                  disabled={isLiked}
+                ></LikeButton>
+              ) : null}
+            </Col>
           </Row>
           <Row>
             <Col sm={5} style={{ marginTop: 10 }}>
