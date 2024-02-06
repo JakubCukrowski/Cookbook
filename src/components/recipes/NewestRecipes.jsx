@@ -20,6 +20,6 @@ export const NewestRecipes = () => {
     }
 
     return (
-        <RecipesGroup title="Najnowsze przepisy" array={sortedRecipes} onClick={handleClick}/>
+        <RecipesGroup title="Najnowsze przepisy" array={sortedRecipes} onClick={handleClick} addButton={true}/>
     )
 }

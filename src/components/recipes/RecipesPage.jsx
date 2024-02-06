@@ -16,18 +16,16 @@ export const RecipesPage = () => {
     updateQueryResults,
   } = UserAuth();
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [isDownloaded, setIsDownloaded] = useState(false);
 
   const query = searchParams.get("query");
 
   useEffect(() => {
     updateQueryText(query);
-    navigate(`/search?query=${query}`);
 
     const fuse = new Fuse(recipes, {
       keys: ["name"],
-      threshold: 0.3,
+      threshold: 0.4,
       includeMatches: true,
     });
 
@@ -49,7 +47,7 @@ export const RecipesPage = () => {
       {isDownloaded ? (
         <section>
           <RecipesGroup
-            title={`Przepisy zawierające: ${query}`}
+            title={queryText.length > 0 ? `Przepisy zawierające: ${query}` : 'Brak wyników'}
             array={queryResults}
           />
         </section>
