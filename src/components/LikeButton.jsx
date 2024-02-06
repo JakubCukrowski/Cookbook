@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { StyledLikeButton } from "./recipes/StyledLikeButton";
 
-export const LikeButton = ({top, right, rightTablet, rightDesktop, rightXl, onClick, id, className, disabled}) => {
+export const LikeButton = ({onClick, id, className, disabled}) => {
 
     return (
         <>
@@ -11,12 +11,7 @@ export const LikeButton = ({top, right, rightTablet, rightDesktop, rightXl, onCl
                 className={className}
                 disabled={disabled}
                 id={id}
-                onClick={onClick} 
-                top={top} 
-                right={right} 
-                rightTablet={rightTablet} 
-                rightDesktop={rightDesktop} 
-                rightXl={rightXl}>
+                onClick={onClick}>
                 <FontAwesomeIcon icon={faHeart}/>
             </StyledLikeButton>
         </>
