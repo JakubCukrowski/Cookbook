@@ -46,6 +46,7 @@ export const Hero = () => {
 
   const handleInputValue = (e) => {
     updateQueryText(e.target.value);
+    setInputError(false)
   };
 
   //logic for keys down/up/enter
@@ -94,10 +95,12 @@ export const Hero = () => {
 
     if (e.key === "Enter" && queryResults.length > 0 && activeIndex !== "") {
       navigate(`/recipes/${queryResults[activeIndex].id}`);
-    } 
+    }
 
-    if (e.key === "Enter" && activeIndex === "") {
-      navigate(`/search?query=${queryText}`)
+    if (e.key === "Enter" && activeIndex === "" && queryText.length >= 2) {
+      navigate(`/search?query=${queryText}`);
+    } else {
+      setInputError(true)
     }
   };
 
@@ -125,7 +128,7 @@ export const Hero = () => {
 
     const fuse = new Fuse(recipes, {
       keys: ["name"],
-      threshold: 0.3,
+      threshold: 0.4,
       includeMatches: true,
     });
 
@@ -137,7 +140,7 @@ export const Hero = () => {
 
   const renderTooltip = (props) => (
     <Tooltip id="input-tooltip" {...props}>
-      Musisz podać więcej liter
+      Podaj przynajmniej 2 litery{" "}
     </Tooltip>
   );
 
@@ -163,8 +166,8 @@ export const Hero = () => {
                 autoComplete="off"
                 onChange={handleInputValue}
                 onFocus={() => {
-                  setIsFocused(true)
-                  setInputError(false)
+                  setIsFocused(true);
+                  setInputError(false);
                 }}
                 onBlur={handleFocusOut}
                 type="search"
