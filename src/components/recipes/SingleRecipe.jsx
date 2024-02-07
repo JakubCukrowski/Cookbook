@@ -4,7 +4,7 @@ import { StyledImage } from "../../styles/StyledImage";
 import { SingleRecipeH2 } from "../../styles/StyledH2";
 import { SpinnerContainer } from "../../styles/Containers";
 import { LikeButton } from "../LikeButton";
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useEffect, useState } from "react";
 import { storage } from "../../firebase";
@@ -22,7 +22,7 @@ export const SingleRecipe = () => {
   const [isFound, setIsFound] = useState(false);
   const [authorName, setAuthorName] = useState(null);
   const [authorProfilePhotoURL, setAuthorProfilePhotoURL] = useState("");
-  const [isLiked, setIsLiked] = useState(false)
+  const [isLiked, setIsLiked] = useState(false);
 
   //donwload the recipe, get author name, check if liked by user
   useEffect(() => {
@@ -51,21 +51,33 @@ export const SingleRecipe = () => {
     };
 
     getSingleRecipeData();
+  }, []);
 
+  useEffect(() => {
     const checkIfLiked = async () => {
       const loggedUserRef = doc(db, "users", user.uid)
       const userData = await getDoc(loggedUserRef)
       setIsLiked(userData.data().liked.includes(recipeId))
     }
 
-    checkIfLiked()
-  }, []);
+    if (user) {
+      checkIfLiked()
+    }
+  }, [])
 
   const handleLikeRecipe = async () => {
     const userRef = doc(db, "users", user.uid);
     await updateDoc(userRef, {
       liked: arrayUnion(recipeId),
     });
+    setIsLiked(prev => !prev)
+
+    if (isLiked) {
+      await updateDoc(userRef, {
+        liked: arrayRemove(recipeId)
+      })
+      setIsLiked(false)
+    }
   };
 
   return (
@@ -100,10 +112,10 @@ export const SingleRecipe = () => {
               <RecipeAuthor>{authorName}</RecipeAuthor>
             </RecipeAuthorWrapper>
             <Col>
-              {user ? (
+              {user && searchedRecipe.addedBy !== user.uid ? (
                 <LikeButton
                   onClick={handleLikeRecipe}
-                  disabled={isLiked}
+                  className={isLiked ? 'liked' : null}
                 ></LikeButton>
               ) : null}
             </Col>
