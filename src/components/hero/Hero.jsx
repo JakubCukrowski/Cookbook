@@ -9,7 +9,7 @@ import {
 import { SearchBarContainer } from "./SearchBarContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { Alert, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { SearchBarWrapper } from "./SearchBarWrapper";
 import { StyledSearchedRecipes } from "./StyledSearchedRecipes";
 import { UserAuth } from "../../context/AuthContext";
@@ -28,8 +28,11 @@ export const Hero = () => {
     updateQueryText,
   } = UserAuth();
   const [isFocused, setIsFocused] = useState(false);
+
+  //for search results
   const [activeIndex, setActiveIndex] = useState("");
   const [count, setCount] = useState(0);
+
   const navigate = useNavigate();
   const ulRef = useRef(null);
   const linkRefs = useRef([]);

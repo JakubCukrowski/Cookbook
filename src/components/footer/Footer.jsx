@@ -3,11 +3,11 @@ import { Container, Row, Col } from "react-bootstrap";
 import { StyledFooter } from "./StyledFooter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import {UserAuth} from '../../context/AuthContext'
 
 export const Footer = () => {
-    const location = useLocation()
-    const pathname = location.pathname
+    const {pathname} = UserAuth()
 
     return (
         <StyledFooter className={pathname === '/violation' ? 'position_fixed' : null}>
