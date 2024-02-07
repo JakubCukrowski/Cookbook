@@ -112,10 +112,10 @@ export const AddRecipe = () => {
   const updateImage = (value) =>
     setNewRecipeDetails((prev) => ({ ...prev, image: value }));
 
-  //check if image 
+  //check if image
   const checkIfImage = (value) => {
-    setIsImage(value)
-  }
+    setIsImage(value);
+  };
 
   //adds ingredients and relative error
   const handleIngredients = () => {
@@ -321,7 +321,7 @@ export const AddRecipe = () => {
       );
 
       //upload the image
-      await uploadBytes(recipesRef, newRecipeDetails.image)
+      await uploadBytes(recipesRef, newRecipeDetails.image);
 
       //set the image url to document in firestore
       const currentRecipeRef = ref(

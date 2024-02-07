@@ -10,6 +10,7 @@ import { auth, db } from "../firebase";
 import {
   setDoc,
   doc,
+  getDoc,
   getDocs,
   collection,
   updateDoc,
@@ -21,6 +22,7 @@ const userContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState("");
 
   //checks if user is logged
   const [loading, setLoading] = useState(true);
@@ -46,6 +48,7 @@ export const AuthContextProvider = ({ children }) => {
   //query
   const [queryText, setQueryText] = useState("");
 
+  //pathname
   const pathname = window.location.pathname;
 
   //create user in firebase with firestore data
@@ -61,8 +64,11 @@ export const AuthContextProvider = ({ children }) => {
           email: email,
           liked: [],
         });
-        const updatedUser = {...userCredentials.user, displayName: displayName}
-        setUser(updatedUser)
+        const updatedUser = {
+          ...userCredentials.user,
+          displayName: displayName,
+        };
+        setUser(updatedUser);
       })
       .catch((error) => console.log(error));
   };
@@ -75,23 +81,6 @@ export const AuthContextProvider = ({ children }) => {
   const signout = () => {
     return signOut(auth);
   };
-
-  //on user state change
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [setUser]);
-
-  //set display name for dashboard and navbar
-  useEffect(() => {
-    if (user) {
-      setDisplayName(user.displayName);
-    }
-  }, [user]);
 
   //check if profile photo exists logic
   const checkIfProfilePhotoAvailable = async (id) => {
@@ -115,6 +104,27 @@ export const AuthContextProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  //function to handle state and added recipe
+  const handleAddedRecipe = () => {
+    setIsRecipeAdded(true);
+
+    const timeout = setTimeout(() => {
+      setIsRecipeAdded(false);
+    }, 1000);
+
+    clearTimeout(timeout);
+  };
+
+  //logic for query results
+  const updateQueryResults = (array) => {
+    setQueryResults(array);
+  };
+
+  //logic for updating query
+  const updateQueryText = (value) => {
+    setQueryText(value);
   };
 
   //update the photo
@@ -166,27 +176,6 @@ export const AuthContextProvider = ({ children }) => {
     getRecipes();
   }, [isRecipeAdded]);
 
-  //function to handle state and added recipe
-  const handleAddedRecipe = () => {
-    setIsRecipeAdded(true);
-
-    const timeout = setTimeout(() => {
-      setIsRecipeAdded(false);
-    }, 1000);
-
-    clearTimeout(timeout);
-  };
-
-  //logic for query results
-  const updateQueryResults = (array) => {
-    setQueryResults(array);
-  };
-
-  //logic for updating query
-  const updateQueryText = (value) => {
-    setQueryText(value);
-  };
-
   //clear querytext and queryresults
   useEffect(() => {
     if (pathname === "/") {
@@ -195,21 +184,46 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, [pathname]);
 
+  //on user state change
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [setUser]);
+
+  //set display name for dashboard and navbar, download user docs
+  useEffect(() => {
+    if (user) {
+      setDisplayName(user.displayName);
+
+      const getUserData = async () => {
+        const userRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+        setUserData(userDoc.data().liked)
+      };
+  
+      getUserData()
+    }
+  }, [user]);
+
   return (
     <userContext.Provider
       value={{
         recipes,
         isLoading,
         user,
+        userData,
+        pathname,
         createUser,
         login,
         signout,
-        URL,
         userImage,
         isUserImageUploaded,
         setIsUserImageUploaded,
         displayName,
-        // setDisplayName,
         handleAddedRecipe,
         isRecipeAdded,
         updateQueryResults,

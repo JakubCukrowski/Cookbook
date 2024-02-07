@@ -1,6 +1,7 @@
 import React from "react";
 import { StyledLink } from "../../styles/StyledLink";
 import { Container } from "react-bootstrap";
+import {DashboardRecipeImage} from './DashboardRecipeImage'
 
 export const DashboardRecipes = ({ linkTo, recipeName, recipeImage }) => {
   return (
@@ -9,9 +10,9 @@ export const DashboardRecipes = ({ linkTo, recipeName, recipeImage }) => {
         <span>{recipeName}</span>
         <StyledLink to={`/recipes/${linkTo}`}>
           <Container>
-            <img
+            <DashboardRecipeImage
               src={recipeImage}
-              style={{ height: 260, width: 300, borderRadius: 6 }}
+              alt="recipe"
             />
           </Container>
         </StyledLink>

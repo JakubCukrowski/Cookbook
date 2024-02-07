@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { DashboardElement } from "./DashboardElement";
 import { StyledLink } from "../../styles/StyledLink";
-import { DashboardRecipes } from "./DashboardRecipes";
 import { uploadBytes, ref } from "firebase/storage";
 import { storage } from "../../firebase";
 import { BootstrapModal } from "../BootstrapModal";
@@ -15,8 +14,6 @@ import {
   query,
   where,
   onSnapshot,
-  doc,
-  getDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { DashboardImage } from "./DashboardImage";
@@ -25,12 +22,12 @@ import { SpinnerContainer } from "../../styles/Containers";
 import { StyledH2 } from "../../styles/StyledH2";
 import { DashboardImageWrapper } from "./DashboardImageWrapper";
 import { UpdateUserPhoto } from "./UpdateUserPhoto";
-import { Pagination } from "react-bootstrap";
-import { CustomPaginationItem } from "./CustomPaginationItem";
+import { BootstrapPagination } from "./BootstrapPagination";
 
 export const Dashboard = () => {
   const {
     user,
+    userData,
     recipes,
     userImage,
     isUserImageUploaded,
@@ -46,10 +43,6 @@ export const Dashboard = () => {
 
   //added by user recipes
   const [userRecipes, setUserRecipes] = useState([]);
-
-  //pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [recipesPerPage, setRecipesPerPage] = useState(3);
 
   //liked recipes
   const [likedRecipes, setLikedRecipes] = useState([]);
@@ -101,19 +94,13 @@ export const Dashboard = () => {
         ]);
       });
     });
-
   }, []);
 
   useEffect(() => {
-
     const updateLikedRecipes = async () => {
       const temp = [];
-      const userRef = doc(db, "users", user.uid);
-      const userData = await getDoc(userRef);
-      const likedFromFirebase = userData.data().liked
-
       recipes.filter((recipe) => {
-        likedFromFirebase.forEach((like) => {
+        userData.forEach((like) => {
           if (recipe.id === like) {
             temp.push(recipe);
           }
@@ -124,29 +111,7 @@ export const Dashboard = () => {
     };
 
     updateLikedRecipes();
-  }, [recipes])
-
-  //bootstrap pagination
-  const lastRecipeIndex = currentPage * recipesPerPage;
-  const firstRecipeIndex = lastRecipeIndex - recipesPerPage;
-  const slicedRecipes = userRecipes.slice(firstRecipeIndex, lastRecipeIndex);
-
-  let items = [];
-  for (
-    let number = 1;
-    number <= Math.ceil(userRecipes.length / recipesPerPage);
-    number++
-  ) {
-    items.push(
-      <CustomPaginationItem
-        key={number}
-        active={number === currentPage}
-        onClick={() => setCurrentPage(number)}
-      >
-        {number}
-      </CustomPaginationItem>
-    );
-  }
+  }, [recipes]);
 
   return (
     <>
@@ -207,32 +172,13 @@ export const Dashboard = () => {
                 {userRecipes.length === 0 ? (
                   <p>Aktualnie nie dodałeś żadnego przepisu</p>
                 ) : (
-                  <>
-                    {slicedRecipes.map((recipe, index) => (
-                      <DashboardRecipes
-                        key={index}
-                        linkTo={recipe.id}
-                        recipeName={recipe.name}
-                        recipeImage={recipe.image}
-                      />
-                    ))}
-                  </>
+                  <BootstrapPagination recipes={userRecipes} />
                 )}
-                {userRecipes.length > 3 ? (
-                  <Pagination>{items}</Pagination>
-                ) : null}
               </DataWrapper>
               <DataWrapper>
                 <h2>Polubione przepisy</h2>
                 {likedRecipes.length > 0 ? (
-                  likedRecipes.map((recipe, index) => (
-                    <DashboardRecipes
-                      key={index}
-                      linkTo={recipe.id}
-                      recipeName={recipe.name}
-                      recipeImage={recipe.image}
-                    />
-                  ))
+                  <BootstrapPagination recipes={likedRecipes}/>
                 ) : (
                   <p>Nie polubiłeś żadnego przepisu</p>
                 )}
