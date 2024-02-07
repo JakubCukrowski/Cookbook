@@ -10,7 +10,14 @@ import { DashboardRecipes } from "./DashboardRecipes";
 import { uploadBytes, ref } from "firebase/storage";
 import { storage } from "../../firebase";
 import { BootstrapModal } from "../BootstrapModal";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import { DashboardImage } from "./DashboardImage";
 import { DashboardSection } from "./DashboardSection";
@@ -19,11 +26,12 @@ import { StyledH2 } from "../../styles/StyledH2";
 import { DashboardImageWrapper } from "./DashboardImageWrapper";
 import { UpdateUserPhoto } from "./UpdateUserPhoto";
 import { Pagination } from "react-bootstrap";
-import {CustomPaginationItem} from './CustomPaginationItem'
+import { CustomPaginationItem } from "./CustomPaginationItem";
 
 export const Dashboard = () => {
   const {
     user,
+    recipes,
     userImage,
     isUserImageUploaded,
     setIsUserImageUploaded,
@@ -42,6 +50,9 @@ export const Dashboard = () => {
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [recipesPerPage, setRecipesPerPage] = useState(3);
+
+  //liked recipes
+  const [likedRecipes, setLikedRecipes] = useState([]);
 
   //interval for progress bar
   useEffect(() => {
@@ -81,14 +92,40 @@ export const Dashboard = () => {
       collection(db, "recipes"),
       where("addedBy", "==", user.uid)
     );
+
     onSnapshot(recipesQuery, (querySnapshot) => {
       querySnapshot.forEach((recipe) => {
-        setUserRecipes((prev) => [...prev, {...recipe.data(), id: recipe.id}]);
+        setUserRecipes((prev) => [
+          ...prev,
+          { ...recipe.data(), id: recipe.id },
+        ]);
       });
     });
+
   }, []);
 
-  
+  useEffect(() => {
+
+    const updateLikedRecipes = async () => {
+      const temp = [];
+      const userRef = doc(db, "users", user.uid);
+      const userData = await getDoc(userRef);
+      const likedFromFirebase = userData.data().liked
+
+      recipes.filter((recipe) => {
+        likedFromFirebase.forEach((like) => {
+          if (recipe.id === like) {
+            temp.push(recipe);
+          }
+        });
+      });
+
+      setLikedRecipes(temp);
+    };
+
+    updateLikedRecipes();
+  }, [recipes])
+
   //bootstrap pagination
   const lastRecipeIndex = currentPage * recipesPerPage;
   const firstRecipeIndex = lastRecipeIndex - recipesPerPage;
@@ -187,7 +224,18 @@ export const Dashboard = () => {
               </DataWrapper>
               <DataWrapper>
                 <h2>Polubione przepisy</h2>
-                <p>Nie polubiłeś żadnego przepisu</p>
+                {likedRecipes.length > 0 ? (
+                  likedRecipes.map((recipe, index) => (
+                    <DashboardRecipes
+                      key={index}
+                      linkTo={recipe.id}
+                      recipeName={recipe.name}
+                      recipeImage={recipe.image}
+                    />
+                  ))
+                ) : (
+                  <p>Nie polubiłeś żadnego przepisu</p>
+                )}
               </DataWrapper>
             </div>
           </DashboardSection>
