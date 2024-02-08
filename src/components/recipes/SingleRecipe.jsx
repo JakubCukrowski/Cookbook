@@ -4,7 +4,14 @@ import { StyledImage } from "../../styles/StyledImage";
 import { SingleRecipeH2 } from "../../styles/StyledH2";
 import { SpinnerContainer } from "../../styles/Containers";
 import { LikeButton } from "../LikeButton";
-import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  increment,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import { useEffect, useState } from "react";
 import { storage } from "../../firebase";
@@ -17,7 +24,7 @@ import { UserAuth } from "../../context/AuthContext";
 
 export const SingleRecipe = () => {
   const { recipeId } = useParams();
-  const { user } = UserAuth();
+  const { user, actualLikedRecipes, updateActualUserLikedRecipes } = UserAuth();
   const [searchedRecipe, setSearchedRecipe] = useState(null);
   const [isFound, setIsFound] = useState(false);
   const [authorName, setAuthorName] = useState(null);
@@ -54,29 +61,48 @@ export const SingleRecipe = () => {
   }, []);
 
   useEffect(() => {
-    const checkIfLiked = async () => {
-      const loggedUserRef = doc(db, "users", user.uid)
-      const userData = await getDoc(loggedUserRef)
-      setIsLiked(userData.data().liked.includes(recipeId))
-    }
-
     if (user) {
-      checkIfLiked()
-    }
-  }, [])
+      const checkIfLiked = async () => {
+        const loggedUserRef = doc(db, "users", user.uid);
+        const userData = await getDoc(loggedUserRef);
+        setIsLiked(userData.data().liked.includes(recipeId));
+      };
 
+      checkIfLiked();
+    }
+  }, [actualLikedRecipes]);
+
+  //on like button click
   const handleLikeRecipe = async () => {
     const userRef = doc(db, "users", user.uid);
-    await updateDoc(userRef, {
-      liked: arrayUnion(recipeId),
-    });
-    setIsLiked(prev => !prev)
+    const recipeRef = doc(db, 'recipes', recipeId)
+    
+    if (!isLiked) {
+      await updateDoc(userRef, {
+        liked: arrayUnion(recipeId),
+      });
+  
+      await updateDoc(recipeRef, {
+        likedBy: arrayUnion(user.uid),
+        likes: increment(1)
+      })
+  
+      setIsLiked((prev) => !prev);
+      updateActualUserLikedRecipes(prev => [...prev, searchedRecipe])
+    }
 
     if (isLiked) {
       await updateDoc(userRef, {
-        liked: arrayRemove(recipeId)
+        liked: arrayRemove(recipeId),
+      });
+
+      await updateDoc(recipeRef, {
+        likedBy: arrayRemove(user.uid),
+        likes: increment(-1)
       })
-      setIsLiked(false)
+      const newActualUserLikedRecipes = actualLikedRecipes
+      const filterLikedRecipes = newActualUserLikedRecipes.filter(recipe => recipe.id !== recipeId)
+      updateActualUserLikedRecipes(filterLikedRecipes)
     }
   };
 
@@ -115,7 +141,7 @@ export const SingleRecipe = () => {
               {user && searchedRecipe.addedBy !== user.uid ? (
                 <LikeButton
                   onClick={handleLikeRecipe}
-                  className={isLiked ? 'liked' : null}
+                  className={isLiked ? "liked" : null}
                 ></LikeButton>
               ) : null}
             </Col>
