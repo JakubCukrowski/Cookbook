@@ -9,12 +9,7 @@ import { StyledLink } from "../../styles/StyledLink";
 import { uploadBytes, ref } from "firebase/storage";
 import { storage } from "../../firebase";
 import { BootstrapModal } from "../BootstrapModal";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 import { DashboardImage } from "./DashboardImage";
 import { DashboardSection } from "./DashboardSection";
@@ -27,7 +22,9 @@ import { BootstrapPagination } from "./BootstrapPagination";
 export const Dashboard = () => {
   const {
     user,
-    userData,
+    recipesLikedByUserById,
+    actualLikedRecipes,
+    updateActualUserLikedRecipes,
     recipes,
     userImage,
     isUserImageUploaded,
@@ -45,7 +42,7 @@ export const Dashboard = () => {
   const [userRecipes, setUserRecipes] = useState([]);
 
   //liked recipes
-  const [likedRecipes, setLikedRecipes] = useState([]);
+  // const [actualLikedRecipes, setActualLikedRecipes] = useState([]);
 
   //interval for progress bar
   useEffect(() => {
@@ -100,14 +97,14 @@ export const Dashboard = () => {
     const updateLikedRecipes = async () => {
       const temp = [];
       recipes.filter((recipe) => {
-        userData.forEach((like) => {
+        recipesLikedByUserById.forEach((like) => {
           if (recipe.id === like) {
             temp.push(recipe);
           }
         });
       });
 
-      setLikedRecipes(temp);
+      updateActualUserLikedRecipes(temp);
     };
 
     updateLikedRecipes();
@@ -177,8 +174,8 @@ export const Dashboard = () => {
               </DataWrapper>
               <DataWrapper>
                 <h2>Polubione przepisy</h2>
-                {likedRecipes.length > 0 ? (
-                  <BootstrapPagination recipes={likedRecipes}/>
+                {actualLikedRecipes.length > 0 ? (
+                  <BootstrapPagination recipes={actualLikedRecipes} />
                 ) : (
                   <p>Nie polubiłeś żadnego przepisu</p>
                 )}

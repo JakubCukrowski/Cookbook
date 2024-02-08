@@ -22,7 +22,11 @@ const userContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState("");
+  //liked recipes by id
+  const [recipesLikedByUserById, setRecipesLikedByUserById] = useState("");
+
+  //actual user liked recipes object/s
+  const [actualLikedRecipes, setActualLikedRecipes] = useState([]);
 
   //checks if user is logged
   const [loading, setLoading] = useState(true);
@@ -45,6 +49,7 @@ export const AuthContextProvider = ({ children }) => {
 
   //query results when searching for recipe/inredient etc
   const [queryResults, setQueryResults] = useState([]);
+
   //query
   const [queryText, setQueryText] = useState("");
 
@@ -207,12 +212,17 @@ export const AuthContextProvider = ({ children }) => {
       const getUserData = async () => {
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
-        setUserData(userDoc.data().liked)
+        setRecipesLikedByUserById(userDoc.data().liked)
       };
   
       getUserData()
     }
-  }, [user]);
+  }, [user, actualLikedRecipes]);
+
+  //update actual user liked recipes
+  const updateActualUserLikedRecipes = (value) => {
+    setActualLikedRecipes(value)
+  }
 
   return (
     <userContext.Provider
@@ -220,7 +230,9 @@ export const AuthContextProvider = ({ children }) => {
         recipes,
         isLoading,
         user,
-        userData,
+        recipesLikedByUserById,
+        actualLikedRecipes,
+        updateActualUserLikedRecipes,
         pathname,
         createUser,
         login,
