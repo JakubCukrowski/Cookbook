@@ -127,6 +127,11 @@ export const AuthContextProvider = ({ children }) => {
     setQueryText(value);
   };
 
+  //update user image (to null when logged out)
+  const updateUserImage = (value) => {
+    setUserImage(value)
+  }
+
   //update the photo
   useEffect(() => {
     if (user) {
@@ -221,6 +226,7 @@ export const AuthContextProvider = ({ children }) => {
         login,
         signout,
         userImage,
+        updateUserImage,
         isUserImageUploaded,
         setIsUserImageUploaded,
         displayName,
