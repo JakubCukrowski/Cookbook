@@ -41,9 +41,6 @@ export const Dashboard = () => {
   //added by user recipes
   const [userRecipes, setUserRecipes] = useState([]);
 
-  //liked recipes
-  // const [actualLikedRecipes, setActualLikedRecipes] = useState([]);
-
   //interval for progress bar
   useEffect(() => {
     if (isUserImageUploaded) {

@@ -308,6 +308,7 @@ export const AddRecipe = () => {
         ingredients: newRecipeDetails.ingredients,
         likes: newRecipeDetails.likes,
         name: newRecipeDetails.name,
+        likedBy: [],
         preparationTime: newRecipeDetails.preparationTime,
         difficulty: newRecipeDetails.difficulty,
         description: newRecipeDetails.description,
