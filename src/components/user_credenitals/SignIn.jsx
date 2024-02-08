@@ -46,7 +46,11 @@ export const SignIn = () => {
       return {
         ...prev,
         email: userData.email.length === 0 ? true : prev.email,
-        password: userData.password.length === 0 ? true : prev.password,
+        password:
+          userData.password.length === 0 ||
+          (userData.password.length > 0 && userData.password.length < 6)
+            ? true
+            : prev.password,
       };
     });
 
@@ -112,6 +116,11 @@ export const SignIn = () => {
             <Form.Label>Hasło</Form.Label>
             {credentialsErrors.password && userData.password.length === 0 ? (
               <Alert variant="danger">Musisz podać hasło</Alert>
+            ) : null}
+            {credentialsErrors.password &&
+            userData.password.length > 0 &&
+            userData.password.length < 6 ? (
+              <Alert variant="danger">Hasło jest za krótkie</Alert>
             ) : null}
             <Form.Control
               isInvalid={
