@@ -13,7 +13,7 @@ import { BootstrapModal } from "../BootstrapModal";
 import { useEffect, useState } from "react";
 
 export const CustomNavbar = () => {
-  const { user, signout, userImage, displayName, pathname } = UserAuth();
+  const { user, signout, userImage, updateUserImage, displayName, pathname } = UserAuth();
   const navigate = useNavigate();
   const [loggedOut, setLoggedOut] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -22,6 +22,7 @@ export const CustomNavbar = () => {
     try {
       await signout();
       setLoggedOut(true);
+      updateUserImage(null)
       navigate("/");
 
       const timeout = setTimeout(() => {
