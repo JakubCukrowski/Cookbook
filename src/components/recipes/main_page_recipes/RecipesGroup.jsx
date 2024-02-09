@@ -11,11 +11,11 @@ import Row from "react-bootstrap/Row";
 import { StyledCol } from "./StyledCol";
 import { StyledCard } from "./StyledCard";
 import { StyledCardImg } from "./StyledCardImg";
-import { FakeSpinnerContainer, FlexContainer } from "../../styles/Containers";
-import { StyledLink } from "../../styles/StyledLink";
-import { LikeButton } from "../LikeButton";
-import { UserAuth } from "../../context/AuthContext";
-import { StyledH2 } from "../../styles/StyledH2";
+import { FakeSpinnerContainer, FlexContainer } from "../../../styles/Containers";
+import { StyledLink } from "../../../styles/StyledLink";
+import { LikeButton } from "../../LikeButton";
+import { UserAuth } from "../../../context/AuthContext";
+import { StyledH2 } from "../../../styles/StyledH2";
 import { StyledCardWrapper } from "./StyledCardWrapper";
 
 export const RecipesGroup = ({
@@ -31,7 +31,7 @@ export const RecipesGroup = ({
     <Container>
       <StyledH2>{title}</StyledH2>
       <Row xs={1} md={2} className="g-4" style={{ paddingBottom: 20 }}>
-        {array.slice(0, 8).map((recipe, idx) => (
+        {array.slice(0, 4).map((recipe, idx) => (
           <StyledCol key={recipe.id || idx}>
             {isLoading ? (
               <>

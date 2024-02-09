@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
-import { RecipesGroup } from "./RecipesGroup";
+import { RecipesGroup } from "./main_page_recipes/RecipesGroup";
 import { Spinner } from "react-bootstrap";
 import { SpinnerContainer } from "../../styles/Containers";
 

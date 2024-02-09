@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { UserAuth } from "../../context/AuthContext";
+import { UserAuth } from "../../../context/AuthContext";
 import { RecipesGroup } from "./RecipesGroup";
 import { useNavigate } from "react-router-dom";
 
-export const NewestRecipes = () => {
+export const Desserts = () => {
     const {recipes, isRecipeAdded} = UserAuth()
     const checkDate = (date) => new Date(date)
     const navigate = useNavigate()
@@ -11,8 +11,9 @@ export const NewestRecipes = () => {
 
     
     useEffect(() => {
-        const sorted = [...recipes].sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt))
-        setSortedRecipes(sorted)
+        const desserts = [...recipes].filter(recipie => recipie.category === "Desery")
+        const sortedDesserts = desserts.sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt))
+        setSortedRecipes(sortedDesserts)
     }, [recipes, isRecipeAdded])
        
     const handleClick = () => {
@@ -20,6 +21,6 @@ export const NewestRecipes = () => {
     }
 
     return (
-        <RecipesGroup title="Najnowsze przepisy" array={sortedRecipes} onClick={handleClick} addButton={true}/>
+        <RecipesGroup title="Desery" array={sortedRecipes} onClick={handleClick} addButton={true}/>
     )
 }
