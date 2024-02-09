@@ -17,10 +17,10 @@ export const Desserts = () => {
     }, [recipes, isRecipeAdded])
        
     const handleClick = () => {
-        navigate('/newest-recipes')
+        navigate('/desserts')
     }
 
     return (
-        <RecipesGroup title="Desery" array={sortedRecipes} onClick={handleClick} addButton={true}/>
+        <RecipesGroup title="Desery" array={sortedRecipes} onClick={handleClick} addButton={true} sliceBy={4}/>
     )
 }

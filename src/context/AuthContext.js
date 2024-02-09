@@ -233,7 +233,6 @@ export const AuthContextProvider = ({ children }) => {
         recipesLikedByUserById,
         actualLikedRecipes,
         updateActualUserLikedRecipes,
-        pathname,
         createUser,
         login,
         signout,
