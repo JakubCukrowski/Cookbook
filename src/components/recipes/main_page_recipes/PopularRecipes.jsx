@@ -1,5 +1,5 @@
 import React from "react";
-import { UserAuth } from "../../context/AuthContext";
+import { UserAuth } from "../../../context/AuthContext";
 import { RecipesGroup } from "./RecipesGroup";
 
 export const PopularRecipes = () => {
@@ -7,6 +7,6 @@ export const PopularRecipes = () => {
     const popular = [...recipes].sort((a, b) => b.likes - a.likes)
     
     return (
-        <RecipesGroup title="Najpopularniejsze przepisy" array={popular} marginBottom={80} addButton={true}/>
+        <RecipesGroup title="Najpopularniejsze przepisy" array={popular} addButton={true}/>
     )
 }

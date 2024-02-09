@@ -2,8 +2,9 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { Hero } from "./components/hero/Hero";
-import { NewestRecipes } from "./components/recipes/NewestRecipes";
-import { PopularRecipes } from "./components/recipes/PopularRecipes";
+import { NewestRecipes } from "./components/recipes/main_page_recipes/NewestRecipes";
+// import { PopularRecipes } from "./components/recipes/PopularRecipes";
+import {PopularRecipes} from './components/recipes/main_page_recipes/PopularRecipes'
 import { SingleRecipe } from "./components/recipes/SingleRecipe";
 import { AuthContextProvider } from "./context/AuthContext";
 import { SignUp } from "./components/user_credenitals/SignUp";
@@ -15,6 +16,8 @@ import { GlobalStyle } from "./styles/GlobalStyles";
 import { AddRecipe } from "./components/recipes/AddRecipe";
 import { PrivateRoute } from "./components/private_route/PrivateRoute";
 import { ProfanityViolation } from "./components/profanity/ProfanityViolation";
+import { Soups } from "./components/recipes/main_page_recipes/Soups";
+import { Desserts } from "./components/recipes/main_page_recipes/Desserts";
 
 function App() {
   return (
@@ -30,6 +33,8 @@ function App() {
                   <Hero />
                   <NewestRecipes />
                   <PopularRecipes />
+                  <Soups />
+                  <Desserts />
                 </>
               }
             />
@@ -55,7 +60,7 @@ function App() {
           </Route>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
-          {/* <Route path="*" element={<NotFound />} /> */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>
