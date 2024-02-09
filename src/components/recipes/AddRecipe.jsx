@@ -120,7 +120,6 @@ export const AddRecipe = () => {
   //adds ingredients and relative error
   const handleIngredients = () => {
     setNewRecipeDetails((prev) => {
-      console.log(prev.ingredientsErrors);
       return {
         ...prev,
         ingredients: [...prev.ingredients, ""],

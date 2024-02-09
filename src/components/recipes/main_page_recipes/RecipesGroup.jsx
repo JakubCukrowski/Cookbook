@@ -24,6 +24,7 @@ export const RecipesGroup = ({
   onClick,
   marginBottom,
   addButton,
+  sliceBy
 }) => {
   const { isLoading } = UserAuth();
 
@@ -31,7 +32,7 @@ export const RecipesGroup = ({
     <Container>
       <StyledH2>{title}</StyledH2>
       <Row xs={1} md={2} className="g-4" style={{ paddingBottom: 20 }}>
-        {array.slice(0, 4).map((recipe, idx) => (
+        {array.slice(0, sliceBy).map((recipe, idx) => (
           <StyledCol key={recipe.id || idx}>
             {isLoading ? (
               <>

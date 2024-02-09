@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { Hero } from "./components/hero/Hero";
 import { NewestRecipes } from "./components/recipes/main_page_recipes/NewestRecipes";
-// import { PopularRecipes } from "./components/recipes/PopularRecipes";
 import {PopularRecipes} from './components/recipes/main_page_recipes/PopularRecipes'
 import { SingleRecipe } from "./components/recipes/SingleRecipe";
 import { AuthContextProvider } from "./context/AuthContext";
@@ -18,6 +17,7 @@ import { PrivateRoute } from "./components/private_route/PrivateRoute";
 import { ProfanityViolation } from "./components/profanity/ProfanityViolation";
 import { Soups } from "./components/recipes/main_page_recipes/Soups";
 import { Desserts } from "./components/recipes/main_page_recipes/Desserts";
+import { FilterRecipes } from "./components/recipes/FilterRecipes";
 
 function App() {
   return (
@@ -38,6 +38,7 @@ function App() {
                 </>
               }
             />
+            <Route path="/category/:categoryName" element={<FilterRecipes />}/>
             <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
             <Route path="/search" element={<RecipesPage />} />
             <Route path="/violation" element={<ProfanityViolation />}/>
