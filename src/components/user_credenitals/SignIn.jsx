@@ -136,6 +136,7 @@ export const SignIn = () => {
               name="password"
               type="password"
               placeholder="Hasło"
+              autoComplete="off"
             />
           </Form.Group>
           <Button onClick={handleLogin} variant="light" type="submit">

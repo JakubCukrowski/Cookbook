@@ -6,7 +6,7 @@ import {DashboardRecipeImage} from './DashboardRecipeImage'
 export const DashboardRecipes = ({ linkTo, recipeName, recipeImage }) => {
   return (
     <>
-      <div style={{paddingTop: 10, textAlign: "center"}}>
+      <div style={{paddingTop: 10, textAlign: "center", width: '100%'}}>
         <span>{recipeName}</span>
         <StyledLink to={`/recipes/${linkTo}`}>
           <Container>
