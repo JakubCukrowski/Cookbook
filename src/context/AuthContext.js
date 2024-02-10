@@ -23,7 +23,7 @@ const userContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   //liked recipes by id
-  const [recipesLikedByUserById, setRecipesLikedByUserById] = useState("");
+  const [recipesLikedByUserById, setRecipesLikedByUserById] = useState([]);
 
   //actual user liked recipes object/s
   const [actualLikedRecipes, setActualLikedRecipes] = useState([]);
