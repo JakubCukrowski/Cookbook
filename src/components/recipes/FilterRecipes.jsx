@@ -50,6 +50,7 @@ export const FilterRecipes = () => {
     }
   }, [categoryName, recipes]);
 
+  console.log(filteredList);
   return (
     <>
       {recipes ? (

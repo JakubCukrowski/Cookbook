@@ -17,7 +17,7 @@ export const Desserts = () => {
     }, [recipes, isRecipeAdded])
        
     const handleClick = () => {
-        navigate('/desserts')
+        navigate('/category/desserts')
     }
 
     return (
