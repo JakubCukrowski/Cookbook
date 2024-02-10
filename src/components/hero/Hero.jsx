@@ -102,7 +102,9 @@ export const Hero = () => {
 
     if (e.key === "Enter" && activeIndex === "" && queryText.length >= 2) {
       navigate(`/search?query=${queryText}`);
-    } else {
+    }
+
+    if (e.key === "Enter" && activeIndex === "" && queryText.length < 2) {
       setInputError(true)
     }
   };
@@ -163,6 +165,7 @@ export const Hero = () => {
               delay={{ show: 250, hide: 400 }}
               overlay={renderTooltip}
               show={inputError}
+              trigger={'click'}
             >
               <StyledInput
                 onKeyDown={handleKeyPress}
