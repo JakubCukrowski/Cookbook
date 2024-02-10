@@ -75,20 +75,20 @@ export const SingleRecipe = () => {
   //on like button click
   const handleLikeRecipe = async () => {
     const userRef = doc(db, "users", user.uid);
-    const recipeRef = doc(db, 'recipes', recipeId)
-    
+    const recipeRef = doc(db, "recipes", recipeId);
+
     if (!isLiked) {
       await updateDoc(userRef, {
         liked: arrayUnion(recipeId),
       });
-  
+
       await updateDoc(recipeRef, {
         likedBy: arrayUnion(user.uid),
-        likes: increment(1)
-      })
-  
+        likes: increment(1),
+      });
+
       setIsLiked((prev) => !prev);
-      updateActualUserLikedRecipes(prev => [...prev, searchedRecipe])
+      updateActualUserLikedRecipes((prev) => [...prev, searchedRecipe]);
     }
 
     if (isLiked) {
@@ -98,11 +98,13 @@ export const SingleRecipe = () => {
 
       await updateDoc(recipeRef, {
         likedBy: arrayRemove(user.uid),
-        likes: increment(-1)
-      })
-      const newActualUserLikedRecipes = actualLikedRecipes
-      const filterLikedRecipes = newActualUserLikedRecipes.filter(recipe => recipe.id !== recipeId)
-      updateActualUserLikedRecipes(filterLikedRecipes)
+        likes: increment(-1),
+      });
+      const newActualUserLikedRecipes = actualLikedRecipes;
+      const filterLikedRecipes = newActualUserLikedRecipes.filter(
+        (recipe) => recipe.id !== recipeId
+      );
+      updateActualUserLikedRecipes(filterLikedRecipes);
     }
   };
 
@@ -162,10 +164,10 @@ export const SingleRecipe = () => {
             </Col>
             <Col sm={5}>
               <SingleRecipeH2>Jak przygotować</SingleRecipeH2>
-              {Object.entries(searchedRecipe.steps).map((value, index) => (
+              {searchedRecipe.steps.map((value, index) => (
                 <p key={index}>
-                  {`${parseInt(value[0]) + 1}.`}
-                  <span> {value[1]}</span>
+                  {`${index + 1}.`}
+                  <span> {value}</span>
                 </p>
               ))}
             </Col>

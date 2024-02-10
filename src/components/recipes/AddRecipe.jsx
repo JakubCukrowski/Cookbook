@@ -29,7 +29,7 @@ export const AddRecipe = () => {
     preparationTime: "15",
     difficulty: "easy",
     description: "",
-    preparationSteps: { 0: "", 1: "", 2: "" },
+    preparationSteps: ["", "", ""],
   });
 
   const [newRecipeErrors, setNewRecipeErrors] = useState({
@@ -46,7 +46,7 @@ export const AddRecipe = () => {
   const navigate = useNavigate();
 
   //steps state
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(2);
 
   //gibberish regex
   const gibberishCheck = /(.)\1{2,}/;
@@ -84,6 +84,8 @@ export const AddRecipe = () => {
       };
     });
 
+    console.log(newRecipeDetails.ingredients);
+
     //name validation
     if (name === "recipeName") {
       setNewRecipeErrors((prev) => {
@@ -118,7 +120,7 @@ export const AddRecipe = () => {
   };
 
   //adds ingredients and relative error
-  const handleIngredients = () => {
+  const handleAddIngredients = () => {
     setNewRecipeDetails((prev) => {
       return {
         ...prev,
@@ -143,18 +145,17 @@ export const AddRecipe = () => {
   const addNextStep = () => {
     setNewRecipeDetails((prev) => {
       return {
-        ...prev,
-        preparationSteps: {
-          ...prev.preparationSteps,
-          [Object.keys(prev.preparationSteps).length]: "",
-        },
-      };
+       ...prev,
+       preparationSteps: [...prev.preparationSteps, '']
+      }
     });
+    console.log(Object.keys(newRecipeDetails.preparationSteps).length);
   };
 
   //preparation stesp
-  const handleStepsObject = (object) =>
-    setNewRecipeDetails((prev) => ({ ...prev, preparationSteps: object }));
+  const handleStepsArray = (array) => {
+    setNewRecipeDetails((prev) => ({ ...prev, preparationSteps: array }));
+  };
 
   const handleStepsErrors = (array) =>
     setNewRecipeErrors((prev) => ({ ...prev, preparationStepsErrors: array }));
@@ -171,7 +172,7 @@ export const AddRecipe = () => {
     />,
     <Ingredients
       details={newRecipeDetails}
-      handleIngredients={handleIngredients}
+      handleAddIngredients={handleAddIngredients}
       handleIngredientsArray={handleIngredientsArray}
       handleIngredientsErrors={handleIngredientsErrors}
       errors={newRecipeErrors}
@@ -180,7 +181,7 @@ export const AddRecipe = () => {
     <Preparation
       details={newRecipeDetails}
       addNextStep={addNextStep}
-      handleStepsObject={handleStepsObject}
+      handleStepsArray={handleStepsArray}
       errors={newRecipeErrors}
       handleStepsErrors={handleStepsErrors}
     />,
