@@ -49,7 +49,7 @@ export const Hero = () => {
 
   const handleInputValue = (e) => {
     updateQueryText(e.target.value);
-    setInputError(false)
+    setInputError(false);
   };
 
   //logic for keys down/up/enter
@@ -105,7 +105,7 @@ export const Hero = () => {
     }
 
     if (e.key === "Enter" && activeIndex === "" && queryText.length < 2) {
-      setInputError(true)
+      setInputError(true);
     }
   };
 
@@ -165,7 +165,7 @@ export const Hero = () => {
               delay={{ show: 250, hide: 400 }}
               overlay={renderTooltip}
               show={inputError}
-              trigger={'click'}
+              trigger={"click"}
             >
               <StyledInput
                 onKeyDown={handleKeyPress}

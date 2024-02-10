@@ -2,11 +2,11 @@ import { faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Alert, Button, Form, FormGroup } from "react-bootstrap";
-import { DeleteIngredientButton } from "./DeleteIngredientButton";
+import { DeleteButton } from "./DeleteButton";
 
 export const Ingredients = ({
   details,
-  handleIngredients,
+  handleAddIngredients,
   handleIngredientsArray,
   errors,
   handleIngredientsErrors,
@@ -14,7 +14,7 @@ export const Ingredients = ({
 }) => {
   // changes the value of ingredients array element, also clears the error
   const handleInputChange = (e, index) => {
-    const newIngredientsArray = details.ingredients;
+    const newIngredientsArray = [...details.ingredients];
     newIngredientsArray[index] = e.target.value;
     handleIngredientsArray(newIngredientsArray);
 
@@ -39,8 +39,6 @@ export const Ingredients = ({
     handleDeleteInput(index, firstArray);
     clearInputError(index, secondArray);
   };
-
-  console.log(errors.ingredientsErrors);
 
   return (
     <>
@@ -81,7 +79,7 @@ export const Ingredients = ({
               onChange={(e) => handleInputChange(e, index)}
             />
             {details.ingredients.length > 1 ? (
-              <DeleteIngredientButton
+              <DeleteButton
                 type="button"
                 onClick={() =>
                   handleDeleteButton(
@@ -92,12 +90,12 @@ export const Ingredients = ({
                 }
               >
                 <FontAwesomeIcon icon={faTrashCan} color="rgba(0, 0, 0, 0.4)" />
-              </DeleteIngredientButton>
+              </DeleteButton>
             ) : null}
           </div>
         </FormGroup>
       ))}
-      <Button variant="dark" style={{ marginTop: 20 }} onClick={() => handleIngredients()}>
+      <Button variant="dark" style={{ marginTop: 20 }} onClick={() => handleAddIngredients()}>
         <FontAwesomeIcon icon={faPlus} /> Dodaj kolejny
       </Button>
     </>
