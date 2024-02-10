@@ -46,7 +46,7 @@ export const AddRecipe = () => {
   const navigate = useNavigate();
 
   //steps state
-  const [currentStepIndex, setCurrentStepIndex] = useState(2);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   //gibberish regex
   const gibberishCheck = /(.)\1{2,}/;
