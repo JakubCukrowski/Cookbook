@@ -2,7 +2,7 @@ The idea for this project was born once I started going to the gym and basically
 
 Current features include:
 
-Creating an account
+Creating an account </b>
 Uploading user photos (the website checks if the file is actually an image file)
 Adding recipes
 Liking recipes
