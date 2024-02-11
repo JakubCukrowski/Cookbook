@@ -159,6 +159,10 @@ export const RecipeDetails = ({
             <Alert variant="danger">Musisz wybrać kategorię</Alert>
           ) : null}
           <FormCategory
+            isInvalid={
+              errors.categoryError &&
+              (details.category === "" || details.category === "default")
+            }
             value={details.category}
             name="category"
             id="recipe_category"
