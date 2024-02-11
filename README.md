@@ -2,21 +2,21 @@ The idea for this project was born once I started going to the gym and basically
 
 Current features include:
 
-Creating an account <br></br>
-Uploading user photos (the website checks if the file is actually an image file) <br></br>
-Adding recipes <br></br>
-Liking recipes <br></br>
-Storing recipes in a user's dashboard under 'liked' and 'created' <br></br>
-Searching for a recipe <br></br>
-Advanced search filters <br></br>
+- Creating an account <br></br>
+- Uploading user photos (the website checks if the file is actually an image file) <br></br>
+- Adding recipes <br></br>
+- Liking recipes <br></br>
+- Storing recipes in a user's dashboard under 'liked' and 'created' <br></br>
+- Searching for a recipe <br></br>
+- Advanced search filters <br></br>
 
 To be added: 
 
-Commenting on recipes <br></br>
-Deleting recipes <br></br>
-Updating recipes <br></br>
-Handling <hero /> component buttons for the most popular categories <br></br>
-The ability to change email addresses <br></br>
-Including special characters when creating a password <br></br>
-Adding the possibility to view all recipes added by the user once on the single recipe page <br></br>
+- Commenting on recipes <br></br>
+- Deleting recipes <br></br>
+- Updating recipes <br></br>
+- Handling <hero /> component buttons for the most popular categories <br></br>
+- The ability to change email addresses <br></br>
+- Including special characters when creating a password <br></br>
+- Adding the possibility to view all recipes added by the user once on the single recipe page <br></br>
 Live version available here: https://gleeful-conkies-1f4a7c.netlify.app/
