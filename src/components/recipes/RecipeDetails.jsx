@@ -3,6 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Button, Form, FormGroup } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
+import { FormCategory } from "./form_elements/FormCategory";
+import { FormDifficulty } from "./form_elements/FormDifficulty";
+import { FormPrepTime } from "./form_elements/FormPrepTime";
 
 //podzielic na mniejsze komponenty
 export const RecipeDetails = ({
@@ -133,31 +136,21 @@ export const RecipeDetails = ({
         </FormGroup>
         <FormGroup className="mb-3">
           <Form.Label htmlFor="preparation_time">Czas przygotowania</Form.Label>
-          <Form.Select
+          <FormPrepTime
             value={details.preparationTime}
             name="preparationTime"
             id="preparation_time"
             onChange={(e) => updateRecipeDetails(e)}
-          >
-            <option value="15">15 minut</option>
-            <option value="30">30 minut</option>
-            <option value="60">60 minut</option>
-            <option value="90">90 minut</option>
-            <option value="more">90 i więcej</option>
-          </Form.Select>
+          />
         </FormGroup>
         <FormGroup className="mb-3">
           <Form.Label htmlFor="difficulty_level">Stopień trudności</Form.Label>
-          <Form.Select
+          <FormDifficulty
             value={details.difficulty}
             name="difficulty"
             id="difficulty_level"
             onChange={(e) => updateRecipeDetails(e)}
-          >
-            <option value="easy">Łatwy</option>
-            <option value="medium">Średni</option>
-            <option value="advanced">Zaawansowany</option>
-          </Form.Select>
+          />
         </FormGroup>
         <FormGroup className="mb-3">
           <Form.Label htmlFor="recipe_category">Wybierz kategorię</Form.Label>
@@ -165,25 +158,12 @@ export const RecipeDetails = ({
           (details.category === "" || details.category === "default") ? (
             <Alert variant="danger">Musisz wybrać kategorię</Alert>
           ) : null}
-          <Form.Select
-            isInvalid={
-              errors.categoryError &&
-              (details.category === "" || details.category === "default")
-            }
+          <FormCategory
             value={details.category}
             name="category"
             id="recipe_category"
             onChange={(e) => updateRecipeDetails(e)}
-          >
-            <option value="default">wybierz</option>
-            <option value="Dania główne">Dania główne</option>
-            <option value="Zupy">Zupy</option>
-            <option value="Śniadania">Śniadania</option>
-            <option value="Kolacje">Kolacje</option>
-            <option value="Przekąski">Przekąski</option>
-            <option value="Desery">Desery</option>
-            <option value="Napoje">Napoje</option>
-          </Form.Select>
+          />
         </FormGroup>
         <FormGroup className="mb-3">
           <Form.Label htmlFor="recipe_description">
