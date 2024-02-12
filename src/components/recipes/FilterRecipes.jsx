@@ -8,10 +8,7 @@ import { Form } from "react-bootstrap";
 import { FormCategory } from "./form_elements/FormCategory";
 import { FormDifficulty } from "./form_elements/FormDifficulty";
 import { FormPrepTime } from "./form_elements/FormPrepTime";
-import {
-  FakeSpinnerContainer,
-  SpinnerContainer,
-} from "../../styles/Containers";
+import { FakeSpinnerContainer } from "../../styles/Containers";
 
 export const FilterRecipes = () => {
   const { recipes } = UserAuth();
@@ -26,7 +23,9 @@ export const FilterRecipes = () => {
     difficulty: "",
   });
 
-  const [isSelected, setIsSelected] = useState(false);
+  const [isFilterSelected, setIsFilterSelected] = useState(false);
+
+  const navigate = useNavigate();
 
   const categories = {
     "newest-recipes": "Najnowsze przepisy",
@@ -53,7 +52,6 @@ export const FilterRecipes = () => {
         const soups = [...recipes]
           .filter((recipe) => recipe.category === "Zupy")
           .sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt));
-        setFilteredList([]);
         setFilteredList(soups);
         break;
 
@@ -107,19 +105,64 @@ export const FilterRecipes = () => {
         setFilteredList(beverages);
         break;
     }
+
+    switch (filterData.prepTime) {
+      case "15":
+        const prepTimeIs15 = [...recipes].filter(
+          (recipe) =>
+            recipe.preparationTime === "15" &&
+            recipe.category === filterData.category
+        );
+        setFilteredList(prepTimeIs15);
+        break;
+
+      case "30":
+        const prepTimeIs30 = [...recipes].filter(
+          (recipe) =>
+            recipe.preparationTime === "30" &&
+            recipe.category === filterData.category
+        );
+        setFilteredList(prepTimeIs30);
+        break;
+
+      case "60":
+        const prepTimeIs60 = [...recipes].filter(
+          (recipe) =>
+            recipe.preparationTime === "60" &&
+            recipe.category === filterData.category
+        );
+        setFilteredList(prepTimeIs60);
+        break;
+
+      case "90":
+        const prepTimeIs90 = [...recipes].filter(
+          (recipe) =>
+            recipe.preparationTime === "90" &&
+            recipe.category === filterData.category
+        );
+        setFilteredList(prepTimeIs90);
+        break;
+
+      case "more":
+        const prepTimeIsMoreThan90 = [...recipes].filter(
+          (recipe) => recipe.preparationTime === "more"
+        );
+        setFilteredList(prepTimeIsMoreThan90);
+        break;
+    }
   }, [categoryName, recipes, filterData]);
 
   useEffect(() => {
-    if (isSelected) {
+    if (isFilterSelected) {
       const timeout = setTimeout(() => {
-        setIsSelected(false);
+        setIsFilterSelected(false);
       }, 500);
 
       return () => clearTimeout(timeout);
     }
-  }, [isSelected]);
+  }, [isFilterSelected]);
 
-  const navigate = useNavigate();
+  console.log(filteredList);
 
   const handleChangeCategory = (e) => {
     const arrayFromObject = Object.entries(categories);
@@ -133,7 +176,17 @@ export const FilterRecipes = () => {
       (category) => category[1] === e.target.value
     );
     navigate(`/category/${filtered[0][0]}`);
-    setIsSelected(true);
+    setIsFilterSelected(true);
+  };
+
+  const handlePrepTime = (e) => {
+    setFilterData((prev) => {
+      return {
+        ...prev,
+        prepTime: e.target.value,
+      };
+    });
+    setIsFilterSelected(true);
   };
 
   return (
@@ -145,22 +198,38 @@ export const FilterRecipes = () => {
             <Form>
               <p>Szukanie zaawansowane</p>
               <Container>
-                <Form.Label>Kategoria</Form.Label>
-                <FormCategory onChange={handleChangeCategory} />
+                <Form.Label htmlFor="category_filter">Kategoria</Form.Label>
+                <FormCategory
+                  id="category_filter"
+                  value={filterData.category}
+                  onChange={handleChangeCategory}
+                  optionDisabled={filterData.category !== ""}
+                />
               </Container>
-              <Container>
-                <FormLabel>Czas przygotowania</FormLabel>
-                <FormPrepTime />
-              </Container>
-              <Container>
-                <Form.Label>Poziom trudności</Form.Label>
-                <FormDifficulty />
-              </Container>
+              {filterData.category !== "" ? (
+                <>
+                  {" "}
+                  <Container>
+                    <FormLabel htmlFor="prep_filter">
+                      Czas przygotowania
+                    </FormLabel>
+                    <FormPrepTime id="prep_filter" onChange={handlePrepTime} />
+                  </Container>
+                  <Container>
+                    <Form.Label>Poziom trudności</Form.Label>
+                    <FormDifficulty />
+                  </Container>
+                </>
+              ) : null}
             </Form>
-            {!isSelected ? (
+            {!isFilterSelected ? (
               <>
                 <RecipesGroup array={filteredList} />
-                {filteredList.length === 0 ? <div style={{textAlign: "center", height: 100}}><h5>Brak wyników</h5></div> : null}
+                {filteredList.length === 0 ? (
+                  <div style={{ textAlign: "center", height: 100 }}>
+                    <h5>Brak wyników</h5>
+                  </div>
+                ) : null}
               </>
             ) : (
               <FakeSpinnerContainer>
