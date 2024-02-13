@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../../context/AuthContext";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Container, FormLabel, Spinner } from "react-bootstrap";
 import { StyledH2 } from "../../styles/StyledH2";
 import { RecipesGroup } from "./main_page_recipes/RecipesGroup";
@@ -19,152 +19,120 @@ export const FilterRecipes = () => {
   //state for filtering
   const [filterData, setFilterData] = useState({
     category: "",
-    prepTime: "",
-    difficulty: "",
+    prepTime: "Wszystko",
+    difficulty: "Wszystko",
   });
 
-  const [isFilterSelected, setIsFilterSelected] = useState(false);
+  const [isFilterSelected, setIsFilterSelected] = useState(true);
 
   const navigate = useNavigate();
 
   const categories = {
     "newest-recipes": "Najnowsze przepisy",
+    "popular-recipes": "Najpopularniejsze przepisy",
     soups: "Zupy",
     desserts: "Desery",
-    "popular-recipes": "Najpopularniejsze przepisy",
-    "main-dish": "Dania główne",
-    breakfast: "Śniadania",
+    "main-dishes": "Dania główne",
+    breakfasts: "Śniadania",
     supper: "Kolacje",
-    snack: "Przekąski",
-    beverage: "Napoje",
+    snacks: "Przekąski",
+    beverages: "Napoje",
   };
 
+  const preparationTimes = [
+    "Wszystko",
+    "15 minut",
+    "30 minut",
+    "60 minut",
+    "90 minut",
+  ];
+
+  //filtering
   useEffect(() => {
-    switch (categories[categoryName]) {
-      case "Najnowsze przepisy":
-        const newest = [...recipes].sort(
-          (a, b) => checkDate(b.createdAt) - checkDate(a.createdAt)
-        );
-        setFilteredList(newest);
-        break;
+    setFilterData((prev) => {
+      return {
+        ...prev,
+        category: categories[categoryName],
+      };
+    });
 
-      case "Zupy":
-        const soups = [...recipes]
-          .filter((recipe) => recipe.category === "Zupy")
-          .sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt));
-        setFilteredList(soups);
-        break;
+    const sortRecipes = (array) => {
+      return array.sort(
+        (a, b) => checkDate(b.createdAt) - checkDate(a.createdAt)
+      );
+    };
 
-      case "Desery":
-        const desserts = [...recipes]
-          .filter((recipe) => recipe.category === "Desery")
-          .sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt));
+    const filterRecipesByPrepTime = (array) => {
+      return array.filter(
+        (element) =>
+          element.preparationTime ===
+          filterData.prepTime
+      );
+    };
 
-        setFilteredList(desserts);
-        break;
-
-      case "Najpopularniejsze przepisy":
-        const mostPopular = [...recipes].sort(
-          (a, b) => checkDate(b.createdAt) - checkDate(a.createdAt)
-        );
-        setFilteredList(mostPopular);
-        break;
-
-      case "Dania główne":
-        const mainDishes = [...recipes]
-          .filter((recipe) => recipe.category === "Dania główne")
-          .sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt));
-        setFilteredList(mainDishes);
-        break;
-
-      case "Kolacje":
-        const suppers = [...recipes]
-          .filter((recipe) => recipe.category === "Kolacje")
-          .sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt));
-        setFilteredList(suppers);
-        break;
-
-      case "Śniadania":
-        const breakfasts = [...recipes]
-          .filter((recipe) => recipe.category === "Śniadania")
-          .sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt));
-        setFilteredList(breakfasts);
-        break;
-
-      case "Przekąski":
-        const snacks = [...recipes]
-          .filter((recipe) => recipe.category === "Przekąski")
-          .sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt));
-        setFilteredList(snacks);
-        break;
-
-      case "Napoje":
-        const beverages = [...recipes]
-          .filter((recipe) => recipe.category === "Napoje")
-          .sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt));
-        setFilteredList(beverages);
-        break;
+    if (
+      categories[categoryName] === "Najnowsze przepisy" &&
+      filterData.prepTime === "Wszystko"
+    ) {
+      const newest = sortRecipes([...recipes]);
+      setFilteredList(newest);
+    } else if (
+      categories[categoryName] === "Najnowsze przepisy" &&
+      filterData.prepTime !== "Wszystko"
+    ) {
+      const newestByPrepTime = filterRecipesByPrepTime([...recipes]);
+      const newestSorted = sortRecipes(newestByPrepTime);
+      setFilteredList(newestSorted);
     }
 
-    switch (filterData.prepTime) {
-      case "15":
-        const prepTimeIs15 = [...recipes].filter(
-          (recipe) =>
-            recipe.preparationTime === "15" &&
-            recipe.category === filterData.category
-        );
-        setFilteredList(prepTimeIs15);
-        break;
-
-      case "30":
-        const prepTimeIs30 = [...recipes].filter(
-          (recipe) =>
-            recipe.preparationTime === "30" &&
-            recipe.category === filterData.category
-        );
-        setFilteredList(prepTimeIs30);
-        break;
-
-      case "60":
-        const prepTimeIs60 = [...recipes].filter(
-          (recipe) =>
-            recipe.preparationTime === "60" &&
-            recipe.category === filterData.category
-        );
-        setFilteredList(prepTimeIs60);
-        break;
-
-      case "90":
-        const prepTimeIs90 = [...recipes].filter(
-          (recipe) =>
-            recipe.preparationTime === "90" &&
-            recipe.category === filterData.category
-        );
-        setFilteredList(prepTimeIs90);
-        break;
-
-      case "more":
-        const prepTimeIsMoreThan90 = [...recipes].filter(
-          (recipe) => recipe.preparationTime === "more"
-        );
-        setFilteredList(prepTimeIsMoreThan90);
-        break;
+    if (
+      categories[categoryName] === "Najpopularniejsze przepisy" &&
+      filterData.prepTime === "Wszystko"
+    ) {
+      const popular = sortRecipes([...recipes])
+      setFilteredList(popular);
+    } else if (
+      categories[categoryName] === "Najpopularniejsze przepisy" &&
+      filterData.prepTime !== "Wszystko"
+    ) {
+      const popularByPrepTime = filterRecipesByPrepTime([...recipes])
+      const popularSorted =   sortRecipes(popularByPrepTime);
+      setFilteredList(popularSorted);
     }
-  }, [categoryName, recipes, filterData]);
 
-  useEffect(() => {
+    if (
+      categories[categoryName] !== "Najpopularniejsze przepisy" &&
+      categories[categoryName] !== "Najnowsze przepisy" &&
+      filterData.prepTime === "Wszystko"
+    ) {
+      const filterByCategory = [...recipes].filter(recipe => recipe.category === categories[categoryName]);
+      setFilteredList(filterByCategory);
+    } else if (
+      categories[categoryName] !== "Najpopularniejsze przepisy" &&
+      categories[categoryName] !== "Najnowsze przepisy" &&
+      filterData.prepTime !== "Wszystko"
+    ) {
+      const filterByCategory = [...recipes].filter(recipe => recipe.category === categories[categoryName])
+      console.log(filterByCategory);
+      const filteredByPrepTime = filterRecipesByPrepTime(filterByCategory);
+      setFilteredList(filteredByPrepTime);
+    }
+
     if (isFilterSelected) {
       const timeout = setTimeout(() => {
         setIsFilterSelected(false);
       }, 500);
-
       return () => clearTimeout(timeout);
     }
-  }, [isFilterSelected]);
-
-  console.log(filteredList);
+  }, [isFilterSelected, categories[categoryName], recipes]);
 
   const handleChangeCategory = (e) => {
+    setFilterData((prev) => {
+      return {
+        ...prev,
+        prepTime: "Wszystko",
+      };
+    });
     const arrayFromObject = Object.entries(categories);
     setFilterData((prev) => {
       return {
@@ -201,9 +169,10 @@ export const FilterRecipes = () => {
                 <Form.Label htmlFor="category_filter">Kategoria</Form.Label>
                 <FormCategory
                   id="category_filter"
-                  value={filterData.category}
+                  value={categories[categoryName]}
                   onChange={handleChangeCategory}
-                  optionDisabled={filterData.category !== ""}
+                  filterIncluded={true}
+                  array={Object.values(categories)}
                 />
               </Container>
               {filterData.category !== "" ? (
@@ -213,7 +182,12 @@ export const FilterRecipes = () => {
                     <FormLabel htmlFor="prep_filter">
                       Czas przygotowania
                     </FormLabel>
-                    <FormPrepTime id="prep_filter" onChange={handlePrepTime} />
+                    <FormPrepTime
+                      id="prep_filter"
+                      onChange={handlePrepTime}
+                      array={preparationTimes}
+                      value={filterData.prepTime}
+                    />
                   </Container>
                   <Container>
                     <Form.Label>Poziom trudności</Form.Label>

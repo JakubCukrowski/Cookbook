@@ -1,7 +1,7 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 
-export const FormCategory = ({isInvalid, value, name, id, onChange, optionDisabled}) => {
+export const FormCategory = ({isInvalid, value, name, id, onChange, array, defaultValue}) => {
   return (
     <>
       <Form.Select
@@ -10,15 +10,13 @@ export const FormCategory = ({isInvalid, value, name, id, onChange, optionDisabl
         name={name}
         id={id}
         onChange={onChange}
+        defaultValue={defaultValue}
       >
-        <option value="default" disabled={optionDisabled}>wybierz</option>
-        <option value="Dania główne">Dania główne</option>
-        <option value="Zupy">Zupy</option>
-        <option value="Śniadania">Śniadania</option>
-        <option value="Kolacje">Kolacje</option>
-        <option value="Przekąski">Przekąski</option>
-        <option value="Desery">Desery</option>
-        <option value="Napoje">Napoje</option>
+        {array.map((element, index) => {
+          return (
+            <option key={index} value={element}>{element}</option>
+          )
+        })}
       </Form.Select>
     </>
   );
