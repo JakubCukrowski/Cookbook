@@ -43,6 +43,19 @@ export const RecipeDetails = ({
     "image/webp",
   ];
 
+  const options = [
+    'wybierz',
+    "Dania główne",
+    "Zupy",
+    "Śniadania",
+    "Kolacje",
+    "Przekąski",
+    "Desery",
+    "Napoje",
+  ];
+
+  const prepTimes = ["15 minut", "30 minut", "60 minut", "90 minut"]
+
   useEffect(() => {
     if (!imageTypes.includes(details.image.type)) {
       checkIfImage(false);
@@ -141,6 +154,7 @@ export const RecipeDetails = ({
             name="preparationTime"
             id="preparation_time"
             onChange={(e) => updateRecipeDetails(e)}
+            array={prepTimes}
           />
         </FormGroup>
         <FormGroup className="mb-3">
@@ -155,18 +169,19 @@ export const RecipeDetails = ({
         <FormGroup className="mb-3">
           <Form.Label htmlFor="recipe_category">Wybierz kategorię</Form.Label>
           {errors.categoryError &&
-          (details.category === "" || details.category === "default") ? (
+          (details.category === "" || details.category === "wybierz") ? (
             <Alert variant="danger">Musisz wybrać kategorię</Alert>
           ) : null}
           <FormCategory
             isInvalid={
               errors.categoryError &&
-              (details.category === "" || details.category === "default")
+              (details.category === "" || details.category === "wybierz")
             }
             value={details.category}
             name="category"
             id="recipe_category"
             onChange={(e) => updateRecipeDetails(e)}
+            array={options}
           />
         </FormGroup>
         <FormGroup className="mb-3">
