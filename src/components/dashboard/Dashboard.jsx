@@ -18,6 +18,9 @@ import { StyledH2 } from "../../styles/StyledH2";
 import { DashboardImageWrapper } from "./DashboardImageWrapper";
 import { UpdateUserPhoto } from "./UpdateUserPhoto";
 import { BootstrapPagination } from "./BootstrapPagination";
+import { DashboardDesktopWrapper } from "./DashboardDesktopWrapper";
+import { DataDesktopWrapper } from "./DataDesktopWrapper";
+import { DashboardDesktopRecipes } from "./DashboardDesktopRecipes";
 
 export const Dashboard = () => {
   const {
@@ -119,65 +122,72 @@ export const Dashboard = () => {
               />
             ) : null}
             <StyledH2>Twój profil</StyledH2>
-            <DataWrapper>
-              {userImage !== null ? (
-                <>
-                  <DashboardImageWrapper>
-                    <DashboardImage src={userImage} alt="profile_image" />
-                    <UpdateUserPhoto onChange={uploadPhoto} />
-                  </DashboardImageWrapper>
-                  <Container>
-                    <DashboardElement
-                      spanTitle={"Utworzono: "}
-                      strongTitle={new Date(
-                        parseInt(user.metadata.createdAt)
-                      ).toLocaleDateString()}
-                    />
-                    <DashboardElement
-                      spanTitle={"Nazwa użytkownika: "}
-                      strongTitle={displayName}
-                      inputName="username"
-                    />
-                    <DashboardElement
-                      spanTitle={"Email: "}
-                      strongTitle={user.email}
-                      inputName="email"
-                      isButton={true}
-                      onClick={() => console.log("Dodaj funkcję zmiany maila!")}
-                    />
-                    <DashboardElement
-                      spanTitle={"Hasło"}
-                      strongTitle={
-                        <StyledLink to={"/"}>Zmień hasło</StyledLink>
-                      }
-                    />
-                  </Container>
-                </>
-              ) : (
-                <Spinner />
-              )}
-            </DataWrapper>
-            <div>
-              <DataWrapper>
-                <h2>Twoje przepisy</h2>
-                <StyledLink to={"/add-recipe"}>
-                  {<FontAwesomeIcon icon={faPlus} />} Dodaj przepis
-                </StyledLink>
-                {userRecipes.length === 0 ? (
-                  <p>Aktualnie nie dodałeś żadnego przepisu</p>
-                ) : (
-                  <BootstrapPagination recipes={userRecipes} />
-                )}
-              </DataWrapper>
-              <DataWrapper>
-                <h2>Polubione przepisy</h2>
-                {actualLikedRecipes.length > 0 ? (
-                  <BootstrapPagination recipes={actualLikedRecipes} />
-                ) : (
-                  <p>Nie polubiłeś żadnego przepisu</p>
-                )}
-              </DataWrapper>
-            </div>
+            <DashboardDesktopWrapper>
+              <DataDesktopWrapper>
+                <DataWrapper>
+                  {userImage !== null ? (
+                    <>
+                      <DashboardImageWrapper>
+                        <DashboardImage src={userImage} alt="profile_image" />
+                        <UpdateUserPhoto onChange={uploadPhoto} />
+                      </DashboardImageWrapper>
+                      <Container>
+                        <DashboardElement
+                          spanTitle={"Utworzono: "}
+                          strongTitle={new Date(
+                            parseInt(user.metadata.createdAt)
+                          ).toLocaleDateString()}
+                        />
+                        <DashboardElement
+                          spanTitle={"Nazwa użytkownika: "}
+                          strongTitle={displayName}
+                          inputName="username"
+                        />
+                        <DashboardElement
+                          spanTitle={"Email: "}
+                          strongTitle={user.email}
+                          inputName="email"
+                          isButton={true}
+                          onClick={() =>
+                            console.log("Dodaj funkcję zmiany maila!")
+                          }
+                        />
+                        <DashboardElement
+                          spanTitle={"Hasło"}
+                          strongTitle={
+                            <StyledLink to={"/"}>Zmień hasło</StyledLink>
+                          }
+                        />
+                      </Container>
+                    </>
+                  ) : (
+                    <Spinner />
+                  )}
+                </DataWrapper>
+              </DataDesktopWrapper>
+
+              <DashboardDesktopRecipes>
+                <DataWrapper>
+                  <h2>Twoje przepisy</h2>
+                  <StyledLink to={"/add-recipe"}>
+                    {<FontAwesomeIcon icon={faPlus} />} Dodaj przepis
+                  </StyledLink>
+                  {userRecipes.length === 0 ? (
+                    <p>Aktualnie nie dodałeś żadnego przepisu</p>
+                  ) : (
+                    <BootstrapPagination recipes={userRecipes} />
+                  )}
+                </DataWrapper>
+                <DataWrapper>
+                  <h2>Polubione przepisy</h2>
+                  {actualLikedRecipes.length > 0 ? (
+                    <BootstrapPagination recipes={actualLikedRecipes} />
+                  ) : (
+                    <p>Nie polubiłeś żadnego przepisu</p>
+                  )}
+                </DataWrapper>
+              </DashboardDesktopRecipes>
+            </DashboardDesktopWrapper>
           </DashboardSection>
         </Container>
       ) : (
