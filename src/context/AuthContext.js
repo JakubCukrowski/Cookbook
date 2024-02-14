@@ -56,6 +56,9 @@ export const AuthContextProvider = ({ children }) => {
   //pathname
   const pathname = window.location.pathname;
 
+  //check if recipe was liked
+  const [isRecipeLiked, setIsRecipeLiked] = useState(false)
+
   //create user in firebase with firestore data
   const createUser = (displayName, email, password) => {
     return createUserWithEmailAndPassword(auth, email, password)
@@ -184,7 +187,7 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     getRecipes();
-  }, [isRecipeAdded]);
+  }, [isRecipeAdded, isRecipeLiked]);
 
   //clear querytext and queryresults
   useEffect(() => {
@@ -224,6 +227,11 @@ export const AuthContextProvider = ({ children }) => {
     setActualLikedRecipes(value)
   }
 
+  //update recipe liked status
+  const updateIsRecipeLiked = value => {
+    setIsRecipeLiked(value)
+  }
+
   return (
     <userContext.Provider
       value={{
@@ -233,6 +241,8 @@ export const AuthContextProvider = ({ children }) => {
         recipesLikedByUserById,
         actualLikedRecipes,
         updateActualUserLikedRecipes,
+        isRecipeLiked,
+        updateIsRecipeLiked,
         createUser,
         login,
         signout,
