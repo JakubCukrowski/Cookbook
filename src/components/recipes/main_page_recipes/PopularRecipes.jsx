@@ -13,6 +13,6 @@ export const PopularRecipes = () => {
     }
     
     return (
-        <RecipesGroup title="Najpopularniejsze przepisy" array={popular} onClick={handleClick} addButton={true} sliceBy={4}/>
+        <RecipesGroup title="Najpopularniejsze przepisy" array={popular} onClick={handleClick} addButton={true} sliceBy={6}/>
     )
 }

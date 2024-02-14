@@ -17,5 +17,11 @@ export const StyledNavbarColapse = styled(Navbar.Collapse)`
     @media (min-width: 992px) {
         flex-basis: 0;
         flex-grow: 0;
+       
+        .nav-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
 `
