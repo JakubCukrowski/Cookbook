@@ -14,8 +14,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useEffect, useState } from "react";
-import { storage } from "../../firebase";
-import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { AuthorImageWrapper } from "./AuthorImageWrapper";
 import { RecipeDescription } from "./RecipeDescription";
 import { RecipeAuthor } from "./RecipeAuthor";
@@ -27,9 +25,6 @@ export const SingleRecipe = () => {
   const { user, actualLikedRecipes, updateActualUserLikedRecipes, isRecipeLiked, updateIsRecipeLiked } = UserAuth();
   const [searchedRecipe, setSearchedRecipe] = useState(null);
   const [isFound, setIsFound] = useState(false);
-  const [authorName, setAuthorName] = useState(null);
-  const [authorProfilePhotoURL, setAuthorProfilePhotoURL] = useState("");
-  // const [isLiked, setIsLiked] = useState(false);
 
   //donwload the recipe, get author name, check if liked by current user
   useEffect(() => {
@@ -38,23 +33,6 @@ export const SingleRecipe = () => {
       const recipeSnap = await getDoc(recipeRef);
       setSearchedRecipe(recipeSnap.data());
       setIsFound(true);
-
-      const userRef = doc(db, "users", recipeSnap.data().addedBy);
-      const userSnap = await getDoc(userRef);
-      setAuthorName(userSnap.data().username);
-
-      const listRef = ref(storage, `/profile/${recipeSnap.data().addedBy}`);
-      const anonRef = ref(storage, "/profile/anon-chef1.png");
-      await listAll(listRef).then((res) => {
-        //check if user udated photo. If not sets url as anonymous photo
-        if (res.items.length === 0) {
-          getDownloadURL(anonRef).then((url) => setAuthorProfilePhotoURL(url));
-        } else {
-          res.items.forEach((item) =>
-            getDownloadURL(item).then((url) => setAuthorProfilePhotoURL(url))
-          );
-        }
-      });
     };
 
     getSingleRecipeData();
@@ -136,12 +114,12 @@ export const SingleRecipe = () => {
           <Row>
             <RecipeAuthorWrapper>
               <AuthorImageWrapper>
-                <img src={authorProfilePhotoURL} alt="profile_photo" />
+                <img src={searchedRecipe.addedBy.photo} alt="profile_photo" />
               </AuthorImageWrapper>
-              <RecipeAuthor>{authorName}</RecipeAuthor>
+              <RecipeAuthor>{searchedRecipe.addedBy.user}</RecipeAuthor>
             </RecipeAuthorWrapper>
             <Col>
-              {user && searchedRecipe.addedBy !== user.uid ? (
+              {user && searchedRecipe.addedBy.user !== user.displayName ? (
                 <LikeButton
                   onClick={handleLikeRecipe}
                   className={isRecipeLiked ? "liked" : null}

@@ -16,12 +16,15 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { storage } from "../firebase";
-import { ref, getMetadata, getDownloadURL, listAll } from "firebase/storage";
+import { ref, getDownloadURL, listAll } from "firebase/storage";
 
 const userContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const anonImage =
+    "https://firebasestorage.googleapis.com/v0/b/cookbook-a4b98.appspot.com/o/profile%2Fanon-chef1.png?alt=media&token=76a571b2-6999-4a5e-a553-5d5ae628b522";
+
   //liked recipes by id
   const [recipesLikedByUserById, setRecipesLikedByUserById] = useState([]);
 
@@ -32,7 +35,6 @@ export const AuthContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   //user image state
-  const [userImage, setUserImage] = useState(null);
   const [isUserImageUploaded, setIsUserImageUploaded] = useState(false);
 
   //user data
@@ -57,7 +59,7 @@ export const AuthContextProvider = ({ children }) => {
   const pathname = window.location.pathname;
 
   //check if recipe was liked
-  const [isRecipeLiked, setIsRecipeLiked] = useState(false)
+  const [isRecipeLiked, setIsRecipeLiked] = useState(false);
 
   //create user in firebase with firestore data
   const createUser = (displayName, email, password) => {
@@ -66,6 +68,7 @@ export const AuthContextProvider = ({ children }) => {
         const userRef = doc(db, "users", userCredentials.user.uid);
         await updateProfile(userCredentials.user, {
           displayName: displayName,
+          photoURL: anonImage,
         });
         const docRef = await setDoc(userRef, {
           username: displayName,
@@ -90,30 +93,6 @@ export const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  //check if profile photo exists logic
-  const checkIfProfilePhotoAvailable = async (id) => {
-    const profileImageRef = ref(storage, `/profile/${id}/profile_photo`);
-    const basicImageRef = ref(storage, "profile/anon-chef1.png");
-
-    try {
-      await getMetadata(profileImageRef)
-        .then(() => {
-          getDownloadURL(profileImageRef).then((url) => {
-            setUserImage(url);
-          });
-        })
-        .catch((error) => {
-          if (error.code === "storage/object-not-found") {
-            getDownloadURL(basicImageRef).then((url) => {
-              setUserImage(url);
-            });
-          }
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   //function to handle state and added recipe
   const handleAddedRecipe = () => {
     setIsRecipeAdded(true);
@@ -134,19 +113,6 @@ export const AuthContextProvider = ({ children }) => {
   const updateQueryText = (value) => {
     setQueryText(value);
   };
-
-  //update user image (to null when logged out)
-  const updateUserImage = (value) => {
-    setUserImage(value)
-  }
-
-  //update the photo
-  useEffect(() => {
-    if (user) {
-      //user profile image storage
-      checkIfProfilePhotoAvailable(user.uid);
-    }
-  }, [user, isUserImageUploaded]);
 
   //donwload recipes from firebase
   useEffect(() => {
@@ -215,22 +181,22 @@ export const AuthContextProvider = ({ children }) => {
       const getUserData = async () => {
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
-        setRecipesLikedByUserById(userDoc.data().liked)
+        setRecipesLikedByUserById(userDoc.data().liked);
       };
-  
-      getUserData()
+
+      getUserData();
     }
   }, [user, actualLikedRecipes]);
 
   //update actual user liked recipes
   const updateActualUserLikedRecipes = (value) => {
-    setActualLikedRecipes(value)
-  }
+    setActualLikedRecipes(value);
+  };
 
   //update recipe liked status
-  const updateIsRecipeLiked = value => {
-    setIsRecipeLiked(value)
-  }
+  const updateIsRecipeLiked = (value) => {
+    setIsRecipeLiked(value);
+  };
 
   return (
     <userContext.Provider
@@ -246,8 +212,6 @@ export const AuthContextProvider = ({ children }) => {
         createUser,
         login,
         signout,
-        userImage,
-        updateUserImage,
         isUserImageUploaded,
         setIsUserImageUploaded,
         displayName,

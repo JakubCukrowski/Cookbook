@@ -4,7 +4,6 @@ import Navbar from "react-bootstrap/Navbar";
 import { StyledLink, StyledNavbar, StyledNavbarColapse } from "./StyledNavbar";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
-import anonImage from "../../images/anon-chef1.png";
 import { LoggedUserImage } from "./LoggedUserImage";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,7 +12,7 @@ import { BootstrapModal } from "../BootstrapModal";
 import { useEffect, useState } from "react";
 
 export const CustomNavbar = () => {
-  const { user, signout, userImage, updateUserImage, displayName } = UserAuth();
+  const { user, signout, displayName } = UserAuth();
   const navigate = useNavigate();
   const [loggedOut, setLoggedOut] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -24,7 +23,6 @@ export const CustomNavbar = () => {
     try {
       await signout();
       setLoggedOut(true);
-      updateUserImage(null)
       navigate("/");
 
       const timeout = setTimeout(() => {
@@ -70,7 +68,7 @@ export const CustomNavbar = () => {
                     <Link className="nav-link" to="/dashboard">
                       Zalogowany: {displayName}{" "}
                       <LoggedUserImage
-                        src={userImage ? userImage : anonImage}
+                        src={user.photoURL}
                         alt="profile_image"
                       />
                     </Link>

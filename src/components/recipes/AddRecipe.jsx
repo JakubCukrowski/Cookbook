@@ -16,7 +16,7 @@ import { ButtonsContainer } from "./ButtonsContainer";
 import { ButtonWrapper } from "./ButtonWrapper";
 
 export const AddRecipe = () => {
-  const { user, handleAddedRecipe } = UserAuth();
+  const { user, handleAddedRecipe, userImage } = UserAuth();
 
   const [newRecipeDetails, setNewRecipeDetails] = useState({
     addedBy: "",
@@ -63,7 +63,10 @@ export const AddRecipe = () => {
       setNewRecipeDetails((prev) => {
         return {
           ...prev,
-          addedBy: user.uid,
+          addedBy: {
+            user: user.displayName,
+            photo: userImage
+          }
         };
       });
     }
