@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { DashboardElement } from "./DashboardElement";
 import { StyledLink } from "../../styles/StyledLink";
-import { uploadBytes, ref } from "firebase/storage";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase";
 import { BootstrapModal } from "../BootstrapModal";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { DashboardImage } from "./DashboardImage";
 import { DashboardSection } from "./DashboardSection";
@@ -21,6 +21,7 @@ import { BootstrapPagination } from "./BootstrapPagination";
 import { DashboardDesktopWrapper } from "./DashboardDesktopWrapper";
 import { DataDesktopWrapper } from "./DataDesktopWrapper";
 import { DashboardDesktopRecipes } from "./DashboardDesktopRecipes";
+import { updateProfile } from "firebase/auth";
 
 export const Dashboard = () => {
   const {
@@ -29,7 +30,6 @@ export const Dashboard = () => {
     actualLikedRecipes,
     updateActualUserLikedRecipes,
     recipes,
-    userImage,
     isUserImageUploaded,
     setIsUserImageUploaded,
     displayName,
@@ -37,9 +37,6 @@ export const Dashboard = () => {
 
   //progress bar percentage
   const [currentProgress, setCurrentProgress] = useState(0);
-
-  //to download image from firebase
-  const [profileImageRef, setProfileImageRef] = useState("");
 
   //added by user recipes
   const [userRecipes, setUserRecipes] = useState([]);
@@ -57,17 +54,19 @@ export const Dashboard = () => {
     }
   }, [isUserImageUploaded]);
 
-  useEffect(() => {
-    if (user) {
-      setProfileImageRef(ref(storage, `profile/${user.uid}/profile_photo`));
-    }
-  }, [user]);
-
   //upload photo logic with timeout to make modal dissapear
   const uploadPhoto = async (e) => {
-    await uploadBytes(profileImageRef, e.target.files[0]).then((snapshot) =>
-      console.log(snapshot)
-    );
+    const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`)
+    await uploadBytes(profileImageRef, e.target.files[0]).then(async () => {
+      await getDownloadURL(profileImageRef).then((url) => {
+        updateProfile(user, {
+          photoURL: url,
+        });
+      });
+    });
+
+    
+
     setIsUserImageUploaded(true);
 
     const timeoutID = setTimeout(() => {
@@ -80,7 +79,7 @@ export const Dashboard = () => {
   useEffect(() => {
     const recipesQuery = query(
       collection(db, "recipes"),
-      where("addedBy", "==", user.uid)
+      where("addedBy.user", "==", user.displayName)
     );
 
     onSnapshot(recipesQuery, (querySnapshot) => {
@@ -97,8 +96,8 @@ export const Dashboard = () => {
     const updateLikedRecipes = async () => {
       const temp = [];
       recipes.filter((recipe) => {
-        recipesLikedByUserById.forEach((like) => {
-          if (recipe.id === like) {
+        recipesLikedByUserById.forEach((likedRecipe) => {
+          if (recipe.id === likedRecipe) {
             temp.push(recipe);
           }
         });
@@ -112,7 +111,7 @@ export const Dashboard = () => {
 
   return (
     <>
-      {user !== null && profileImageRef !== "" ? (
+      {user !== null ? (
         <Container>
           <DashboardSection>
             {isUserImageUploaded ? (
@@ -125,10 +124,13 @@ export const Dashboard = () => {
             <DashboardDesktopWrapper>
               <DataDesktopWrapper>
                 <DataWrapper>
-                  {userImage !== null ? (
+                  {
                     <>
                       <DashboardImageWrapper>
-                        <DashboardImage src={userImage} alt="profile_image" />
+                        <DashboardImage
+                          src={user.photoURL}
+                          alt="profile_image"
+                        />
                         <UpdateUserPhoto onChange={uploadPhoto} />
                       </DashboardImageWrapper>
                       <Container>
@@ -160,9 +162,7 @@ export const Dashboard = () => {
                         />
                       </Container>
                     </>
-                  ) : (
-                    <Spinner />
-                  )}
+                  }
                 </DataWrapper>
               </DataDesktopWrapper>
 
