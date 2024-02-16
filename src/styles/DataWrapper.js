@@ -11,8 +11,4 @@ export const DataWrapper = styled.div`
     background-color: rgba(33, 37, 41, 0.1);
     border-radius: 10px;
     margin-bottom: 50px;
-
-    img {
-        width: 100%;
-    }
 `

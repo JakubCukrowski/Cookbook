@@ -51,7 +51,7 @@ export const Preparation = ({
             value.length < 15 ? (
               <Alert variant="danger">Ten krok jest za krótki</Alert>
             ) : null}
-            <div style={{ position: "relative" }}>
+            <div style={{ display: "flex" }}>
               <Form.Control
                 isInvalid={
                   errors.preparationStepsErrors[index] && value.length === 0

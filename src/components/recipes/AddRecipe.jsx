@@ -11,7 +11,7 @@ import { collection, updateDoc, addDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
-import { PaddingContainer } from "../../styles/Containers";
+import { NewRecipeContainer, PaddingContainer } from "../../styles/Containers";
 import { ButtonsContainer } from "./ButtonsContainer";
 import { ButtonWrapper } from "./ButtonWrapper";
 
@@ -65,8 +65,8 @@ export const AddRecipe = () => {
           ...prev,
           addedBy: {
             user: user.displayName,
-            photo: userImage
-          }
+            photo: userImage,
+          },
         };
       });
     }
@@ -148,9 +148,9 @@ export const AddRecipe = () => {
   const addNextStep = () => {
     setNewRecipeDetails((prev) => {
       return {
-       ...prev,
-       preparationSteps: [...prev.preparationSteps, '']
-      }
+        ...prev,
+        preparationSteps: [...prev.preparationSteps, ""],
+      };
     });
     console.log(Object.keys(newRecipeDetails.preparationSteps).length);
   };
@@ -204,12 +204,14 @@ export const AddRecipe = () => {
       setNewRecipeErrors((prev) => {
         return { ...prev, nameError: true };
       });
+      window.scrollTo(0, 0)
     }
 
     if (newRecipeDetails.image === "") {
       setNewRecipeErrors((prev) => {
         return { ...prev, imageError: true };
       });
+      window.scrollTo(0, 0)
     }
 
     if (
@@ -345,7 +347,7 @@ export const AddRecipe = () => {
   };
 
   return (
-    <PaddingContainer>
+    <NewRecipeContainer>
       <DataWrapper>
         <Container>
           <h2 style={{ textAlign: "center", paddingBottom: 50 }}>
@@ -391,6 +393,6 @@ export const AddRecipe = () => {
           </Form>
         </Container>
       </DataWrapper>
-    </PaddingContainer>
+    </NewRecipeContainer>
   );
 };

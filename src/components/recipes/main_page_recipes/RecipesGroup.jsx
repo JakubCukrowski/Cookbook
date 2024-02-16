@@ -5,6 +5,7 @@ import { StyledCol } from "./StyledCol";
 import { FlexContainer } from "../../../styles/Containers";
 import { StyledH2 } from "../../../styles/StyledH2";
 import { Link } from "react-router-dom";
+import { StyledDetailsWrapper } from "./StyledDetailsWrapper";
 
 export const RecipesGroup = ({
   title,
@@ -14,46 +15,37 @@ export const RecipesGroup = ({
   addButton,
   sliceBy,
 }) => {
-
   return (
     <Container>
       <StyledH2>{title}</StyledH2>
       <Row
         xs={1}
-        sm={2}
+        sm={1}
         lg={2}
         xl={3}
         className="g-4"
         style={{ paddingBottom: 20 }}
       >
         {array.slice(0, sliceBy).map((recipe, idx) => (
-          <StyledCol>
+          <StyledCol key={idx}>
             <Link
               to={`/recipes/${recipe.id}`}
               style={{ textDecoration: "none", color: "black" }}
             >
-              <div
-                style={{
-                  boxShadow: "0 0 4px rgb(0, 0, 0)",
-                  borderRadius: 8,
-                  width: "80%",
-                  height: 150,
-                  padding: 10,
-                  position: "relative",
-                  backgroundColor: "white",
-                }}
-              >
+              <StyledDetailsWrapper>
                 <h5>{recipe.name}</h5>
-                <img
-                  style={{ width: 40, height: 40, borderRadius: "50%" }}
-                  src={recipe.addedBy.photo}
-                  alt="creator_photo"
-                />
-                <span>{recipe.addedBy.user}</span>
                 <p style={{ marginBottom: 0 }}>{recipe.preparationTime}</p>
                 <p style={{ marginBottom: 0 }}>
                   Polubienia: <strong>{recipe.likes}</strong>
                 </p>
+                <div>
+                  <img
+                    style={{ width: 40, height: 40, borderRadius: "50%" }}
+                    src={recipe.addedBy.photo}
+                    alt="creator_photo"
+                  />
+                  <span> {recipe.addedBy.user}</span>
+                </div>
                 <div
                   style={{
                     position: "absolute",
@@ -68,7 +60,7 @@ export const RecipesGroup = ({
                     alt="recipe_image"
                   />
                 </div>
-              </div>
+              </StyledDetailsWrapper>
             </Link>
           </StyledCol>
         ))}

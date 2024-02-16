@@ -56,7 +56,9 @@ export const FakeSpinnerContainer = styled.div`
     }
 `
 
-export const PaddingContainer = styled(Container)`
+export const NewRecipeContainer = styled(Container)`
     padding-top: 50px;
-    padding-bottom: 50px;
+    @media (min-width: 992px) {
+        width: 60%;
+    }
 `

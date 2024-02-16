@@ -62,7 +62,7 @@ export const Ingredients = ({
           details.ingredients[index].match(gibberishCheck) ? (
             <Alert variant="danger">Próbujesz dodać coś co nie ma sensu</Alert>
           ) : null}
-          <div style={{ position: "relative", marginBottom: 10 }}>
+          <div style={{ marginBottom: 10, display: "flex" }}>
             <Form.Control
               value={details.ingredients[index]}
               isInvalid={
