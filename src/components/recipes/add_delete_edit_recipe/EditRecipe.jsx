@@ -3,42 +3,62 @@ import { RecipeDetails } from "./RecipeDetails";
 import { Ingredients } from "./Ingredients";
 import { Preparation } from "./Preparation";
 import { Button, Container, Form } from "react-bootstrap";
-import { DataWrapper } from "../../styles/DataWrapper";
-import { UserAuth } from "../../context/AuthContext";
-import profanity from "../../profanity.json";
-import { useNavigate } from "react-router-dom";
+import { DataWrapper } from "../../../styles/DataWrapper";
+import { UserAuth } from "../../../context/AuthContext";
+import profanity from "../../../profanity.json";
+import { useNavigate, useParams } from "react-router-dom";
 import { collection, updateDoc, addDoc, doc } from "firebase/firestore";
-import { db } from "../../firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "../../firebase";
-import { NewRecipeContainer, PaddingContainer } from "../../styles/Containers";
-import { ButtonsContainer } from "./ButtonsContainer";
-import { ButtonWrapper } from "./ButtonWrapper";
+import { db } from "../../../firebase";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { storage } from "../../../firebase";
+import { NewRecipeContainer } from "../../../styles/Containers";
+import { ButtonsContainer } from "../ButtonsContainer";
+import { ButtonWrapper } from "../ButtonWrapper";
+import { RecipeData } from "../../../context/RecipeContext";
 
-export const AddRecipe = () => {
-  const { user, handleAddedRecipe, userImage } = UserAuth();
+export const EditRecipe = () => {
+  const { user, handleAddedRecipe, userImage, recipes } = UserAuth();
+  const {
+    newRecipeDetails,
+    updateNewRecipeDetails,
+    newRecipeErrors,
+    updateNewRecipeErrors,
+    gibberishCheck,
+  } = RecipeData();
 
-  const [newRecipeDetails, setNewRecipeDetails] = useState({
-    addedBy: "",
-    category: "",
-    createdAt: "",
-    image: "",
-    ingredients: ["", "", ""],
-    likes: 0,
-    name: "",
-    preparationTime: "15",
-    difficulty: "easy",
-    description: "",
-    preparationSteps: ["", "", ""],
-  });
+  const { recipeId } = useParams();
 
-  const [newRecipeErrors, setNewRecipeErrors] = useState({
-    categoryError: false,
-    imageError: false,
-    ingredientsErrors: [false, false, false],
-    nameError: false,
-    preparationStepsErrors: [false, false, false],
-  });
+  useEffect(() => {
+    const recipeToEdit = recipes.find((recipe) => recipe.id === recipeId);
+
+    if (recipeToEdit !== undefined) {
+      updateNewRecipeDetails({
+        addedBy: recipeToEdit.addedBy,
+        category: recipeToEdit.category,
+        createdAt: recipeToEdit.createdAt,
+        image: recipeToEdit.image,
+        ingredients: recipeToEdit.ingredients,
+        likes: recipeToEdit.likes,
+        name: recipeToEdit.name,
+        preparationTime: recipeToEdit.preparationTime,
+        difficulty: recipeToEdit.difficulty,
+        description: recipeToEdit.description,
+        preparationSteps: recipeToEdit.steps,
+      });
+
+      updateNewRecipeErrors((prev) => {
+        return {
+          ...prev,
+          ingredientsErrors: recipeToEdit.ingredients.map(() => false),
+          preparationStepsErrors: recipeToEdit.steps.map(() => false),
+        };
+      });
+    }
+  }, [recipes]);
 
   //gathers profanity words
   const [profanityArray, setProfanityArray] = useState([]);
@@ -47,9 +67,6 @@ export const AddRecipe = () => {
 
   //steps state
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-
-  //gibberish regex
-  const gibberishCheck = /(.)\1{2,}/;
 
   //block submiting multiple times
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -60,7 +77,7 @@ export const AddRecipe = () => {
   //update user id while adding recipe
   useEffect(() => {
     if (user) {
-      setNewRecipeDetails((prev) => {
+      updateNewRecipeDetails((prev) => {
         return {
           ...prev,
           addedBy: {
@@ -75,7 +92,7 @@ export const AddRecipe = () => {
   //update category, name, preparation time, difficulty
   const updateRecipeDetails = (e) => {
     const { name, value } = e.target;
-    setNewRecipeDetails((prev) => {
+    updateNewRecipeDetails((prev) => {
       return {
         ...prev,
         name: name === "recipeName" ? value : prev.name,
@@ -91,7 +108,7 @@ export const AddRecipe = () => {
 
     //name validation
     if (name === "recipeName") {
-      setNewRecipeErrors((prev) => {
+      updateNewRecipeErrors((prev) => {
         return {
           ...prev,
           nameError: false,
@@ -115,7 +132,7 @@ export const AddRecipe = () => {
 
   //add image
   const updateImage = (value) =>
-    setNewRecipeDetails((prev) => ({ ...prev, image: value }));
+    updateNewRecipeDetails((prev) => ({ ...prev, image: value }));
 
   //check if image
   const checkIfImage = (value) => {
@@ -124,13 +141,13 @@ export const AddRecipe = () => {
 
   //adds ingredients and relative error
   const handleAddIngredients = () => {
-    setNewRecipeDetails((prev) => {
+    updateNewRecipeDetails((prev) => {
       return {
         ...prev,
         ingredients: [...prev.ingredients, ""],
       };
     });
-    setNewRecipeErrors((prev) => {
+    updateNewRecipeErrors((prev) => {
       return {
         ...prev,
         ingredientsErrors: [...prev.ingredientsErrors, false],
@@ -139,14 +156,14 @@ export const AddRecipe = () => {
   };
 
   const handleIngredientsArray = (array) =>
-    setNewRecipeDetails((prev) => ({ ...prev, ingredients: array }));
+    updateNewRecipeDetails((prev) => ({ ...prev, ingredients: array }));
 
   const handleIngredientsErrors = (array) =>
-    setNewRecipeErrors((prev) => ({ ...prev, ingredientsErrors: array }));
+    updateNewRecipeErrors((prev) => ({ ...prev, ingredientsErrors: array }));
 
   //steps logic
   const addNextStep = () => {
-    setNewRecipeDetails((prev) => {
+    updateNewRecipeDetails((prev) => {
       return {
         ...prev,
         preparationSteps: [...prev.preparationSteps, ""],
@@ -157,11 +174,14 @@ export const AddRecipe = () => {
 
   //preparation stesp
   const handleStepsArray = (array) => {
-    setNewRecipeDetails((prev) => ({ ...prev, preparationSteps: array }));
+    updateNewRecipeDetails((prev) => ({ ...prev, preparationSteps: array }));
   };
 
   const handleStepsErrors = (array) =>
-    setNewRecipeErrors((prev) => ({ ...prev, preparationStepsErrors: array }));
+    updateNewRecipeErrors((prev) => ({
+      ...prev,
+      preparationStepsErrors: array,
+    }));
 
   const currentStep = [
     <RecipeDetails
@@ -201,24 +221,24 @@ export const AddRecipe = () => {
       newRecipeDetails.name.length < 8 ||
       newRecipeDetails.name.match(gibberishCheck)
     ) {
-      setNewRecipeErrors((prev) => {
+      updateNewRecipeErrors((prev) => {
         return { ...prev, nameError: true };
       });
-      window.scrollTo(0, 0)
+      window.scrollTo(0, 0);
     }
 
     if (newRecipeDetails.image === "") {
-      setNewRecipeErrors((prev) => {
+      updateNewRecipeErrors((prev) => {
         return { ...prev, imageError: true };
       });
-      window.scrollTo(0, 0)
+      window.scrollTo(0, 0);
     }
 
     if (
       newRecipeDetails.category === "" ||
       newRecipeDetails.category === "default"
     ) {
-      setNewRecipeErrors((prev) => {
+      updateNewRecipeErrors((prev) => {
         return { ...prev, categoryError: true };
       });
     }
@@ -252,7 +272,7 @@ export const AddRecipe = () => {
       }
     }
 
-    setNewRecipeErrors((prev) => {
+    updateNewRecipeErrors((prev) => {
       return {
         ...prev,
         ingredientsErrors: newIngredientsErrors,
@@ -294,7 +314,7 @@ export const AddRecipe = () => {
       }
     }
 
-    setNewRecipeErrors((prev) => {
+    updateNewRecipeErrors((prev) => {
       return {
         ...prev,
         preparationStepsErrors: newPreparationErrors,
@@ -351,7 +371,7 @@ export const AddRecipe = () => {
       <DataWrapper>
         <Container>
           <h2 style={{ textAlign: "center", paddingBottom: 50 }}>
-            Dodaj przepis {currentStepIndex + 1} / 3
+            Edytuj przepis {currentStepIndex + 1} / 3
           </h2>
           <Form className="new-recipe-form" onSubmit={handleSubmitForm}>
             {currentStep[currentStepIndex]}

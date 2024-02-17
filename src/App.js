@@ -12,12 +12,14 @@ import { Dashboard } from "./components/dashboard/Dashboard";
 import { NotFound } from "./components/not_found/NotFound";
 import { RecipesPage } from "./components/recipes/RecipesPage";
 import { GlobalStyle } from "./styles/GlobalStyles";
-import { AddRecipe } from "./components/recipes/AddRecipe";
+import { AddRecipe} from './components/recipes/add_delete_edit_recipe/AddRecipe'
 import { PrivateRoute } from "./components/private_route/PrivateRoute";
 import { ProfanityViolation } from "./components/profanity/ProfanityViolation";
 import { Soups } from "./components/recipes/main_page_recipes/Soups";
 import { Desserts } from "./components/recipes/main_page_recipes/Desserts";
 import { FilterRecipes } from "./components/recipes/FilterRecipes";
+import { RecipeContextProvider } from "./context/RecipeContext";
+import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditRecipe";
 
 function App() {
   return (
@@ -54,7 +56,19 @@ function App() {
               path="/add-recipe"
               element={
                 <PrivateRoute>
-                  <AddRecipe />
+                  <RecipeContextProvider>
+                    <AddRecipe />
+                  </RecipeContextProvider>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/recipes/edit/:recipeId"
+              element={
+                <PrivateRoute>
+                  <RecipeContextProvider>
+                    <EditRecipe />
+                  </RecipeContextProvider>
                 </PrivateRoute>
               }
             />
