@@ -6,6 +6,11 @@ import Alert from "react-bootstrap/Alert";
 import { FormCategory } from "../form_elements/FormCategory";
 import { FormDifficulty } from "../form_elements/FormDifficulty";
 import { FormPrepTime } from "../form_elements/FormPrepTime";
+import { getDoc, doc } from "firebase/firestore";
+import { UserAuth } from "../../../context/AuthContext";
+import { db } from "../../../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../../firebase";
 
 //podzielic na mniejsze komponenty
 export const RecipeDetails = ({
@@ -17,11 +22,33 @@ export const RecipeDetails = ({
   isImage,
   checkIfImage,
 }) => {
-  const handleOnDrop = (ev) => {
+  const { user } = UserAuth();
+
+  useEffect(() => {
+    const getTempRecipe = async () => {
+      const tempRecipeRef = doc(db, "temp", `temp_${user.uid}`);
+      const docSnap = await getDoc(tempRecipeRef);
+
+      console.log(docSnap.data());
+    };
+
+    getTempRecipe();
+  }, []);
+
+  const getRecipeRef = (file) => ref(storage, `temporary/temp_${user.uid}/${file}`)
+
+  const handleOnDrop = async (ev) => {
     ev.preventDefault();
 
     const file = ev.dataTransfer.items[0].getAsFile();
-    updateImage(file);
+
+    const recipeRef = getRecipeRef(file.name)
+    await uploadBytes(recipeRef, file).then(async () => {
+      await getDownloadURL(recipeRef).then((url) => {
+        updateImage(url)
+      });
+    })
+
   };
 
   const handleDragOver = (e) => {
@@ -30,7 +57,9 @@ export const RecipeDetails = ({
 
   //upload image on change
   const onImageChange = (e) => {
+    // const recipeRef = getRecipeRef()
     updateImage(e.target.files[0]);
+    console.log(e.target.files[0]);
   };
 
   const imageTypes = [

@@ -18,7 +18,6 @@ import { ProfanityViolation } from "./components/profanity/ProfanityViolation";
 import { Soups } from "./components/recipes/main_page_recipes/Soups";
 import { Desserts } from "./components/recipes/main_page_recipes/Desserts";
 import { FilterRecipes } from "./components/recipes/FilterRecipes";
-import { RecipeContextProvider } from "./context/RecipeContext";
 import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditRecipe";
 
 function App() {
@@ -56,9 +55,7 @@ function App() {
               path="/add-recipe"
               element={
                 <PrivateRoute>
-                  <RecipeContextProvider>
                     <AddRecipe />
-                  </RecipeContextProvider>
                 </PrivateRoute>
               }
             />
@@ -66,9 +63,7 @@ function App() {
               path="/recipes/edit/:recipeId"
               element={
                 <PrivateRoute>
-                  <RecipeContextProvider>
                     <EditRecipe />
-                  </RecipeContextProvider>
                 </PrivateRoute>
               }
             />

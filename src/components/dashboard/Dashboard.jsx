@@ -9,7 +9,12 @@ import { StyledLink } from "../../styles/StyledLink";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase";
 import { BootstrapModal } from "../BootstrapModal";
-import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import { DashboardImage } from "./DashboardImage";
 import { DashboardSection } from "./DashboardSection";
@@ -56,7 +61,7 @@ export const Dashboard = () => {
 
   //upload photo logic with timeout to make modal dissapear
   const uploadPhoto = async (e) => {
-    const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`)
+    const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`);
     await uploadBytes(profileImageRef, e.target.files[0]).then(async () => {
       await getDownloadURL(profileImageRef).then((url) => {
         updateProfile(user, {
@@ -64,8 +69,6 @@ export const Dashboard = () => {
         });
       });
     });
-
-    
 
     setIsUserImageUploaded(true);
 
@@ -175,7 +178,10 @@ export const Dashboard = () => {
                   {userRecipes.length === 0 ? (
                     <p>Aktualnie nie dodałeś żadnego przepisu</p>
                   ) : (
-                    <BootstrapPagination recipes={userRecipes} />
+                    <BootstrapPagination
+                      recipes={userRecipes}
+                      isUserRecipe={true}
+                    />
                   )}
                 </DataWrapper>
                 <DataWrapper>

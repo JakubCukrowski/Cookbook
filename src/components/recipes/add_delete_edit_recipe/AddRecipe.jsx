@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../../../context/AuthContext";
 import { HandleRecipe } from "./HandleRecipe";
-import { collection, updateDoc, addDoc, doc } from "firebase/firestore";
+import { collection, updateDoc, addDoc, doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../firebase";
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export const AddRecipe = () => {
   const { user, userImage, handleAddedRecipe } = UserAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [newRecipeDetails, setNewRecipeDetails] = useState({
     addedBy: "",
@@ -57,12 +57,31 @@ export const AddRecipe = () => {
         };
       });
     }
+
+    const createTempDoc = async () => {
+      await setDoc(doc(db, "temp", `temp_${user.uid}`), {
+        addedBy: user.displayName,
+        category: "",
+        createdAt: "",
+        image: "",
+        ingredients: ["", "", ""],
+        likes: 0,
+        name: "",
+        preparationTime: "15",
+        difficulty: "easy",
+        description: "",
+        preparationSteps: ["", "", ""],
+      });
+    };
+
+    createTempDoc()
   }, []);
 
   //submit form
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
+    //handle errors
     const newPreparationErrors = newRecipeErrors.preparationStepsErrors;
     const preparationStepsObject = Object.keys(
       newRecipeDetails.preparationSteps
@@ -88,6 +107,7 @@ export const AddRecipe = () => {
       };
     });
 
+    //if no errors
     if (newRecipeErrors.preparationStepsErrors.every((error) => !error)) {
       setIsSubmitted(true);
       const currentDate = Date.now();
