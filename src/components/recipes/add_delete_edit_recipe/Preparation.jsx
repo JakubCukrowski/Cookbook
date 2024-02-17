@@ -2,7 +2,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Alert, Button, Form, FormGroup } from "react-bootstrap";
-import { DeleteButton } from "./DeleteButton";
+import { DeleteButton } from "../DeleteButton";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 export const Preparation = ({
@@ -33,8 +33,6 @@ export const Preparation = ({
     const filterErrors = newErrorsArray.filter((_, i) => i !== index)
     handleStepsErrors(filterErrors)
   };
-
-  console.log(details.preparationSteps);
 
   return (
     <>

@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { Button, Form, FormGroup } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
-import { FormCategory } from "./form_elements/FormCategory";
-import { FormDifficulty } from "./form_elements/FormDifficulty";
-import { FormPrepTime } from "./form_elements/FormPrepTime";
+import { FormCategory } from "../form_elements/FormCategory";
+import { FormDifficulty } from "../form_elements/FormDifficulty";
+import { FormPrepTime } from "../form_elements/FormPrepTime";
 
 //podzielic na mniejsze komponenty
 export const RecipeDetails = ({
@@ -44,7 +44,7 @@ export const RecipeDetails = ({
   ];
 
   const options = [
-    'wybierz',
+    "wybierz",
     "Dania główne",
     "Zupy",
     "Śniadania",
@@ -54,7 +54,7 @@ export const RecipeDetails = ({
     "Napoje",
   ];
 
-  const prepTimes = ["15 minut", "30 minut", "60 minut", "90 minut"]
+  const prepTimes = ["15 minut", "30 minut", "60 minut", "90 minut"];
 
   useEffect(() => {
     if (!imageTypes.includes(details.image.type)) {
@@ -135,8 +135,16 @@ export const RecipeDetails = ({
             </>
           ) : (
             <>
-              <p>Dodano plik: {details.image.name}</p>
+              {details.image instanceof File ? (
+                <p>Dodano plik: {details.image.name}</p>
+              ) : (
+                <img
+                  style={{ width: 300, height: 300, objectFit: "fill" }}
+                  src={details.image}
+                />
+              )}
               <Button
+                style={{ marginTop: 30 }}
                 variant="dark"
                 onClick={() => {
                   updateImage("");
