@@ -3,7 +3,7 @@ import { CustomPaginationItem } from "./CustomPaginationItem";
 import { DashboardRecipes } from "./DashboardRecipes";
 import { Pagination } from "react-bootstrap";
 
-export const BootstrapPagination = ({ recipes }) => {
+export const BootstrapPagination = ({ recipes, isUserRecipe }) => {
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [recipesPerPage, setRecipesPerPage] = useState(3);
@@ -38,6 +38,7 @@ export const BootstrapPagination = ({ recipes }) => {
           linkTo={recipe.id}
           recipeName={recipe.name}
           recipeImage={recipe.image}
+          isUserRecipe={isUserRecipe}
         />
       ))}
 

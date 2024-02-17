@@ -21,6 +21,7 @@ import { ref, getDownloadURL, listAll } from "firebase/storage";
 const userContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
+
   const [user, setUser] = useState(null);
   const anonImage =
     "https://firebasestorage.googleapis.com/v0/b/cookbook-a4b98.appspot.com/o/profile%2Fanon-chef1.png?alt=media&token=76a571b2-6999-4a5e-a553-5d5ae628b522";

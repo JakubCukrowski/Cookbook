@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RecipeDetails } from "./RecipeDetails";
 import { Ingredients } from "./Ingredients";
 import { Preparation } from "./Preparation";
@@ -9,6 +9,9 @@ import { ButtonsContainer } from "../ButtonsContainer";
 import { ButtonWrapper } from "../ButtonWrapper";
 import { useNavigate } from "react-router-dom";
 import profanity from "../../../profanity.json";
+import { deleteDoc, doc } from "firebase/firestore";
+import { UserAuth } from "../../../context/AuthContext";
+import { db } from "../../../firebase";
 
 export const HandleRecipe = ({
   newRecipeDetails,
@@ -17,9 +20,10 @@ export const HandleRecipe = ({
   newRecipeErrors,
   updateNewRecipeErrors,
   isSubmitted,
-  handleSubmitForm
+  handleSubmitForm,
 }) => {
 
+  const {user} = UserAuth()
   //steps state
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const navigate = useNavigate();
@@ -32,6 +36,20 @@ export const HandleRecipe = ({
 
   //shows if image file is actually an image
   const [isImage, setIsImage] = useState(null);
+
+  useEffect(() => {
+    const beforeUnloadHandler = async (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+
+      await deleteDoc(doc(db, 'temp', `temp_${user.uid}`))
+
+    };
+
+    window.addEventListener("beforeunload", beforeUnloadHandler);
+
+    return () => window.removeEventListener("beforeunload", beforeUnloadHandler);
+  }, []);
 
   //update category, name, preparation time, difficulty
   const updateRecipeDetails = (e) => {
