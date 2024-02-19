@@ -1,7 +1,7 @@
 import { faCamera, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from "react";
-import { Button, Form, FormGroup } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Form, FormGroup, Spinner } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 import { FormCategory } from "../form_elements/FormCategory";
 import { FormDifficulty } from "../form_elements/FormDifficulty";
@@ -9,7 +9,12 @@ import { FormPrepTime } from "../form_elements/FormPrepTime";
 import { getDoc, doc } from "firebase/firestore";
 import { UserAuth } from "../../../context/AuthContext";
 import { db } from "../../../firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadString,
+} from "firebase/storage";
 import { storage } from "../../../firebase";
 
 //podzielic na mniejsze komponenty
@@ -23,32 +28,67 @@ export const RecipeDetails = ({
   checkIfImage,
 }) => {
   const { user } = UserAuth();
+  const [imageTypeError, setImageTypeError] = useState(false);
+  const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
+
+  const imageTypes = [
+    "image/apng",
+    "image/avif",
+    "image/gif",
+    "image/jpeg",
+    "image/png",
+    "image/svg+xml",
+    "image/webp",
+  ];
+
+  //handle image on drop/add
+  const updateRecipeImage = async (file) => {
+    if (imageTypes.includes(file.type)) {
+      setIsSpinnerVisible(true);
+      const recipeRef = ref(storage, `temporary/temp_${user.uid}/${file.name}`);
+      await uploadBytes(recipeRef, file).then(async () => {
+        await getDownloadURL(recipeRef).then((url) => {
+          updateImage(url);
+        });
+      });
+      setImageTypeError(false)
+    } else {
+      setImageTypeError(true);
+    }
+  };
 
   useEffect(() => {
-    const getTempRecipe = async () => {
-      const tempRecipeRef = doc(db, "temp", `temp_${user.uid}`);
-      const docSnap = await getDoc(tempRecipeRef);
+    if (isSpinnerVisible) {
+      const timeout = setTimeout(() => {
+        setIsSpinnerVisible(false);
+      }, 1000);
 
-      console.log(docSnap.data());
-    };
+      return () => clearTimeout(timeout);
+    }
+  }, [isSpinnerVisible]);
 
-    getTempRecipe();
-  }, []);
-
-  const getRecipeRef = (file) => ref(storage, `temporary/temp_${user.uid}/${file}`)
-
+  //drop image
   const handleOnDrop = async (ev) => {
     ev.preventDefault();
-
     const file = ev.dataTransfer.items[0].getAsFile();
-
-    const recipeRef = getRecipeRef(file.name)
-    await uploadBytes(recipeRef, file).then(async () => {
-      await getDownloadURL(recipeRef).then((url) => {
-        updateImage(url)
-      });
-    })
-
+    if (file) {
+      setImageTypeError(false)
+      updateRecipeImage(file);
+    } else {
+      await fetch(ev.dataTransfer.getData("URL"))
+        .then(async (res) => {
+          return res.blob();
+        })
+        .then((blob) => {
+          const file = new File([blob], "image", { type: blob.type });
+          console.log(file);
+          updateRecipeImage(file);
+          setImageTypeError(false)
+        })
+        .catch(() => {
+          setImageTypeError(true);
+        });
+    }
   };
 
   const handleDragOver = (e) => {
@@ -57,20 +97,8 @@ export const RecipeDetails = ({
 
   //upload image on change
   const onImageChange = (e) => {
-    // const recipeRef = getRecipeRef()
-    updateImage(e.target.files[0]);
-    console.log(e.target.files[0]);
+    updateRecipeImage(e.target.files[0]);
   };
-
-  const imageTypes = [
-    "/image/apng",
-    "image/avif",
-    "image/gif",
-    "image/jpeg",
-    "image/png",
-    "image/svg+xml",
-    "image/webp",
-  ];
 
   const options = [
     "wybierz",
@@ -123,21 +151,15 @@ export const RecipeDetails = ({
         {details.image === "" && errors.imageError ? (
           <Alert variant="danger">Musisz dodać zdjęcie</Alert>
         ) : null}
-        {imageTypes.includes(details.image.type) && isImage ? (
+        {details.image !== '' && !imageTypeError ? (
           <Alert variant="success">Plik jest poprawny</Alert>
         ) : null}
-        {!imageTypes.includes(details.image.type) &&
-        details.image.type !== undefined &&
-        !isImage ? (
-          <Alert variant="danger">
-            Sprawdź czy plik na pewno jest zdjęciem
-          </Alert>
+        {imageTypeError ? (
+          <Alert variant="danger">Plik nie jest poprawny</Alert>
         ) : null}
         <FormGroup
           className={`mb-3 form_group_sfg ${
-            errors.imageError && details.image === ""
-              ? "form_group_error"
-              : null
+            imageTypeError ? "form_group_error" : null
           }`}
           onDrop={details.image === "" ? (e) => handleOnDrop(e) : null}
           onDragOver={handleDragOver}
@@ -160,18 +182,30 @@ export const RecipeDetails = ({
                 type="file"
                 id="recipe_photo"
                 onChange={onImageChange}
+                accept="image/*"
               />
             </>
           ) : (
             <>
-              {details.image instanceof File ? (
-                <p>Dodano plik: {details.image.name}</p>
-              ) : (
-                <img
-                  style={{ width: 300, height: 300, objectFit: "fill" }}
-                  src={details.image}
-                />
-              )}
+              <div style={{ width: 200, height: 200 }}>
+                {isSpinnerVisible ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <p>Podgląd</p>
+                    <img
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        borderRadius: "50%",
+                        aspectRatio: "auto",
+                      }}
+                      src={details.image}
+                    />
+                  </>
+                )}
+              </div>
               <Button
                 style={{ marginTop: 30 }}
                 variant="dark"

@@ -57,24 +57,6 @@ export const AddRecipe = () => {
         };
       });
     }
-
-    const createTempDoc = async () => {
-      await setDoc(doc(db, "temp", `temp_${user.uid}`), {
-        addedBy: user.displayName,
-        category: "",
-        createdAt: "",
-        image: "",
-        ingredients: ["", "", ""],
-        likes: 0,
-        name: "",
-        preparationTime: "15",
-        difficulty: "easy",
-        description: "",
-        preparationSteps: ["", "", ""],
-      });
-    };
-
-    createTempDoc()
   }, []);
 
   //submit form
