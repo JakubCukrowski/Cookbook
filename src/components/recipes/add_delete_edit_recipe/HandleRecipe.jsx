@@ -94,11 +94,6 @@ export const HandleRecipe = ({
   const updateImage = (value) =>
     updateNewRecipeDetails((prev) => ({ ...prev, image: value }));
 
-  //check if image
-  const checkIfImage = (value) => {
-    setIsImage(value);
-  };
-
   //adds ingredients and relative error
   const handleAddIngredients = () => {
     updateNewRecipeDetails((prev) => {
@@ -146,11 +141,10 @@ export const HandleRecipe = ({
     <RecipeDetails
       details={newRecipeDetails}
       errors={newRecipeErrors}
+      updateNewRecipeErrors={updateNewRecipeErrors}
       updateImage={updateImage}
       updateRecipeDetails={updateRecipeDetails}
       gibberishCheck={gibberishCheck}
-      isImage={isImage}
-      checkIfImage={checkIfImage}
     />,
     <Ingredients
       details={newRecipeDetails}
@@ -209,8 +203,7 @@ export const HandleRecipe = ({
       newRecipeDetails.image !== "" &&
       newRecipeDetails.category !== "" &&
       newRecipeDetails.category !== "default" &&
-      !newRecipeDetails.name.match(gibberishCheck) &&
-      isImage
+      !newRecipeDetails.name.match(gibberishCheck) 
     ) {
       setCurrentStepIndex((prev) => prev + 1);
     }
