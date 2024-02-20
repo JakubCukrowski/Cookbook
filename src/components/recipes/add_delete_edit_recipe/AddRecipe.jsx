@@ -8,7 +8,7 @@ import { storage } from "../../../firebase";
 import { useNavigate } from "react-router-dom";
 
 export const AddRecipe = () => {
-  const { user, userImage, handleAddedRecipe } = UserAuth();
+  const { user, handleAddedRecipe } = UserAuth();
   const navigate = useNavigate();
 
   const [newRecipeDetails, setNewRecipeDetails] = useState({
@@ -52,7 +52,7 @@ export const AddRecipe = () => {
           ...prev,
           addedBy: {
             user: user.displayName,
-            photo: userImage,
+            photo: user.photoURL,
           },
         };
       });

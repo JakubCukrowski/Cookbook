@@ -1,4 +1,4 @@
-import { faCamera, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faPlusCircle, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Button, Form, FormGroup, Spinner } from "react-bootstrap";
@@ -13,7 +13,6 @@ import {
   ref,
   uploadBytes,
   getDownloadURL,
-  uploadString,
 } from "firebase/storage";
 import { storage } from "../../../firebase";
 
@@ -24,12 +23,13 @@ export const RecipeDetails = ({
   updateImage,
   updateRecipeDetails,
   gibberishCheck,
-  isImage,
-  checkIfImage,
+  updateNewRecipeErrors
+
 }) => {
   const { user } = UserAuth();
   const [imageTypeError, setImageTypeError] = useState(false);
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null)
 
   const imageTypes = [
     "image/apng",
@@ -41,17 +41,28 @@ export const RecipeDetails = ({
     "image/webp",
   ];
 
+  const setImageErrorToFalse = () => {
+    updateNewRecipeErrors(prev => {
+      return {
+        ...prev,
+        imageError: false
+      }
+    })
+  }
+
   //handle image on drop/add
   const updateRecipeImage = async (file) => {
     if (imageTypes.includes(file.type)) {
       setIsSpinnerVisible(true);
-      const recipeRef = ref(storage, `temporary/temp_${user.uid}/${file.name}`);
-      await uploadBytes(recipeRef, file).then(async () => {
-        await getDownloadURL(recipeRef).then((url) => {
-          updateImage(url);
-        });
-      });
+      const fr = new FileReader()
+      fr.addEventListener('load', () => {
+        const res = fr.result
+        setImagePreview(res)
+      })
+      fr.readAsDataURL(file)
+      updateImage(file)
       setImageTypeError(false)
+     setImageErrorToFalse()
     } else {
       setImageTypeError(true);
     }
@@ -73,9 +84,12 @@ export const RecipeDetails = ({
     const file = ev.dataTransfer.items[0].getAsFile();
     if (file) {
       setImageTypeError(false)
+      setImageErrorToFalse()
       updateRecipeImage(file);
     } else {
-      await fetch(ev.dataTransfer.getData("URL"))
+      //match src of dropped file
+      const regex = /src="?([^"\s]+)"?\s*/;
+      await fetch(regex.exec(ev.dataTransfer.getData('text/html'))[1])
         .then(async (res) => {
           return res.blob();
         })
@@ -84,6 +98,7 @@ export const RecipeDetails = ({
           console.log(file);
           updateRecipeImage(file);
           setImageTypeError(false)
+          setImageErrorToFalse()
         })
         .catch(() => {
           setImageTypeError(true);
@@ -113,14 +128,6 @@ export const RecipeDetails = ({
 
   const prepTimes = ["15 minut", "30 minut", "60 minut", "90 minut"];
 
-  useEffect(() => {
-    if (!imageTypes.includes(details.image.type)) {
-      checkIfImage(false);
-    } else {
-      checkIfImage(true);
-    }
-  }, [details.image]);
-
   return (
     <>
       <div className="recipe-details">
@@ -148,7 +155,7 @@ export const RecipeDetails = ({
             onChange={(e) => updateRecipeDetails(e)}
           />
         </FormGroup>
-        {details.image === "" && errors.imageError ? (
+        {details.image === "" && errors.imageError && !imageTypeError ? (
           <Alert variant="danger">Musisz dodać zdjęcie</Alert>
         ) : null}
         {details.image !== '' && !imageTypeError ? (
@@ -159,7 +166,7 @@ export const RecipeDetails = ({
         ) : null}
         <FormGroup
           className={`mb-3 form_group_sfg ${
-            imageTypeError ? "form_group_error" : null
+            imageTypeError || errors.imageError ? "form_group_error" : null
           }`}
           onDrop={details.image === "" ? (e) => handleOnDrop(e) : null}
           onDragOver={handleDragOver}
@@ -201,7 +208,7 @@ export const RecipeDetails = ({
                         borderRadius: "50%",
                         aspectRatio: "auto",
                       }}
-                      src={details.image}
+                      src={imagePreview}
                     />
                   </>
                 )}
@@ -213,7 +220,7 @@ export const RecipeDetails = ({
                   updateImage("");
                 }}
               >
-                Zmień
+                <FontAwesomeIcon icon={faTrashCan} />
               </Button>
             </>
           )}
