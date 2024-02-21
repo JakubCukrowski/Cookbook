@@ -38,9 +38,6 @@ export const AuthContextProvider = ({ children }) => {
   //user image state
   const [isUserImageUploaded, setIsUserImageUploaded] = useState(false);
 
-  //user data
-  const [displayName, setDisplayName] = useState("");
-
   //recipes from firebase
   const [recipes, setRecipes] = useState([]);
 
@@ -177,8 +174,6 @@ export const AuthContextProvider = ({ children }) => {
   //set display name for dashboard and navbar, download user docs
   useEffect(() => {
     if (user) {
-      setDisplayName(user.displayName);
-
       const getUserData = async () => {
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
@@ -215,7 +210,6 @@ export const AuthContextProvider = ({ children }) => {
         signout,
         isUserImageUploaded,
         setIsUserImageUploaded,
-        displayName,
         handleAddedRecipe,
         isRecipeAdded,
         updateQueryResults,
