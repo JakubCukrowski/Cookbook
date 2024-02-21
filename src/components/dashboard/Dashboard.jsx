@@ -37,7 +37,6 @@ export const Dashboard = () => {
     recipes,
     isUserImageUploaded,
     setIsUserImageUploaded,
-    displayName,
   } = UserAuth();
 
   //progress bar percentage
@@ -145,7 +144,7 @@ export const Dashboard = () => {
                         />
                         <DashboardElement
                           spanTitle={"Nazwa użytkownika: "}
-                          strongTitle={displayName}
+                          strongTitle={user.displayName}
                           inputName="username"
                         />
                         <DashboardElement

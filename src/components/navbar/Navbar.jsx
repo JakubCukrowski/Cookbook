@@ -12,7 +12,7 @@ import { BootstrapModal } from "../BootstrapModal";
 import { useEffect, useState } from "react";
 
 export const CustomNavbar = () => {
-  const { user, signout, displayName } = UserAuth();
+  const { user, signout } = UserAuth();
   const navigate = useNavigate();
   const [loggedOut, setLoggedOut] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -66,7 +66,7 @@ export const CustomNavbar = () => {
                 <>
                   <Nav.Item>
                     <Link className="nav-link" to="/dashboard">
-                      Zalogowany: {displayName}{" "}
+                      Zalogowany: {user.displayName}{" "}
                       <LoggedUserImage
                         src={user.photoURL}
                         alt="profile_image"
