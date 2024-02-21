@@ -6,17 +6,7 @@ import Alert from "react-bootstrap/Alert";
 import { FormCategory } from "../form_elements/FormCategory";
 import { FormDifficulty } from "../form_elements/FormDifficulty";
 import { FormPrepTime } from "../form_elements/FormPrepTime";
-import { getDoc, doc } from "firebase/firestore";
-import { UserAuth } from "../../../context/AuthContext";
-import { db } from "../../../firebase";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
-import { storage } from "../../../firebase";
 
-//podzielic na mniejsze komponenty
 export const RecipeDetails = ({
   details,
   errors,
@@ -26,7 +16,6 @@ export const RecipeDetails = ({
   updateNewRecipeErrors
 
 }) => {
-  const { user } = UserAuth();
   const [imageTypeError, setImageTypeError] = useState(false);
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
   const [imagePreview, setImagePreview] = useState(null)
