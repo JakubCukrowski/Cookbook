@@ -2,7 +2,10 @@ import { useParams } from "react-router-dom";
 import { Col, Row, Container, Spinner } from "react-bootstrap";
 import { StyledImage } from "../../styles/StyledImage";
 import { SingleRecipeH2 } from "../../styles/StyledH2";
-import { SpinnerContainer } from "../../styles/Containers";
+import {
+  SingleRecipeContainer,
+  SpinnerContainer,
+} from "../../styles/Containers";
 import { LikeButton } from "../LikeButton";
 import {
   arrayRemove,
@@ -19,10 +22,18 @@ import { RecipeDescription } from "./RecipeDescription";
 import { RecipeAuthor } from "./RecipeAuthor";
 import { RecipeAuthorWrapper } from "./RecipeAuthorWrapper";
 import { UserAuth } from "../../context/AuthContext";
+import { H1wrapper } from "../../styles/H1wrapper";
+import { Wrapper } from "../../styles/Wrapper";
 
 export const SingleRecipe = () => {
   const { recipeId } = useParams();
-  const { user, actualLikedRecipes, updateActualUserLikedRecipes, isRecipeLiked, updateIsRecipeLiked } = UserAuth();
+  const {
+    user,
+    actualLikedRecipes,
+    updateActualUserLikedRecipes,
+    isRecipeLiked,
+    updateIsRecipeLiked,
+  } = UserAuth();
   const [searchedRecipe, setSearchedRecipe] = useState(null);
   const [isFound, setIsFound] = useState(false);
 
@@ -94,64 +105,63 @@ export const SingleRecipe = () => {
           <Spinner />
         </SpinnerContainer>
       ) : (
-        <Container>
-          <Row>
-            <Col style={{ textAlign: "center", padding: "20px 0" }}>
-              <h1>{searchedRecipe.name}</h1>
-            </Col>
-          </Row>
-          <Row style={{ marginBottom: 30 }}>
-            <Col
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                position: "relative",
-              }}
-            >
-              <StyledImage rounded src={searchedRecipe.image} />
-            </Col>
-          </Row>
-          <Row>
-            <RecipeAuthorWrapper>
-              <AuthorImageWrapper>
-                <img src={searchedRecipe.addedBy.photo} alt="profile_photo" />
-              </AuthorImageWrapper>
-              <RecipeAuthor>{searchedRecipe.addedBy.user}</RecipeAuthor>
-            </RecipeAuthorWrapper>
-            <Col>
-              {user && searchedRecipe.addedBy.user !== user.displayName ? (
-                <LikeButton
-                  onClick={handleLikeRecipe}
-                  className={isRecipeLiked ? "liked" : null}
-                ></LikeButton>
-              ) : null}
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={5} style={{ marginTop: 10 }}>
-              <RecipeDescription>
-                {searchedRecipe.description}
-              </RecipeDescription>
-            </Col>
-          </Row>
-          <Row style={{ justifyContent: "center" }}>
-            <Col sm={5}>
-              <SingleRecipeH2>Składniki</SingleRecipeH2>
-              {searchedRecipe.ingredients.map((ingredient, index) => (
-                <p key={index}>{ingredient}</p>
-              ))}
-            </Col>
-            <Col sm={5}>
-              <SingleRecipeH2>Jak przygotować</SingleRecipeH2>
-              {searchedRecipe.steps.map((value, index) => (
-                <p key={index}>
-                  {`${index + 1}.`}
-                  <span> {value}</span>
-                </p>
-              ))}
-            </Col>
-          </Row>
-        </Container>
+        <>
+          <H1wrapper>
+            <h1>{searchedRecipe.name}</h1>
+          </H1wrapper>
+          <SingleRecipeContainer>
+            <div style={{ width: "100%" }}>
+              <div style={{ marginBottom: 30 }}>
+                <Wrapper justify="center">
+                  <StyledImage rounded src={searchedRecipe.image} />
+                </Wrapper>
+              </div>
+              <div style={{ display: "flex" }}>
+                <RecipeAuthorWrapper>
+                  <AuthorImageWrapper>
+                    <img
+                      src={searchedRecipe.addedBy.photo}
+                      alt="profile_photo"
+                    />
+                  </AuthorImageWrapper>
+                  <RecipeAuthor>{searchedRecipe.addedBy.user}</RecipeAuthor>
+                </RecipeAuthorWrapper>
+                <Wrapper justify="center">
+                  {user && searchedRecipe.addedBy.user !== user.displayName ? (
+                    <LikeButton
+                      onClick={handleLikeRecipe}
+                      className={isRecipeLiked ? "liked" : null}
+                    ></LikeButton>
+                  ) : null}
+                </Wrapper>
+              </div>
+              <div>
+                <div sm={5} style={{ marginTop: 10 }}>
+                  <RecipeDescription>
+                    {searchedRecipe.description}
+                  </RecipeDescription>
+                </div>
+              </div>
+            </div>
+            <Wrapper direction="column">
+              <div sm={5}>
+                <SingleRecipeH2>Składniki</SingleRecipeH2>
+                {searchedRecipe.ingredients.map((ingredient, index) => (
+                  <p key={index}>{ingredient}</p>
+                ))}
+              </div>
+              <div sm={5}>
+                <SingleRecipeH2>Jak przygotować</SingleRecipeH2>
+                {searchedRecipe.steps.map((value, index) => (
+                  <p key={index}>
+                    {`${index + 1}.`}
+                    <span> {value}</span>
+                  </p>
+                ))}
+              </div>
+            </Wrapper>
+          </SingleRecipeContainer>
+        </>
       )}
     </section>
   );

@@ -1,11 +1,7 @@
 import styled from "styled-components";
-import { LikeButton } from "../LikeButton";
 
 export const StyledLikeButton = styled.button`
-    position: absolute;
     border: none;
-    top: ${props => props.top};
-    right: ${props => props.right};
     background-color: transparent;
     z-index: 100;
     color: rgb(33, 37, 41);
@@ -14,7 +10,7 @@ export const StyledLikeButton = styled.button`
     -moz-appearance: none;
     appearance: none;
     padding: 0;
-    transition: 200ms;
+    transition: 50ms;
 
     &.liked {
         color: tomato;
