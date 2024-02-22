@@ -89,14 +89,14 @@ export const FilterRecipes = () => {
       categories[categoryName] === "Najpopularniejsze przepisy" &&
       filterData.prepTime === "Wszystko"
     ) {
-      const popular = sortRecipes([...recipes])
+      const popular = [...recipes].sort((a, b) => b.likes - a.likes)
       setFilteredList(popular);
     } else if (
       categories[categoryName] === "Najpopularniejsze przepisy" &&
       filterData.prepTime !== "Wszystko"
     ) {
       const popularByPrepTime = filterRecipesByPrepTime([...recipes])
-      const popularSorted =   sortRecipes(popularByPrepTime);
+      const popularSorted = popularByPrepTime.sort((a, b) => b.likes - a.likes);
       setFilteredList(popularSorted);
     }
 
