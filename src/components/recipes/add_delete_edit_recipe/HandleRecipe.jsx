@@ -12,6 +12,7 @@ import profanity from "../../../profanity.json";
 import { deleteDoc, doc } from "firebase/firestore";
 import { UserAuth } from "../../../context/AuthContext";
 import { db } from "../../../firebase";
+import { Tags } from "./Tags";
 
 export const HandleRecipe = ({
   newRecipeDetails,
@@ -21,9 +22,10 @@ export const HandleRecipe = ({
   updateNewRecipeErrors,
   isSubmitted,
   handleSubmitForm,
+  updateRecipeTags,
+  updateTagsArray
 }) => {
-
-  const {user} = UserAuth()
+  const { user } = UserAuth();
   //steps state
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const navigate = useNavigate();
@@ -34,21 +36,18 @@ export const HandleRecipe = ({
   //gathers profanity words
   const [profanityArray, setProfanityArray] = useState([]);
 
-  //shows if image file is actually an image
-  const [isImage, setIsImage] = useState(null);
-
   useEffect(() => {
     const beforeUnloadHandler = async (e) => {
       e.preventDefault();
       e.returnValue = "";
 
-      await deleteDoc(doc(db, 'temp', `temp_${user.uid}`))
-
+      await deleteDoc(doc(db, "temp", `temp_${user.uid}`));
     };
 
     window.addEventListener("beforeunload", beforeUnloadHandler);
 
-    return () => window.removeEventListener("beforeunload", beforeUnloadHandler);
+    return () =>
+      window.removeEventListener("beforeunload", beforeUnloadHandler);
   }, []);
 
   //update category, name, preparation time, difficulty
@@ -161,6 +160,11 @@ export const HandleRecipe = ({
       errors={newRecipeErrors}
       handleStepsErrors={handleStepsErrors}
     />,
+    <Tags
+      updateRecipeTags={updateRecipeTags}
+      newRecipeDetails={newRecipeDetails}
+      updateTagsArray={updateTagsArray}
+    />,
   ];
 
   // next step logic
@@ -203,7 +207,7 @@ export const HandleRecipe = ({
       newRecipeDetails.image !== "" &&
       newRecipeDetails.category !== "" &&
       newRecipeDetails.category !== "default" &&
-      !newRecipeDetails.name.match(gibberishCheck) 
+      !newRecipeDetails.name.match(gibberishCheck)
     ) {
       setCurrentStepIndex((prev) => prev + 1);
     }
@@ -236,6 +240,39 @@ export const HandleRecipe = ({
     }
   };
 
+  const validateThirdStep = (e) => {
+    e.preventDefault();
+    //handle errors
+    const newPreparationErrors = newRecipeErrors.preparationStepsErrors;
+    const preparationStepsObject = Object.keys(
+      newRecipeDetails.preparationSteps
+    );
+    const mappedPreparationSteps = preparationStepsObject.map(
+      (step) => newRecipeDetails.preparationSteps[step]
+    );
+
+    for (let i = 0; i < mappedPreparationSteps.length; i++) {
+      if (
+        mappedPreparationSteps[i].length === 0 ||
+        (mappedPreparationSteps[i].length > 0 &&
+          mappedPreparationSteps[i].length < 15)
+      ) {
+        newPreparationErrors[i] = true;
+      }
+    }
+
+    updateNewRecipeErrors((prev) => {
+      return {
+        ...prev,
+        preparationStepsErrors: newPreparationErrors,
+      };
+    });
+
+    if (newRecipeErrors.preparationStepsErrors.every((error) => !error)) {
+      setCurrentStepIndex((prev) => prev + 1);
+    }
+  };
+
   //previous step logic
   const handlePrevious = (e) => {
     e.preventDefault();
@@ -249,7 +286,7 @@ export const HandleRecipe = ({
       <DataWrapper>
         <Container>
           <h2 style={{ textAlign: "center", paddingBottom: 50 }}>
-            {h2Text} przepis {currentStepIndex + 1} / 3
+            {h2Text} przepis {currentStepIndex + 1} / {currentStep.length}
           </h2>
           <Form className="new-recipe-form" onSubmit={handleSubmitForm}>
             {currentStep[currentStepIndex]}
@@ -281,7 +318,16 @@ export const HandleRecipe = ({
                     Dalej
                   </Button>
                 ) : null}
-                {currentStepIndex > 1 ? (
+                {currentStepIndex > 1 && currentStepIndex < 3 ? (
+                  <Button
+                    onClick={validateThirdStep}
+                    variant="dark"
+                    type="button"
+                  >
+                    Dalej
+                  </Button>
+                ) : null}
+                {currentStepIndex === 3 ? (
                   <Button disabled={isSubmitted} variant="dark" type="submit">
                     Gotowe
                   </Button>
