@@ -47,6 +47,8 @@ export const Hero = () => {
     }
   };
 
+  console.log(activeIndex);
+
   const handleInputValue = (e) => {
     updateQueryText(e.target.value);
     setInputError(false);
@@ -90,6 +92,8 @@ export const Hero = () => {
       ) {
         ulRef.current.scrollTop -= ulRef.current.offsetHeight;
       }
+    } else if (e.key === "ArrowUp" && activeIndex === 0) {
+      setActiveIndex('')
     }
 
     if (e.key === "Backspace") {
@@ -133,7 +137,7 @@ export const Hero = () => {
 
     const fuse = new Fuse(recipes, {
       keys: ["name"],
-      threshold: 0.4,
+      threshold: 0.3,
       includeMatches: true,
     });
 

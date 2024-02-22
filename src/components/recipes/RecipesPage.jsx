@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
 import { RecipesGroup } from "./main_page_recipes/RecipesGroup";
 import { Spinner } from "react-bootstrap";
 import { SpinnerContainer } from "../../styles/Containers";
+import { NewestRecipes } from "./main_page_recipes/NewestRecipes";
+import {PopularRecipes} from './main_page_recipes/PopularRecipes'
 
 export const RecipesPage = () => {
   const {
@@ -25,7 +26,7 @@ export const RecipesPage = () => {
 
     const fuse = new Fuse(recipes, {
       keys: ["name"],
-      threshold: 0.4,
+      threshold: 0.3,
       includeMatches: true,
     });
 
@@ -45,18 +46,19 @@ export const RecipesPage = () => {
   return (
     <>
       {isDownloaded ? (
-        <section>
+        <section style={{minHeight: 'calc(100vh - 192.8px)'}}>
           <RecipesGroup
-            title={queryText.length > 0 ? `Przepisy zawierające: ${query}` : 'Brak wyników'}
+            title={queryText.length > 0 && queryResults.length > 0 ? `Przepisy zawierające: ${query}` : `Brak wyników dla: ${query}`}
             array={queryResults}
           />
+          {queryResults.length > 0 ? null : <><PopularRecipes /><NewestRecipes /></>}
         </section>
       ) : (
         <SpinnerContainer>
           <Spinner />
         </SpinnerContainer>
       )}
-      <section></section>
+
     </>
   );
 };
