@@ -1,3 +1,7 @@
+Test account <br></br>
+email: test@test.com <br></br>
+password: 123456
+
 The idea for this project was born once I started going to the gym and basically didn't know what to eat. The project uses Firebase, Firestore, and Storage to create accounts, store user and recipe data, and enable the addition of photos.
 
 Current features include:
