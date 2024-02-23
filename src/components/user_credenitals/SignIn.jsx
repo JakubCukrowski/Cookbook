@@ -60,7 +60,7 @@ export const SignIn = () => {
         navigate("/dashboard");
       } catch (error) {
         if (error.message === "Firebase: Error (auth/invalid-email).") {
-          setCredentialsErrors((prev) => {
+          setCredentialsErrors(() => {
             return {
               email: true,
               password: true,
@@ -143,6 +143,11 @@ export const SignIn = () => {
             Potwierdź
           </Button>
         </StyledForm>
+        <div style={{backgroundColor: "white", color: "black", padding: 20, borderRadius: 6}}>
+          <h3>Test account</h3>
+          <p>email: <strong>test@test.com</strong></p>
+          <p>password: <strong>123456</strong></p>
+        </div>
       </FlexContainer>
     </StyledSignSection>
   );
