@@ -103,7 +103,7 @@ export const Dashboard = () => {
     updateUserLikedRecipes(filterRecipesByLikes)
 
 
-  }, []);
+  }, [recipes]);
 
   return (
     <>
