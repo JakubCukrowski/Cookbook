@@ -31,6 +31,7 @@ import { updateProfile } from "firebase/auth";
 export const Dashboard = () => {
   const {
     user,
+    recipes,
     isUserImageUploaded,
     setIsUserImageUploaded,
     userLikedRecipes,
@@ -98,19 +99,10 @@ export const Dashboard = () => {
     });
 
     //get user liked recipes
-    const likedRecipesQuery = query(
-      collection(db, "recipes"),
-      where("likedBy", "array-contains", user.uid)
-    );
+    const filterRecipesByLikes = recipes.filter(recipe => recipe.likedBy.includes(user.uid))
+    updateUserLikedRecipes(filterRecipesByLikes)
 
-    onSnapshot(likedRecipesQuery, (querySnapshot) => {
-      querySnapshot.forEach((recipe) => {
-        updateUserLikedRecipes((prev) => [
-          ...prev,
-          { ...recipe.data(), id: recipe.id },
-        ]);
-      });
-    });
+
   }, []);
 
   return (
