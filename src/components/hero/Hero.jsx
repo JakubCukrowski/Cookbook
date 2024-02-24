@@ -181,7 +181,7 @@ export const Hero = () => {
                 type="search"
                 placeholder={
                   isFocused
-                    ? "Wpisz nazwę potrawy, lub składnik"
+                    ? "Wpisz nazwę potrawy"
                     : "Znajdź przepis"
                 }
                 name="searchbar"
