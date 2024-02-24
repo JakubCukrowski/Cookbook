@@ -26,12 +26,6 @@ export const AuthContextProvider = ({ children }) => {
   const anonImage =
     "https://firebasestorage.googleapis.com/v0/b/cookbook-a4b98.appspot.com/o/profile%2Fanon-chef1.png?alt=media&token=76a571b2-6999-4a5e-a553-5d5ae628b522";
 
-  //liked recipes by id
-  const [recipesLikedByUserById, setRecipesLikedByUserById] = useState([]);
-
-  //actual user liked recipes object/s
-  const [actualLikedRecipes, setActualLikedRecipes] = useState([]);
-
   //checks if user is logged
   const [loading, setLoading] = useState(true);
 
@@ -58,6 +52,9 @@ export const AuthContextProvider = ({ children }) => {
 
   //check if recipe was liked
   const [isRecipeLiked, setIsRecipeLiked] = useState(false);
+
+  //recipes liked by user 
+  const [userLikedRecipes, setUserLikedRecipes] = useState([])
 
   //create user in firebase with firestore data
   const createUser = (displayName, email, password) => {
@@ -177,22 +174,21 @@ export const AuthContextProvider = ({ children }) => {
       const getUserData = async () => {
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
-        setRecipesLikedByUserById(userDoc.data().liked);
       };
 
       getUserData();
     }
-  }, [user, actualLikedRecipes]);
-
-  //update actual user liked recipes
-  const updateActualUserLikedRecipes = (value) => {
-    setActualLikedRecipes(value);
-  };
+  }, [user]);
 
   //update recipe liked status
   const updateIsRecipeLiked = (value) => {
     setIsRecipeLiked(value);
   };
+
+  //update recipes liked by user array
+  const updateUserLikedRecipes = value => {
+    setUserLikedRecipes(value)
+  }
 
   return (
     <userContext.Provider
@@ -200,9 +196,8 @@ export const AuthContextProvider = ({ children }) => {
         recipes,
         isLoading,
         user,
-        recipesLikedByUserById,
-        actualLikedRecipes,
-        updateActualUserLikedRecipes,
+        userLikedRecipes,
+        updateUserLikedRecipes,
         isRecipeLiked,
         updateIsRecipeLiked,
         createUser,
