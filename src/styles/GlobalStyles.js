@@ -77,4 +77,8 @@ export const GlobalStyle = createGlobalStyle`
         border: 2px solid tomato;
         border-radius: 12px;
     }
+
+    .text-error {
+        color: red;
+    }
 `;

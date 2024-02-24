@@ -13,6 +13,7 @@ export const UpdateUserPhoto = ({ onChange }) => {
         onChange={onChange}
         id="addFile"
         className="recipe_image_input"
+        accept="image/*"
       />
     </UpdatePhotoWrapper>
   );

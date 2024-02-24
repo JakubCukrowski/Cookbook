@@ -43,6 +43,9 @@ export const Dashboard = () => {
   //added by user recipes
   const [userRecipes, setUserRecipes] = useState([]);
 
+  //error state of user photo
+  const [userPhotoError, setUserPhotoError] = useState(false)
+
   //interval for progress bar
   useEffect(() => {
     if (isUserImageUploaded) {
@@ -58,16 +61,17 @@ export const Dashboard = () => {
 
   //upload photo logic with timeout to make modal dissapear
   const uploadPhoto = async (e) => {
+    setUserPhotoError(false)
     const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`);
     await uploadBytes(profileImageRef, e.target.files[0]).then(async () => {
       await getDownloadURL(profileImageRef).then((url) => {
         updateProfile(user, {
           photoURL: url,
         });
+        setIsUserImageUploaded(true);
       });
-    });
+    }).catch(() => setUserPhotoError(true))
 
-    setIsUserImageUploaded(true);
 
     const timeoutID = setTimeout(() => {
       setIsUserImageUploaded(false);
@@ -77,6 +81,8 @@ export const Dashboard = () => {
   };
 
   useEffect(() => {
+
+    //get recipes added by user
     const recipesQuery = query(
       collection(db, "recipes"),
       where("addedBy.user", "==", user.displayName)
@@ -91,6 +97,7 @@ export const Dashboard = () => {
       });
     });
 
+    //get user liked recipes
     const likedRecipesQuery = query(
       collection(db, "recipes"),
       where("likedBy", "array-contains", user.uid)
@@ -121,6 +128,7 @@ export const Dashboard = () => {
             <DashboardDesktopWrapper>
               <DataDesktopWrapper>
                 <DataWrapper>
+                  {userPhotoError ? <p className="text-error"><strong>Wybrałeś niepoprawny plik!</strong></p> : null}
                   {
                     <>
                       <DashboardImageWrapper>
