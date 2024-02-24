@@ -31,12 +31,10 @@ import { updateProfile } from "firebase/auth";
 export const Dashboard = () => {
   const {
     user,
-    recipesLikedByUserById,
-    actualLikedRecipes,
-    updateActualUserLikedRecipes,
-    recipes,
     isUserImageUploaded,
     setIsUserImageUploaded,
+    userLikedRecipes,
+    updateUserLikedRecipes
   } = UserAuth();
 
   //progress bar percentage
@@ -92,24 +90,21 @@ export const Dashboard = () => {
         ]);
       });
     });
-  }, []);
 
-  useEffect(() => {
-    const updateLikedRecipes = async () => {
-      const temp = [];
-      recipes.filter((recipe) => {
-        recipesLikedByUserById.forEach((likedRecipe) => {
-          if (recipe.id === likedRecipe) {
-            temp.push(recipe);
-          }
-        });
+    const likedRecipesQuery = query(
+      collection(db, "recipes"),
+      where("likedBy", "array-contains", user.uid)
+    );
+
+    onSnapshot(likedRecipesQuery, (querySnapshot) => {
+      querySnapshot.forEach((recipe) => {
+        updateUserLikedRecipes((prev) => [
+          ...prev,
+          { ...recipe.data(), id: recipe.id },
+        ]);
       });
-
-      updateActualUserLikedRecipes(temp);
-    };
-
-    updateLikedRecipes();
-  }, [recipes]);
+    });
+  }, []);
 
   return (
     <>
@@ -185,8 +180,8 @@ export const Dashboard = () => {
                 </DataWrapper>
                 <DataWrapper>
                   <h2>Polubione przepisy</h2>
-                  {actualLikedRecipes.length > 0 ? (
-                    <BootstrapPagination recipes={actualLikedRecipes} />
+                  {userLikedRecipes.length > 0 ? (
+                    <BootstrapPagination recipes={userLikedRecipes} />
                   ) : (
                     <p>Nie polubiłeś żadnego przepisu</p>
                   )}

@@ -47,8 +47,6 @@ export const Hero = () => {
     }
   };
 
-  console.log(activeIndex);
-
   const handleInputValue = (e) => {
     updateQueryText(e.target.value);
     setInputError(false);

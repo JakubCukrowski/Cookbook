@@ -29,8 +29,8 @@ export const SingleRecipe = () => {
   const { recipeId } = useParams();
   const {
     user,
-    actualLikedRecipes,
-    updateActualUserLikedRecipes,
+    userLikedRecipes,
+    updateUserLikedRecipes,
     isRecipeLiked,
     updateIsRecipeLiked,
   } = UserAuth();
@@ -60,7 +60,7 @@ export const SingleRecipe = () => {
 
       checkIfLiked();
     }
-  }, [actualLikedRecipes]);
+  }, [userLikedRecipes]);
 
   //on like button click
   const handleLikeRecipe = async () => {
@@ -78,7 +78,7 @@ export const SingleRecipe = () => {
       });
 
       updateIsRecipeLiked((prev) => !prev);
-      updateActualUserLikedRecipes((prev) => [...prev, searchedRecipe]);
+      updateUserLikedRecipes((prev) => [...prev, searchedRecipe]);
     }
 
     if (isRecipeLiked) {
@@ -90,11 +90,11 @@ export const SingleRecipe = () => {
         likedBy: arrayRemove(user.uid),
         likes: increment(-1),
       });
-      const newActualUserLikedRecipes = actualLikedRecipes;
+      const newActualUserLikedRecipes = userLikedRecipes;
       const filterLikedRecipes = newActualUserLikedRecipes.filter(
         (recipe) => recipe.id !== recipeId
       );
-      updateActualUserLikedRecipes(filterLikedRecipes);
+      updateUserLikedRecipes(filterLikedRecipes);
     }
   };
 
