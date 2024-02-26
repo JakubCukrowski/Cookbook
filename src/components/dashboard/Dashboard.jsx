@@ -84,26 +84,15 @@ export const Dashboard = () => {
   useEffect(() => {
 
     //get recipes added by user
-    const recipesQuery = query(
-      collection(db, "recipes"),
-      where("addedBy.user", "==", user.displayName)
-    );
-
-    onSnapshot(recipesQuery, (querySnapshot) => {
-      querySnapshot.forEach((recipe) => {
-        setUserRecipes((prev) => [
-          ...prev,
-          { ...recipe.data(), id: recipe.id },
-        ]);
-      });
-    });
+    const filterRecipesByUser = recipes.filter(recipe => recipe.addedBy.user === user.displayName)
+    setUserRecipes(filterRecipesByUser)
 
     //get user liked recipes
     const filterRecipesByLikes = recipes.filter(recipe => recipe.likedBy.includes(user.uid))
     updateUserLikedRecipes(filterRecipesByLikes)
 
 
-  }, []);
+  }, [recipes]);
 
   return (
     <>
