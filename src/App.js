@@ -4,7 +4,7 @@ import { Layout } from "./components/Layout";
 import { Hero } from "./components/hero/Hero";
 import { NewestRecipes } from "./components/recipes/main_page_recipes/NewestRecipes";
 import {PopularRecipes} from './components/recipes/main_page_recipes/PopularRecipes'
-import { SingleRecipe } from "./components/recipes/SingleRecipe";
+import { SingleRecipe } from "./components/recipes/singe_recipe/SingleRecipe";
 import { AuthContextProvider } from "./context/AuthContext";
 import { SignUp } from "./components/user_credenitals/SignUp";
 import { SignIn } from "./components/user_credenitals/SignIn";

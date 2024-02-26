@@ -1,12 +1,12 @@
 import { useParams } from "react-router-dom";
-import { Col, Row, Container, Spinner } from "react-bootstrap";
-import { StyledImage } from "../../styles/StyledImage";
-import { SingleRecipeH2 } from "../../styles/StyledH2";
+import { Spinner } from "react-bootstrap";
+import { StyledImage } from "../../../styles/StyledImage";
+import { SingleRecipeH2 } from "../../../styles/StyledH2";
 import {
   SingleRecipeContainer,
   SpinnerContainer,
-} from "../../styles/Containers";
-import { LikeButton } from "../LikeButton";
+} from "../../../styles/Containers";
+import { LikeButton } from "../../LikeButton";
 import {
   arrayRemove,
   arrayUnion,
@@ -15,15 +15,17 @@ import {
   increment,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "../../../firebase";
 import { useEffect, useState } from "react";
 import { AuthorImageWrapper } from "./AuthorImageWrapper";
 import { RecipeDescription } from "./RecipeDescription";
 import { RecipeAuthor } from "./RecipeAuthor";
 import { RecipeAuthorWrapper } from "./RecipeAuthorWrapper";
-import { UserAuth } from "../../context/AuthContext";
-import { H1wrapper } from "../../styles/H1wrapper";
-import { Wrapper } from "../../styles/Wrapper";
+import { UserAuth } from "../../../context/AuthContext";
+import { H1wrapper } from "../../../styles/H1wrapper";
+import { Wrapper } from "../../../styles/Wrapper";
+import { RecipeTagsWrapper } from "./RecipeTagsWrapper";
+import { RecipeTagLink } from "./RecipeTagLink";
 
 export const SingleRecipe = () => {
   const { recipeId } = useParams();
@@ -141,6 +143,16 @@ export const SingleRecipe = () => {
                     {searchedRecipe.description}
                   </RecipeDescription>
                 </div>
+                {searchedRecipe.tags.length > 0 ? (
+                  <RecipeTagsWrapper>
+                    {searchedRecipe.tags.map((tag, index) => (
+                      <RecipeTagLink key={index} to={"/"}>
+                        {tag.split("")[0].toUpperCase() +
+                          tag.split("").splice(1, tag.length).join("")}
+                      </RecipeTagLink>
+                    ))}
+                  </RecipeTagsWrapper>
+                ) : null}
               </div>
             </div>
             <Wrapper direction="column">
