@@ -40,10 +40,9 @@ export const DashboardRecipes = ({
               >
                 {isHovered ? (
                   <div
-                    onClick={() => console.log("dupa")}
                     className="util_buttons"
                   >
-                    <Button variant="dark" onClick={() => navigate(`/recipes/edit/${linkTo}`)}>
+                    <Button variant="dark" onClick={() => alert('Wkrótce')}>
                       <FontAwesomeIcon icon={faEdit} />
                     </Button>
                     <Button variant="dark" onClick={() => navigate(`/recipes/${linkTo}`)}>
