@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { StyledSignSection } from "./StyledSignSection";
 
 export const SignUp = () => {
-  const { createUser, login } = UserAuth();
+  const { createUser } = UserAuth();
   const navigate = useNavigate();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [userCredentials, setUserCredentials] = useState({
@@ -61,7 +61,10 @@ export const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (userCredentials.displayName.length < 6) {
+    if (
+      userCredentials.displayName.length < 6 ||
+      userCredentials.displayName.length > 10
+    ) {
       setInputErrors((prev) => {
         return {
           ...prev,
@@ -107,7 +110,7 @@ export const SignUp = () => {
       userCredentials.password.length >= 6
     ) {
       setIsSpinnerVisible(true);
-      
+
       try {
         await createUser(
           userCredentials.displayName,
@@ -146,9 +149,13 @@ export const SignUp = () => {
             <StyledForm noValidate onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="user_name">Nazwa użytkownika</Form.Label>
-                <Alert show={inputErrors.displayName} variant="danger">
+                <Alert show={inputErrors.displayName && userCredentials.displayName.length < 6} variant="danger">
                   Nazwa użytkownika jest za krótka. Nazwa musi posiadać
-                  minimalnie 6 znaków
+                  minimalnie 6 znaków.
+                </Alert>
+                <Alert show={inputErrors.displayName && userCredentials.displayName.length > 10} variant="danger">
+                  Nazwa użytkownika jest za krótka. Nazwa może mieć maksymalnie
+                  10 znaków.
                 </Alert>
                 <Form.Control
                   autoComplete="off"
