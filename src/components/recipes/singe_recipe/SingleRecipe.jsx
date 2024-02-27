@@ -146,7 +146,7 @@ export const SingleRecipe = () => {
                 {searchedRecipe.tags.length > 0 ? (
                   <RecipeTagsWrapper>
                     {searchedRecipe.tags.map((tag, index) => (
-                      <RecipeTagLink key={index} to={"/"}>
+                      <RecipeTagLink key={index} to={`/show?tag=${tag}`}>
                         {tag.split("")[0].toUpperCase() +
                           tag.split("").splice(1, tag.length).join("")}
                       </RecipeTagLink>

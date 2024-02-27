@@ -9,13 +9,6 @@ import { StyledLink } from "../../styles/StyledLink";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase";
 import { BootstrapModal } from "../BootstrapModal";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
-import { db } from "../../firebase";
 import { DashboardImage } from "./DashboardImage";
 import { DashboardSection } from "./DashboardSection";
 import { SpinnerContainer } from "../../styles/Containers";
