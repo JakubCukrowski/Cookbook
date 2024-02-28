@@ -59,7 +59,7 @@ export const StyledHeroSection = styled.section`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.45);
+    background-color: rgba(0, 0, 0, 0.6);
   }
 
   h1 {
