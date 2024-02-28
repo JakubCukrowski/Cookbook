@@ -1,21 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyledHeroSection } from "./StyledHeroSection";
 import heroBackgroundImage from "../../images/heroImage.jpg";
-import { StyledInput } from "./StyledInput";
 import {
   HeroFlexContainer,
   PopularButtonsContainer,
 } from "../../styles/Containers";
-import { SearchBarContainer } from "./SearchBarContainer";
+import {
+  SearchBarContainer,
+  StyledHeroSection,
+  StyledInput,
+  StyledH1,
+  SearchBarWrapper,
+  StyledSearchedRecipes,
+} from "./HeroStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "react-bootstrap";
-import { SearchBarWrapper } from "./SearchBarWrapper";
-import { StyledSearchedRecipes } from "./StyledSearchedRecipes";
 import { UserAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
-import { StyledH1 } from "./StyledH1";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
@@ -91,7 +93,7 @@ export const Hero = () => {
         ulRef.current.scrollTop -= ulRef.current.offsetHeight;
       }
     } else if (e.key === "ArrowUp" && activeIndex === 0) {
-      setActiveIndex('')
+      setActiveIndex("");
     }
 
     if (e.key === "Backspace") {
@@ -180,9 +182,7 @@ export const Hero = () => {
                 onBlur={handleFocusOut}
                 type="search"
                 placeholder={
-                  isFocused
-                    ? "Wpisz nazwę potrawy"
-                    : "Znajdź przepis"
+                  isFocused ? "Wpisz nazwę potrawy" : "Znajdź przepis"
                 }
                 name="searchbar"
                 value={queryText}

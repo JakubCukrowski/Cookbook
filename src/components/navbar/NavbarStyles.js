@@ -25,3 +25,9 @@ export const StyledNavbarColapse = styled(Navbar.Collapse)`
         }
     }
 `
+
+export const LoggedUserImage = styled.img`
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+`

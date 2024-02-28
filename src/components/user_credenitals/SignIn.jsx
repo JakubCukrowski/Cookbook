@@ -4,10 +4,9 @@ import { FlexContainer } from "../../styles/Containers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../../styles/StyledLink";
-import { StyledForm } from "./StyledForm";
 import { UserAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { StyledSignSection } from "./StyledSignSection";
+import { StyledSignSection, StyledForm } from "./CredentialsStyles";
 
 export const SignIn = () => {
   const { login } = UserAuth();

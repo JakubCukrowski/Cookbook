@@ -1,6 +1,6 @@
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { UpdatePhotoWrapper } from "./UpdatePhotoWrapper";
+import { UpdatePhotoWrapper } from "./DashboardStyles";
 
 export const UpdateUserPhoto = ({ onChange }) => {
   return (

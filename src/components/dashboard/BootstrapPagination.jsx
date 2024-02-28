@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CustomPaginationItem } from "./CustomPaginationItem";
+import { CustomPaginationItem } from "../../styles/CustomPaginationItem";
 import { DashboardRecipes } from "./DashboardRecipes";
 import { Pagination } from "react-bootstrap";
 

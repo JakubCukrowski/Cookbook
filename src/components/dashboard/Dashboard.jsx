@@ -4,22 +4,24 @@ import { Container, Spinner } from "react-bootstrap";
 import { DataWrapper } from "../../styles/DataWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { DashboardElement } from "./DashboardElement";
 import { StyledLink } from "../../styles/StyledLink";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase";
 import { BootstrapModal } from "../BootstrapModal";
-import { DashboardImage } from "./DashboardImage";
-import { DashboardSection } from "./DashboardSection";
 import { SpinnerContainer } from "../../styles/Containers";
 import { StyledH2 } from "../../styles/StyledH2";
-import { DashboardImageWrapper } from "./DashboardImageWrapper";
 import { UpdateUserPhoto } from "./UpdateUserPhoto";
 import { BootstrapPagination } from "./BootstrapPagination";
-import { DashboardDesktopWrapper } from "./DashboardDesktopWrapper";
-import { DataDesktopWrapper } from "./DataDesktopWrapper";
-import { DashboardDesktopRecipes } from "./DashboardDesktopRecipes";
 import { updateProfile } from "firebase/auth";
+import { DashboardElement } from "./DashboardElement";
+import {
+  DashboardImage,
+  DashboardSection,
+  DashboardImageWrapper,
+  DashboardDesktopWrapper,
+  DataDesktopWrapper,
+  DashboardDesktopRecipes
+} from "./DashboardStyles";
 
 export const Dashboard = () => {
   const {
@@ -28,7 +30,7 @@ export const Dashboard = () => {
     isUserImageUploaded,
     setIsUserImageUploaded,
     userLikedRecipes,
-    updateUserLikedRecipes
+    updateUserLikedRecipes,
   } = UserAuth();
 
   //progress bar percentage
@@ -38,7 +40,7 @@ export const Dashboard = () => {
   const [userRecipes, setUserRecipes] = useState([]);
 
   //error state of user photo
-  const [userPhotoError, setUserPhotoError] = useState(false)
+  const [userPhotoError, setUserPhotoError] = useState(false);
 
   //interval for progress bar
   useEffect(() => {
@@ -55,17 +57,18 @@ export const Dashboard = () => {
 
   //upload photo logic with timeout to make modal dissapear
   const uploadPhoto = async (e) => {
-    setUserPhotoError(false)
+    setUserPhotoError(false);
     const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`);
-    await uploadBytes(profileImageRef, e.target.files[0]).then(async () => {
-      await getDownloadURL(profileImageRef).then((url) => {
-        updateProfile(user, {
-          photoURL: url,
+    await uploadBytes(profileImageRef, e.target.files[0])
+      .then(async () => {
+        await getDownloadURL(profileImageRef).then((url) => {
+          updateProfile(user, {
+            photoURL: url,
+          });
+          setIsUserImageUploaded(true);
         });
-        setIsUserImageUploaded(true);
-      });
-    }).catch(() => setUserPhotoError(true))
-
+      })
+      .catch(() => setUserPhotoError(true));
 
     const timeoutID = setTimeout(() => {
       setIsUserImageUploaded(false);
@@ -75,16 +78,17 @@ export const Dashboard = () => {
   };
 
   useEffect(() => {
-
     //get recipes added by user
-    const filterRecipesByUser = recipes.filter(recipe => recipe.addedBy.user === user.displayName)
-    setUserRecipes(filterRecipesByUser)
+    const filterRecipesByUser = recipes.filter(
+      (recipe) => recipe.addedBy.user === user.displayName
+    );
+    setUserRecipes(filterRecipesByUser);
 
     //get user liked recipes
-    const filterRecipesByLikes = recipes.filter(recipe => recipe.likedBy.includes(user.uid))
-    updateUserLikedRecipes(filterRecipesByLikes)
-
-
+    const filterRecipesByLikes = recipes.filter((recipe) =>
+      recipe.likedBy.includes(user.uid)
+    );
+    updateUserLikedRecipes(filterRecipesByLikes);
   }, [recipes]);
 
   return (
@@ -102,7 +106,11 @@ export const Dashboard = () => {
             <DashboardDesktopWrapper>
               <DataDesktopWrapper>
                 <DataWrapper>
-                  {userPhotoError ? <p className="text-error"><strong>Wybrałeś niepoprawny plik!</strong></p> : null}
+                  {userPhotoError ? (
+                    <p className="text-error">
+                      <strong>Wybrałeś niepoprawny plik!</strong>
+                    </p>
+                  ) : null}
                   {
                     <>
                       <DashboardImageWrapper>

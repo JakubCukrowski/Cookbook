@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { StyledLink } from "../../styles/StyledLink";
 import { Button, Container } from "react-bootstrap";
-import { DashboardRecipeImage } from "./DashboardRecipeImage";
+import { DashboardRecipeImage, EditUserRecipeWrapper } from "./DashboardStyles";
 import { UserAuth } from "../../context/AuthContext";
-import { EditUserRecipeWrapper } from "./EditUserRecipeWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +15,7 @@ export const DashboardRecipes = ({
 }) => {
   const { user } = UserAuth();
   const [isHovered, setIsHovered] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleHoverOver = () => {
     setIsHovered(true);
@@ -39,13 +38,14 @@ export const DashboardRecipes = ({
                 onFocus={handleHoverOver}
               >
                 {isHovered ? (
-                  <div
-                    className="util_buttons"
-                  >
-                    <Button variant="dark" onClick={() => alert('Wkrótce')}>
+                  <div className="util_buttons">
+                    <Button variant="dark" onClick={() => alert("Wkrótce")}>
                       <FontAwesomeIcon icon={faEdit} />
                     </Button>
-                    <Button variant="dark" onClick={() => navigate(`/recipes/${linkTo}`)}>
+                    <Button
+                      variant="dark"
+                      onClick={() => navigate(`/recipes/${linkTo}`)}
+                    >
                       <FontAwesomeIcon icon={faArrowRight} />
                     </Button>
                   </div>
