@@ -17,16 +17,17 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useEffect, useState } from "react";
-import { AuthorImageWrapper } from "./AuthorImageWrapper";
-import { RecipeDescription } from "./RecipeDescription";
-import { RecipeAuthor } from "./RecipeAuthor";
-import { RecipeAuthorWrapper } from "./RecipeAuthorWrapper";
+import {
+  AuthorImageWrapper,
+  RecipeDescription,
+  RecipeAuthor,
+  RecipeAuthorWrapper,
+  RecipeTagsWrapper,
+  RecipeTagLink,
+} from "../RecipesStyles";
 import { UserAuth } from "../../../context/AuthContext";
 import { H1wrapper } from "../../../styles/H1wrapper";
 import { Wrapper } from "../../../styles/Wrapper";
-import { RecipeTagsWrapper } from "./RecipeTagsWrapper";
-import { RecipeTagLink } from "./RecipeTagLink";
-
 export const SingleRecipe = () => {
   const { recipeId } = useParams();
   const {

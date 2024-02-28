@@ -1,10 +1,14 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { StyledLink, StyledNavbar, StyledNavbarColapse } from "./StyledNavbar";
+import {
+  StyledLink,
+  StyledNavbar,
+  StyledNavbarColapse,
+  LoggedUserImage,
+} from "./NavbarStyles";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
-import { LoggedUserImage } from "./LoggedUserImage";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
@@ -17,7 +21,7 @@ export const CustomNavbar = () => {
   const [loggedOut, setLoggedOut] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const pathname = window.location.pathname
+  const pathname = window.location.pathname;
 
   const handleSignOut = async () => {
     try {

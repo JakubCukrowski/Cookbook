@@ -2,8 +2,7 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import { ElementContainer } from "./ElementContainer";
-import { ElementWrapper } from "./ElementWrapper";
+import { ElementContainer, ElementWrapper } from "./DashboardStyles";
 
 export const DashboardElement = ({
   spanTitle,

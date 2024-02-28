@@ -1,11 +1,10 @@
 import React from "react";
 import { Button, Container } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
-import { StyledCol } from "./StyledCol";
+import { StyledCol, StyledDetailsWrapper } from "../RecipesStyles";
 import { FlexContainer } from "../../../styles/Containers";
 import { StyledH2 } from "../../../styles/StyledH2";
 import { Link } from "react-router-dom";
-import { StyledDetailsWrapper } from "./StyledDetailsWrapper";
 
 export const RecipesGroup = ({
   title,
