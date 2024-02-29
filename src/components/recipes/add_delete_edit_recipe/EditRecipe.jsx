@@ -13,18 +13,19 @@ export const EditRecipe = () => {
   const { recipeId } = useParams();
 
   const [recipeDetails, setRecipeDetails] = useState({
-    addedBy: '',
-    category: '',
-    createdAt: '',
-    image: '',
-    ingredients: '',
-    likes: '',
-    name: '',
-    preparationTime: '',
-    difficulty: '',
-    description: '',
-    preparationSteps: '',
-    tags: ''
+    addedBy: { user: "", photo: "" },
+    category: "",
+    createdAt: "",
+    image: "",
+    ingredients: "",
+    likes: "",
+    likedBy: "",
+    name: "",
+    preparationTime: "",
+    difficulty: "",
+    description: "",
+    preparationSteps: "",
+    tags: "",
   });
 
   const [recipeErrors, setRecipeErrors] = useState({
@@ -40,18 +41,22 @@ export const EditRecipe = () => {
 
     if (recipeToEdit !== undefined) {
       setRecipeDetails({
-        addedBy: recipeToEdit.addedBy,
+        addedBy: {
+          user: recipeToEdit.addedBy.user,
+          photo: recipeToEdit.addedBy.photo,
+        },
         category: recipeToEdit.category,
         createdAt: recipeToEdit.createdAt,
         image: recipeToEdit.image,
         ingredients: recipeToEdit.ingredients,
         likes: recipeToEdit.likes,
+        likedBy: recipeToEdit.likedBy,
         name: recipeToEdit.name,
         preparationTime: recipeToEdit.preparationTime,
         difficulty: recipeToEdit.difficulty,
         description: recipeToEdit.description,
         preparationSteps: recipeToEdit.steps,
-        tags: recipeToEdit.tags
+        tags: recipeToEdit.tags,
       });
 
       setRecipeErrors((prev) => {
@@ -76,22 +81,22 @@ export const EditRecipe = () => {
   };
 
   const updateRecipeTags = (value) => {
-    setRecipeDetails(prev => {
+    setRecipeDetails((prev) => {
       return {
         ...prev,
-        tags: [...prev.tags, value]
-      }
-    })
-  }
+        tags: [...prev.tags, value],
+      };
+    });
+  };
 
   const updateTagsArray = (array) => {
-    setRecipeDetails(prev => {
+    setRecipeDetails((prev) => {
       return {
         ...prev,
-        tags: array
-      }
-    })
-  }
+        tags: array,
+      };
+    });
+  };
 
   //update user id while adding recipe
   useEffect(() => {
@@ -111,75 +116,54 @@ export const EditRecipe = () => {
   //submit form
   const handleSubmitForm = async (e) => {
     e.preventDefault();
+    setIsSubmitted(true);
 
-    const newPreparationErrors = recipeErrors.preparationStepsErrors;
-    const preparationStepsObject = Object.keys(
-      recipeDetails.preparationSteps
-    );
-    const mappedPreparationSteps = preparationStepsObject.map(
-      (step) => recipeDetails.preparationSteps[step]
-    );
-
-    for (let i = 0; i < mappedPreparationSteps.length; i++) {
-      if (
-        mappedPreparationSteps[i].length === 0 ||
-        (mappedPreparationSteps[i].length > 0 &&
-          mappedPreparationSteps[i].length < 15)
-      ) {
-        newPreparationErrors[i] = true;
-      }
-    }
-
-    setRecipeErrors((prev) => {
-      return {
-        ...prev,
-        preparationStepsErrors: newPreparationErrors,
-      };
+    //update document in firestore
+    const recipeRef = doc(db, "recipes", recipeId);
+    await updateDoc(recipeRef, {
+      addedBy: {
+        user: recipeDetails.addedBy.user,
+        photo: recipeDetails.addedBy.photo,
+      },
+      category: recipeDetails.category,
+      createdAt: recipeDetails.createdAt,
+      ingredients: recipeDetails.ingredients,
+      likes: recipeDetails.likes,
+      name: recipeDetails.name,
+      image: recipeDetails.image.name !== undefined ? '' : recipeDetails.image,
+      likedBy: recipeDetails.likedBy,
+      preparationTime: recipeDetails.preparationTime,
+      difficulty: recipeDetails.difficulty,
+      description: recipeDetails.description,
+      steps: recipeDetails.preparationSteps,
+      tags: recipeDetails.tags
     });
 
-    if (recipeErrors.preparationStepsErrors.every((error) => !error)) {
-      setIsSubmitted(true);
-      const currentDate = Date.now();
-
-      //set document in firestore
-      const docRef = await addDoc(collection(db, "recipes"), {
-        addedBy: recipeDetails.addedBy,
-        category: recipeDetails.category,
-        createdAt: currentDate,
-        ingredients: recipeDetails.ingredients,
-        likes: recipeDetails.likes,
-        name: recipeDetails.name,
-        likedBy: [],
-        preparationTime: recipeDetails.preparationTime,
-        difficulty: recipeDetails.difficulty,
-        description: recipeDetails.description,
-        steps: recipeDetails.preparationSteps,
-      });
-
-      //create a storage for the image
+    //create a storage for the image
+    if (recipeDetails.image.name !== undefined) {
       const recipesRef = ref(
         storage,
-        `recipe/${docRef.id}/${recipeDetails.image.name}`
+        `recipe/${recipeId}/${recipeDetails.image.name}`
       );
-
+  
       //upload the image
       await uploadBytes(recipesRef, recipeDetails.image);
-
+  
       //set the image url to document in firestore
       const currentRecipeRef = ref(
         storage,
-        `/recipe/${docRef.id}/${recipeDetails.image.name}`
+        `/recipe/${recipeId}/${recipeDetails.image.name}`
       );
-
+  
       await getDownloadURL(currentRecipeRef).then((url) => {
-        updateDoc(doc(db, "recipes", docRef.id), {
+        updateDoc(doc(db, "recipes", recipeId), {
           image: url,
         });
       });
+    } 
 
-      handleAddedRecipe();
-      navigate("/dashboard");
-    }
+    handleAddedRecipe();
+    navigate("/dashboard");
   };
 
   return (
