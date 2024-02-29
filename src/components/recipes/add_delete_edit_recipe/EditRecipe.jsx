@@ -24,6 +24,15 @@ export const EditRecipe = () => {
     difficulty: '',
     description: '',
     preparationSteps: '',
+    tags: ''
+  });
+
+  const [recipeErrors, setRecipeErrors] = useState({
+    categoryError: false,
+    imageError: false,
+    ingredientsErrors: [false, false, false],
+    nameError: false,
+    preparationStepsErrors: [false, false, false],
   });
 
   useEffect(() => {
@@ -42,9 +51,10 @@ export const EditRecipe = () => {
         difficulty: recipeToEdit.difficulty,
         description: recipeToEdit.description,
         preparationSteps: recipeToEdit.steps,
+        tags: recipeToEdit.tags
       });
 
-      updateNewRecipeErrors((prev) => {
+      setRecipeErrors((prev) => {
         return {
           ...prev,
           ingredientsErrors: recipeToEdit.ingredients.map(() => false),
@@ -54,43 +64,39 @@ export const EditRecipe = () => {
     }
   }, [recipes]);
 
-  const [newRecipeDetails, setNewRecipeDetails] = useState({
-    addedBy: "",
-    category: "",
-    createdAt: "",
-    image: "",
-    ingredients: ["", "", ""],
-    likes: 0,
-    name: "",
-    preparationTime: "15",
-    difficulty: "easy",
-    description: "",
-    preparationSteps: ["", "", ""],
-  });
-
-  const [newRecipeErrors, setNewRecipeErrors] = useState({
-    categoryError: false,
-    imageError: false,
-    ingredientsErrors: [false, false, false],
-    nameError: false,
-    preparationStepsErrors: [false, false, false],
-  });
-
   //block submiting multiple times
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const updateNewRecipeDetails = (value) => {
-    setNewRecipeDetails(value);
+    setRecipeDetails(value);
   };
 
   const updateNewRecipeErrors = (value) => {
-    setNewRecipeErrors(value);
+    setRecipeErrors(value);
   };
+
+  const updateRecipeTags = (value) => {
+    setRecipeDetails(prev => {
+      return {
+        ...prev,
+        tags: [...prev.tags, value]
+      }
+    })
+  }
+
+  const updateTagsArray = (array) => {
+    setRecipeDetails(prev => {
+      return {
+        ...prev,
+        tags: array
+      }
+    })
+  }
 
   //update user id while adding recipe
   useEffect(() => {
     if (user) {
-      setNewRecipeDetails((prev) => {
+      setRecipeDetails((prev) => {
         return {
           ...prev,
           addedBy: {
@@ -106,12 +112,12 @@ export const EditRecipe = () => {
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
-    const newPreparationErrors = newRecipeErrors.preparationStepsErrors;
+    const newPreparationErrors = recipeErrors.preparationStepsErrors;
     const preparationStepsObject = Object.keys(
-      newRecipeDetails.preparationSteps
+      recipeDetails.preparationSteps
     );
     const mappedPreparationSteps = preparationStepsObject.map(
-      (step) => newRecipeDetails.preparationSteps[step]
+      (step) => recipeDetails.preparationSteps[step]
     );
 
     for (let i = 0; i < mappedPreparationSteps.length; i++) {
@@ -124,45 +130,45 @@ export const EditRecipe = () => {
       }
     }
 
-    setNewRecipeErrors((prev) => {
+    setRecipeErrors((prev) => {
       return {
         ...prev,
         preparationStepsErrors: newPreparationErrors,
       };
     });
 
-    if (newRecipeErrors.preparationStepsErrors.every((error) => !error)) {
+    if (recipeErrors.preparationStepsErrors.every((error) => !error)) {
       setIsSubmitted(true);
       const currentDate = Date.now();
 
       //set document in firestore
       const docRef = await addDoc(collection(db, "recipes"), {
-        addedBy: newRecipeDetails.addedBy,
-        category: newRecipeDetails.category,
+        addedBy: recipeDetails.addedBy,
+        category: recipeDetails.category,
         createdAt: currentDate,
-        ingredients: newRecipeDetails.ingredients,
-        likes: newRecipeDetails.likes,
-        name: newRecipeDetails.name,
+        ingredients: recipeDetails.ingredients,
+        likes: recipeDetails.likes,
+        name: recipeDetails.name,
         likedBy: [],
-        preparationTime: newRecipeDetails.preparationTime,
-        difficulty: newRecipeDetails.difficulty,
-        description: newRecipeDetails.description,
-        steps: newRecipeDetails.preparationSteps,
+        preparationTime: recipeDetails.preparationTime,
+        difficulty: recipeDetails.difficulty,
+        description: recipeDetails.description,
+        steps: recipeDetails.preparationSteps,
       });
 
       //create a storage for the image
       const recipesRef = ref(
         storage,
-        `recipe/${docRef.id}/${newRecipeDetails.image.name}`
+        `recipe/${docRef.id}/${recipeDetails.image.name}`
       );
 
       //upload the image
-      await uploadBytes(recipesRef, newRecipeDetails.image);
+      await uploadBytes(recipesRef, recipeDetails.image);
 
       //set the image url to document in firestore
       const currentRecipeRef = ref(
         storage,
-        `/recipe/${docRef.id}/${newRecipeDetails.image.name}`
+        `/recipe/${docRef.id}/${recipeDetails.image.name}`
       );
 
       await getDownloadURL(currentRecipeRef).then((url) => {
@@ -181,11 +187,13 @@ export const EditRecipe = () => {
       <HandleRecipe
         newRecipeDetails={recipeDetails}
         updateNewRecipeDetails={updateNewRecipeDetails}
-        h2Text={"Dodaj"}
+        h2Text={"Edytuj"}
         updateNewRecipeErrors={updateNewRecipeErrors}
-        newRecipeErrors={newRecipeErrors}
+        newRecipeErrors={recipeErrors}
         isSubmitted={isSubmitted}
         handleSubmitForm={handleSubmitForm}
+        updateRecipeTags={updateRecipeTags}
+        updateTagsArray={updateTagsArray}
       />
     </>
   );

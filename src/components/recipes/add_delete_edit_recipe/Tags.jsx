@@ -46,8 +46,6 @@ export const Tags = ({updateRecipeTags, newRecipeDetails, updateTagsArray}) => {
     }
   }
 
-  console.log(newRecipeDetails);
-
   return (
     <>
       <h4 style={{ textAlign: "center" }}>Dodaj tagi</h4>
@@ -60,6 +58,7 @@ export const Tags = ({updateRecipeTags, newRecipeDetails, updateTagsArray}) => {
                   <Col key={`col-${colIndex}`}>
                     <Form.Check
                       onChange={handleOnChange}
+                      checked={newRecipeDetails.tags.find(tag => tag === col)}
                       value={col}
                       type="checkbox"
                       id={`default-${col}-${colIndex}`}

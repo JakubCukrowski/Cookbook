@@ -1,4 +1,8 @@
-import { faCamera, faPlusCircle, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCamera,
+  faPlusCircle,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Button, Form, FormGroup, Spinner } from "react-bootstrap";
@@ -13,12 +17,11 @@ export const RecipeDetails = ({
   updateImage,
   updateRecipeDetails,
   gibberishCheck,
-  updateNewRecipeErrors
-
+  updateNewRecipeErrors,
 }) => {
   const [imageTypeError, setImageTypeError] = useState(false);
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null);
 
   const imageTypes = [
     "image/apng",
@@ -31,27 +34,27 @@ export const RecipeDetails = ({
   ];
 
   const setImageErrorToFalse = () => {
-    updateNewRecipeErrors(prev => {
+    updateNewRecipeErrors((prev) => {
       return {
         ...prev,
-        imageError: false
-      }
-    })
-  }
+        imageError: false,
+      };
+    });
+  };
 
   //handle image on drop/add
   const updateRecipeImage = async (file) => {
     if (imageTypes.includes(file.type)) {
       setIsSpinnerVisible(true);
-      const fr = new FileReader()
-      fr.addEventListener('load', () => {
-        const res = fr.result
-        setImagePreview(res)
-      })
-      fr.readAsDataURL(file)
-      updateImage(file)
-      setImageTypeError(false)
-     setImageErrorToFalse()
+      const fr = new FileReader();
+      fr.addEventListener("load", () => {
+        const res = fr.result;
+        setImagePreview(res);
+      });
+      fr.readAsDataURL(file);
+      updateImage(file);
+      setImageTypeError(false);
+      setImageErrorToFalse();
     } else {
       setImageTypeError(true);
     }
@@ -72,13 +75,13 @@ export const RecipeDetails = ({
     ev.preventDefault();
     const file = ev.dataTransfer.items[0].getAsFile();
     if (file) {
-      setImageTypeError(false)
-      setImageErrorToFalse()
+      setImageTypeError(false);
+      setImageErrorToFalse();
       updateRecipeImage(file);
     } else {
       //match src of dropped file
       const regex = /src="?([^"\s]+)"?\s*/;
-      await fetch(regex.exec(ev.dataTransfer.getData('text/html'))[1])
+      await fetch(regex.exec(ev.dataTransfer.getData("text/html"))[1])
         .then(async (res) => {
           return res.blob();
         })
@@ -86,8 +89,8 @@ export const RecipeDetails = ({
           const file = new File([blob], "image", { type: blob.type });
           console.log(file);
           updateRecipeImage(file);
-          setImageTypeError(false)
-          setImageErrorToFalse()
+          setImageTypeError(false);
+          setImageErrorToFalse();
         })
         .catch(() => {
           setImageTypeError(true);
@@ -147,7 +150,7 @@ export const RecipeDetails = ({
         {details.image === "" && errors.imageError && !imageTypeError ? (
           <Alert variant="danger">Musisz dodać zdjęcie</Alert>
         ) : null}
-        {details.image !== '' && !imageTypeError ? (
+        {details.image !== "" && !imageTypeError ? (
           <Alert variant="success">Plik jest poprawny</Alert>
         ) : null}
         {imageTypeError ? (
@@ -197,7 +200,11 @@ export const RecipeDetails = ({
                         borderRadius: "50%",
                         aspectRatio: "auto",
                       }}
-                      src={imagePreview}
+                      src={
+                        window.location.pathname.includes("edit") && !imagePreview
+                          ? details.image
+                          : imagePreview
+                      }
                     />
                   </>
                 )}

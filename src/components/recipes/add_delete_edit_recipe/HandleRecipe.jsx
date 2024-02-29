@@ -163,6 +163,7 @@ export const HandleRecipe = ({
       updateRecipeTags={updateRecipeTags}
       newRecipeDetails={newRecipeDetails}
       updateTagsArray={updateTagsArray}
+      
     />,
   ];
 
@@ -192,7 +193,7 @@ export const HandleRecipe = ({
 
     if (
       newRecipeDetails.category === "" ||
-      newRecipeDetails.category === "default"
+      newRecipeDetails.category === "wybierz"
     ) {
       updateNewRecipeErrors((prev) => {
         return { ...prev, categoryError: true };
@@ -205,7 +206,7 @@ export const HandleRecipe = ({
       newRecipeDetails.name.length >= 8 &&
       newRecipeDetails.image !== "" &&
       newRecipeDetails.category !== "" &&
-      newRecipeDetails.category !== "default" &&
+      newRecipeDetails.category !== "wybierz" &&
       !newRecipeDetails.name.match(gibberishCheck)
     ) {
       setCurrentStepIndex((prev) => prev + 1);

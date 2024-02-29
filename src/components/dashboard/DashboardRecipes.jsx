@@ -39,7 +39,7 @@ export const DashboardRecipes = ({
               >
                 {isHovered ? (
                   <div className="util_buttons">
-                    <Button variant="dark" onClick={() => alert("Wkrótce")}>
+                    <Button variant="dark" onClick={() => navigate(`/recipes/edit/${linkTo}`)}>
                       <FontAwesomeIcon icon={faEdit} />
                     </Button>
                     <Button
