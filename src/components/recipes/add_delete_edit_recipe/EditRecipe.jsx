@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../../../context/AuthContext";
 import { HandleRecipe } from "./HandleRecipe";
-import { collection, updateDoc, addDoc, doc } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  listAll,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { storage } from "../../../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 
+
 export const EditRecipe = () => {
-  const { user, userImage, handleAddedRecipe, recipes } = UserAuth();
+  const { handleAddedRecipe, recipes } = UserAuth();
   const navigate = useNavigate();
   const { recipeId } = useParams();
 
@@ -38,7 +45,7 @@ export const EditRecipe = () => {
 
   useEffect(() => {
     const recipeToEdit = recipes.find((recipe) => recipe.id === recipeId);
-
+    
     if (recipeToEdit !== undefined) {
       setRecipeDetails({
         addedBy: {
@@ -98,21 +105,6 @@ export const EditRecipe = () => {
     });
   };
 
-  //update user id while adding recipe
-  useEffect(() => {
-    if (user) {
-      setRecipeDetails((prev) => {
-        return {
-          ...prev,
-          addedBy: {
-            user: user.displayName,
-            photo: userImage,
-          },
-        };
-      });
-    }
-  }, []);
-
   //submit form
   const handleSubmitForm = async (e) => {
     e.preventDefault();
@@ -130,37 +122,44 @@ export const EditRecipe = () => {
       ingredients: recipeDetails.ingredients,
       likes: recipeDetails.likes,
       name: recipeDetails.name,
-      image: recipeDetails.image.name !== undefined ? '' : recipeDetails.image,
+      image: recipeDetails.image.name !== undefined ? "" : recipeDetails.image,
       likedBy: recipeDetails.likedBy,
       preparationTime: recipeDetails.preparationTime,
       difficulty: recipeDetails.difficulty,
       description: recipeDetails.description,
       steps: recipeDetails.preparationSteps,
-      tags: recipeDetails.tags
+      tags: recipeDetails.tags,
     });
 
+    //HANDLE TO ON UPDATING IMAGE DELETE OLD ONE
     //create a storage for the image
     if (recipeDetails.image.name !== undefined) {
+      //delete old image
+      const oldImageRef = ref(storage, `recipe/${recipeId}`);
+      await listAll(oldImageRef).then((res) =>
+        deleteObject(ref(storage, res.items[0]._location.path_))
+      );
+
       const recipesRef = ref(
         storage,
         `recipe/${recipeId}/${recipeDetails.image.name}`
       );
-  
+
       //upload the image
       await uploadBytes(recipesRef, recipeDetails.image);
-  
+
       //set the image url to document in firestore
       const currentRecipeRef = ref(
         storage,
         `/recipe/${recipeId}/${recipeDetails.image.name}`
       );
-  
+
       await getDownloadURL(currentRecipeRef).then((url) => {
         updateDoc(doc(db, "recipes", recipeId), {
           image: url,
         });
       });
-    } 
+    }
 
     handleAddedRecipe();
     navigate("/dashboard");
