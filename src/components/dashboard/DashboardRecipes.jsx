@@ -29,10 +29,13 @@ export const DashboardRecipes = ({
   isUserRecipe,
 }) => {
   const { user } = UserAuth();
+  //hover status of user added recipe to show utility buttons
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0)
+  //show modal with confirmation/cancelation of deleting the recipe
   const [showModal, setShowModal] = useState(false);
+  //renders a modal with progress bar
   const [isDeleted, setIsDeleted] = useState(false)
 
   const handleHoverOver = () => {
@@ -48,6 +51,7 @@ export const DashboardRecipes = ({
     setShowModal((prev) => !prev);
   };
 
+  //on actual delete confirmation
   const handleDeleteRecipe = async () => {
     await deleteDoc(doc(db, 'recipes', linkTo))
     const q = query(
@@ -57,6 +61,7 @@ export const DashboardRecipes = ({
 
     const batch = writeBatch(db)
 
+    //gets all users who liked the recipe in the past, and filters it out
     const querySnapshot = await getDocs(q)
     querySnapshot.forEach(doc => {
       const userRef = doc.ref
@@ -77,13 +82,12 @@ export const DashboardRecipes = ({
     } catch (e) {
       console.error("Error updating documents: ", e);
     }
-  };
+  }
 
   useEffect(() => {
     if (isDeleted) {
       const interval = setInterval(() => {
         setProgress((prev) => prev + 5);
-        console.log('ddddd');
       }, 50);
     
       return () => clearInterval(interval);

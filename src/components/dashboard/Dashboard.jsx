@@ -20,7 +20,7 @@ import {
   DashboardImageWrapper,
   DashboardDesktopWrapper,
   DataDesktopWrapper,
-  DashboardDesktopRecipes
+  DashboardDesktopRecipes,
 } from "./DashboardStyles";
 
 export const Dashboard = () => {
@@ -78,18 +78,20 @@ export const Dashboard = () => {
   };
 
   useEffect(() => {
-    //get recipes added by user
-    const filterRecipesByUser = recipes.filter(
-      (recipe) => recipe.addedBy.user === user.displayName
-    );
-    setUserRecipes(filterRecipesByUser);
+    if (recipes && user !== undefined) {
+      //get recipes added by user
+      const filterRecipesByUser = recipes.filter(
+        (recipe) => recipe.addedBy.user === user.displayName
+      );
+      setUserRecipes(filterRecipesByUser);
 
-    //get user liked recipes
-    const filterRecipesByLikes = recipes.filter((recipe) =>
-      recipe.likedBy.includes(user.uid)
-    );
-    updateUserLikedRecipes(filterRecipesByLikes);
-  }, [recipes]);
+      //get user liked recipes
+      const filterRecipesByLikes = recipes.filter((recipe) =>
+        recipe.likedBy.includes(user.uid)
+      );
+      updateUserLikedRecipes(filterRecipesByLikes);
+    }
+  }, [recipes, user]);
 
   return (
     <>

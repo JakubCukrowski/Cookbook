@@ -8,7 +8,7 @@ import { storage } from "../../../firebase";
 import { useNavigate } from "react-router-dom";
 
 export const AddRecipe = () => {
-  const { user, handleAddedRecipe } = UserAuth();
+  const { user, updateRecipes } = UserAuth();
   const navigate = useNavigate();
 
   const [newRecipeDetails, setNewRecipeDetails] = useState({
@@ -24,6 +24,7 @@ export const AddRecipe = () => {
     description: "",
     preparationSteps: ["", "", ""],
     tags: [],
+    likedBy: [],
   });
 
   const [newRecipeErrors, setNewRecipeErrors] = useState({
@@ -58,7 +59,7 @@ export const AddRecipe = () => {
         };
       });
     }
-  }, []);
+  }, [user]);
 
   //submit form
   const handleSubmitForm = async (e) => {
@@ -75,12 +76,12 @@ export const AddRecipe = () => {
       ingredients: newRecipeDetails.ingredients,
       likes: newRecipeDetails.likes,
       name: newRecipeDetails.name,
-      likedBy: [],
+      likedBy: newRecipeDetails.likedBy,
       preparationTime: newRecipeDetails.preparationTime,
       difficulty: newRecipeDetails.difficulty,
       description: newRecipeDetails.description,
       steps: newRecipeDetails.preparationSteps,
-      tags: newRecipeDetails.tags
+      tags: newRecipeDetails.tags,
     });
 
     //create a storage for the image
@@ -102,29 +103,37 @@ export const AddRecipe = () => {
       updateDoc(doc(db, "recipes", docRef.id), {
         image: url,
       });
+      setNewRecipeDetails((prev) => {
+        return {
+          ...prev,
+          image: url,
+        };
+      });
+      updateRecipes((prev) => {
+        return [...prev, { ...newRecipeDetails, image: url, id: docRef.id }];
+      });
     });
-
-    handleAddedRecipe();
+    
     navigate("/dashboard");
   };
 
   const updateRecipeTags = (value) => {
-    setNewRecipeDetails(prev => {
+    setNewRecipeDetails((prev) => {
       return {
         ...prev,
-        tags: [...prev.tags, value]
-      }
-    })
-  }
+        tags: [...prev.tags, value],
+      };
+    });
+  };
 
   const updateTagsArray = (array) => {
-    setNewRecipeDetails(prev => {
+    setNewRecipeDetails((prev) => {
       return {
         ...prev,
-        tags: array
-      }
-    })
-  }
+        tags: array,
+      };
+    });
+  };
 
   return (
     <>
