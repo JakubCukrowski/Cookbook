@@ -38,9 +38,6 @@ export const AuthContextProvider = ({ children }) => {
   //checks if recipes are loaded
   const [isLoading, setIsLoading] = useState(true);
 
-  //state to re render recipes
-  const [isRecipeAdded, setIsRecipeAdded] = useState(false);
-
   //query results when searching for recipe/inredient etc
   const [queryResults, setQueryResults] = useState([]);
 
@@ -88,16 +85,9 @@ export const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  //function to handle state and added recipe
-  const handleAddedRecipe = () => {
-    setIsRecipeAdded(true);
-
-    const timeout = setTimeout(() => {
-      setIsRecipeAdded(false);
-    }, 1000);
-
-    clearTimeout(timeout);
-  };
+  const updateRecipes = (value) => {
+    setRecipes(value)
+  }
 
   //logic for query results
   const updateQueryResults = (array) => {
@@ -111,44 +101,21 @@ export const AuthContextProvider = ({ children }) => {
 
   //donwload recipes from firebase
   useEffect(() => {
-    setRecipes([]);
 
     const getRecipes = async () => {
       //get to the collection first
       const recipesRef = collection(db, "recipes");
       const recipesFromFirebase = await getDocs(recipesRef);
 
-      //copy array of recipes to the state, then add recipe.id and recipe url, usable for adding recipe
-      recipesFromFirebase.forEach(async (recipe) => {
-        const listRef = ref(storage, `recipe/${recipe.id}`);
-
-        await listAll(listRef)
-          .then((response) => {
-            response.items.map(async (itemRef) => {
-              const recipeImageRef = ref(
-                storage,
-                `/recipe/${recipe.id}/${itemRef.name}`
-              );
-              await getDownloadURL(recipeImageRef).then(async (url) => {
-                setRecipes((prev) => [
-                  ...prev,
-                  { ...recipe.data(), id: recipe.id, image: url },
-                ]);
-
-                const recipeRef = doc(db, "recipes", recipe.id);
-                await updateDoc(recipeRef, {
-                  image: url,
-                });
-                setIsLoading(false);
-              });
-            });
-          })
-          .catch((error) => console.log(error));
-      });
+      recipesFromFirebase.forEach(recipe => {
+        setRecipes(prev => [...prev, {...recipe.data(), id: recipe.id}])
+      })
     };
 
     getRecipes();
-  }, [isRecipeAdded, isRecipeLiked]);
+  }, []);
+
+  console.log(recipes);
 
   //clear querytext and queryresults
   useEffect(() => {
@@ -196,6 +163,7 @@ export const AuthContextProvider = ({ children }) => {
         recipes,
         isLoading,
         user,
+        updateRecipes,
         userLikedRecipes,
         updateUserLikedRecipes,
         isRecipeLiked,
@@ -205,8 +173,6 @@ export const AuthContextProvider = ({ children }) => {
         signout,
         isUserImageUploaded,
         setIsUserImageUploaded,
-        handleAddedRecipe,
-        isRecipeAdded,
         updateQueryResults,
         queryResults,
         queryText,
