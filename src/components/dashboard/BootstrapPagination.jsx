@@ -6,7 +6,7 @@ import { Pagination } from "react-bootstrap";
 export const BootstrapPagination = ({ recipes, isUserRecipe }) => {
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [recipesPerPage, setRecipesPerPage] = useState(3);
+  const [recipesPerPage, setRecipesPerPage] = useState(2);
 
   //bootstrap pagination
   const lastRecipeIndex = currentPage * recipesPerPage;
