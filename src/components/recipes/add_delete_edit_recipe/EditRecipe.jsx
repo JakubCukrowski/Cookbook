@@ -15,12 +15,11 @@ import { useNavigate, useParams } from "react-router-dom";
 
 
 export const EditRecipe = () => {
-  const { handleAddedRecipe, recipes } = UserAuth();
+  const { handleAddedRecipe, recipes, user } = UserAuth();
   const navigate = useNavigate();
   const { recipeId } = useParams();
 
   const [recipeDetails, setRecipeDetails] = useState({
-    addedBy: { user: "", photo: "" },
     category: "",
     createdAt: "",
     image: "",
@@ -43,10 +42,11 @@ export const EditRecipe = () => {
     preparationStepsErrors: [false, false, false],
   });
 
+
   useEffect(() => {
     const recipeToEdit = recipes.find((recipe) => recipe.id === recipeId);
     
-    if (recipeToEdit !== undefined) {
+    if (recipeToEdit !== undefined && recipeToEdit.addedBy.user === user.displayName) {
       setRecipeDetails({
         addedBy: {
           user: recipeToEdit.addedBy.user,
@@ -73,8 +73,10 @@ export const EditRecipe = () => {
           preparationStepsErrors: recipeToEdit.steps.map(() => false),
         };
       });
+    } else {
+      navigate('/')
     }
-  }, [recipes]);
+  }, [recipes, user]);
 
   //block submiting multiple times
   const [isSubmitted, setIsSubmitted] = useState(false);
