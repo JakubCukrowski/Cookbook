@@ -5,6 +5,8 @@ import { StyledCol, StyledDetailsWrapper } from "../RecipesStyles";
 import { FlexContainer } from "../../../styles/Containers";
 import { StyledH2 } from "../../../styles/StyledH2";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
 
 export const RecipesGroup = ({
   title,
@@ -33,7 +35,12 @@ export const RecipesGroup = ({
             >
               <StyledDetailsWrapper>
                 <h5>{recipe.name}</h5>
-                <p style={{ marginBottom: 0 }}>{recipe.preparationTime}</p>
+                <div>
+                  <FontAwesomeIcon icon={faClock} />
+                  <span style={{ marginBottom: 0, marginLeft: 10}}>
+                    {recipe.preparationTime}
+                  </span>
+                </div>
                 <p style={{ marginBottom: 0 }}>
                   Polubienia: <strong>{recipe.likes}</strong>
                 </p>
@@ -48,13 +55,12 @@ export const RecipesGroup = ({
                 <div
                   style={{
                     position: "absolute",
-                    right: "-60px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
+                    right: '6px',
+                    bottom: '6px',
                   }}
                 >
                   <img
-                    style={{ width: 120, height: 120, borderRadius: "50%" }}
+                    style={{ width: 150, height: 150, borderRadius: 8 }}
                     src={recipe.image}
                     alt="recipe_image"
                   />

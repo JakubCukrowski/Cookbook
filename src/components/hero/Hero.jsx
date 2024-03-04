@@ -155,14 +155,14 @@ export const Hero = () => {
 
   return (
     <StyledHeroSection backgroundimage={heroBackgroundImage}>
-      <StyledH1>Cześć, na co masz dzisiaj ochotę?</StyledH1>
       <HeroFlexContainer
         direction="column"
         justify="center"
         align="center"
         fluid
-      >
+        >
         <SearchBarContainer>
+        <StyledH1>Cześć, na co masz dzisiaj ochotę?</StyledH1>
           <SearchBarWrapper className={inputError ? "search-bar-error" : null}>
             <OverlayTrigger
               placement="top"
@@ -223,17 +223,16 @@ export const Hero = () => {
           ) : null}
         </SearchBarContainer>
 
-        <h2>
-          Możesz również poszukać czegoś w naszych najpopularniejszych
-          kategoriach
-        </h2>
+        <div>
+          <h2>Popularne kategorie</h2>
 
-        <PopularButtonsContainer>
-          <Button variant="dark">Popularne</Button>
-          <Button variant="dark">Popularne</Button>
-          <Button variant="dark">Popularne</Button>
-          <Button variant="dark">Popularne</Button>
-        </PopularButtonsContainer>
+          <PopularButtonsContainer>
+            <Button variant="dark">Popularne</Button>
+            <Button variant="dark">Popularne</Button>
+            <Button variant="dark">Popularne</Button>
+            <Button variant="dark">Popularne</Button>
+          </PopularButtonsContainer>
+        </div>
       </HeroFlexContainer>
     </StyledHeroSection>
   );
