@@ -13,6 +13,7 @@ export const HeroFlexContainer = styled(FlexContainer)`
   z-index: 100;
   padding-top: 2rem;
   text-align: center;
+  gap: 50px;
 
   h2 {
     color: white;

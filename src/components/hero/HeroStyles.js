@@ -45,7 +45,7 @@ export const StyledHeroSection = styled.section`
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 
   @media (min-width: 992px) {

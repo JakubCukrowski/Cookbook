@@ -2,9 +2,12 @@ import styled from "styled-components";
 import { Image } from "react-bootstrap";
 
 export const StyledImage = styled(Image)`
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
-    max-height: 70vh;
+    height: auto;
 
+    @media (min-width:572px)  {
+        height: 60vh;
+    }
 
 `
