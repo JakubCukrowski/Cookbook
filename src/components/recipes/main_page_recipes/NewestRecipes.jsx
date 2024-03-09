@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { UserAuth } from "../../../context/AuthContext";
 import { RecipesGroup } from "./RecipesGroup";
 import { useNavigate } from "react-router-dom";
+import { StyledH2 } from "../../../styles/StyledH2";
 
 export const NewestRecipes = () => {
     const {recipes, isRecipeAdded} = UserAuth()
@@ -20,6 +21,9 @@ export const NewestRecipes = () => {
     }
 
     return (
+        <>
+        <StyledH2>Najnowsze przepisy</StyledH2>
         <RecipesGroup title="Najnowsze przepisy" array={sortedRecipes} onClick={handleClick} addButton={true} sliceBy={6}/>
+        </>
     )
 }

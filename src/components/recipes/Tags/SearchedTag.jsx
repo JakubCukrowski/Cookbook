@@ -30,7 +30,7 @@ export const SearchedTag = () => {
       ) : (
         <>
           <StyledH2>
-            Przepisy z tagiem <strong>{startsFromUpper(tag)}</strong>{" "}
+            Przepisy z tagiem <strong style={{color: '#8a6565'}}>{startsFromUpper(tag)}</strong>{" "}
           </StyledH2>
           <Container>
             <RecipesGroup array={recipesByTags} />
