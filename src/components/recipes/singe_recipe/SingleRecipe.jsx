@@ -41,9 +41,6 @@ export const SingleRecipe = () => {
   const [searchedRecipe, setSearchedRecipe] = useState({});
   const [isFound, setIsFound] = useState(false);
 
-  const userRef = doc(db, "users", user.uid);
-  const recipeRef = doc(db, "recipes", recipeId);
-
   //donwload the recipe, get author name, check if liked by current user
   useEffect(() => {
 
@@ -69,7 +66,8 @@ export const SingleRecipe = () => {
 
   //on like button click
   const handleLikeRecipe = async () => {
-
+    const userRef = doc(db, "users", user.uid);
+    const recipeRef = doc(db, "recipes", recipeId);
 
     if (!isRecipeLiked) {
       await updateDoc(userRef, {

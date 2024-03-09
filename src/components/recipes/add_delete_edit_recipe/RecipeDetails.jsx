@@ -87,7 +87,6 @@ export const RecipeDetails = ({
         })
         .then((blob) => {
           const file = new File([blob], "image", { type: blob.type });
-          console.log(file);
           updateRecipeImage(file);
           setImageTypeError(false);
           setImageErrorToFalse();

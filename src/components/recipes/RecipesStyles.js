@@ -6,29 +6,21 @@ export const StyledCol = styled(Col)`
     transition: 0.3s;
     margin-left: auto;
     margin-right: auto;
+    height: 520px;
 
-    &:hover {
-        transform: scale(0.95);
-        opacity: 0.7;
+    @media (min-width: 576px) {
+      height: 480px;
     }
 
+    img {
+      height: 280px;
+      object-fit: fill;
 
+      @media (min-width: 576px) {
+        height: 220px;
+      }
+    }
 `
-
-export const StyledDetailsWrapper = styled.div`
-  box-shadow: 0 0 4px rgb(0, 0, 0);
-  border-radius: 8px;
-  width: 100%;
-  min-height: 220px;
-  padding: 20px 160px 20px 10px;
-  position: relative;
-  background-color: white;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  word-wrap: break-word;
-`;
 
 export const AuthorImageWrapper = styled.div`
     border-radius: 50%;
@@ -141,19 +133,23 @@ export const StyledLikeButton = styled.button`
         border: none;
     }
 
-    @media (min-width: 992px) {
-        right: ${props => props.rightTablet};
-    }
-
-    @media (min-width: 1200px) {
-        right: ${props => props.rightDesktop};
-    }
-
-    @media (min-width: 1400px) {
-        right: ${props => props.rightXl};
-    }
-
     &:disabled {
         color: red !important; 
     }
 `
+
+export const AuthorData = styled.div`
+  
+  img {
+    width: 40px;
+    height: 40px; 
+    border-radius: 50%;
+  }
+`
+
+export const PrepTimeInfo = styled.div`
+  span {
+    margin-left: 6px;
+  }
+`
+

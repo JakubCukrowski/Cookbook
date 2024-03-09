@@ -23,7 +23,7 @@ export const NewestRecipes = () => {
     return (
         <>
         <StyledH2>Najnowsze przepisy</StyledH2>
-        <RecipesGroup title="Najnowsze przepisy" array={sortedRecipes} onClick={handleClick} addButton={true} sliceBy={6}/>
+        <RecipesGroup title="Najnowsze przepisy" array={sortedRecipes} onClick={handleClick} addButton={true} sliceBy={8}/>
         </>
     )
 }

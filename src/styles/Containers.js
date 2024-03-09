@@ -69,3 +69,9 @@ export const SingleRecipeContainer = styled(Container)`
     gap: 100px;
   }
 `;
+
+export const CustomContainer = styled(Container)`
+  @media (max-width: 576px) {
+    padding: 0 40px;
+  }
+`

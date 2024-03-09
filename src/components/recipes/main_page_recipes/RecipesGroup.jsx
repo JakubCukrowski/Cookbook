@@ -1,11 +1,13 @@
 import React from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Card } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
-import { StyledCol, StyledDetailsWrapper } from "../RecipesStyles";
-import { FlexContainer } from "../../../styles/Containers";
+import { StyledCol } from "../RecipesStyles";
+import { CustomContainer, FlexContainer } from "../../../styles/Containers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { AuthorData } from "../RecipesStyles";
+import { PrepTimeInfo } from "../RecipesStyles";
 
 export const RecipesGroup = ({
   array,
@@ -15,56 +17,42 @@ export const RecipesGroup = ({
   sliceBy,
 }) => {
   return (
-    <Container>
+    <CustomContainer>
       <Row
         xs={1}
-        sm={1}
+        sm={2}
         md={2}
-        lg={2}
-        xl={3}
+        lg={3}
+        xl={4}
         className="g-4"
         style={{ paddingBottom: 20 }}
       >
         {array.slice(0, sliceBy).map((recipe, idx) => (
           <StyledCol key={idx}>
-            <Link
-              to={`/recipes/${recipe.id}`}
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              <StyledDetailsWrapper>
-                <h5 style={{fontWeight: 700}}>{recipe.name}</h5>
-                <div>
-                  <FontAwesomeIcon icon={faClock} />
-                  <span style={{ marginBottom: 0, marginLeft: 10}}>
-                    {recipe.preparationTime}
-                  </span>
+            <Card style={{ height: "100%" }}>
+              <Card.Img
+                src={recipe.image}
+              />
+              <Card.Body style={{position: "relative"}}>
+                <Card.Title>{recipe.name}</Card.Title>
+                <div style={{position: "absolute", bottom: 20}}>
+                  <AuthorData>
+                    <img src={recipe.addedBy.photo} alt="creator_photo" />
+                    <span> {recipe.addedBy.user}</span>
+                  </AuthorData>
+                  <PrepTimeInfo>
+                    <FontAwesomeIcon icon={faClock} />
+                    <span>{recipe.preparationTime}</span>
+                  </PrepTimeInfo>
+                  <Card.Text>
+                    Polubienia: <strong>{recipe.likes}</strong>
+                  </Card.Text>
+                  <Link to={`/recipes/${recipe.id}`}>
+                    <Button variant="dark">Przejdź do przepisu</Button>
+                  </Link>
                 </div>
-                <p style={{ marginBottom: 0 }}>
-                  Polubienia: <strong>{recipe.likes}</strong>
-                </p>
-                <div>
-                  <img
-                    style={{ width: 40, height: 40, borderRadius: "50%" }}
-                    src={recipe.addedBy.photo}
-                    alt="creator_photo"
-                  />
-                  <span> {recipe.addedBy.user}</span>
-                </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    right: '6px',
-                    bottom: '6px',
-                  }}
-                >
-                  <img
-                    style={{ width: 150, height: 150, borderRadius: 8 }}
-                    src={recipe.image}
-                    alt="recipe_image"
-                  />
-                </div>
-              </StyledDetailsWrapper>
-            </Link>
+              </Card.Body>
+            </Card>
           </StyledCol>
         ))}
       </Row>
@@ -79,6 +67,6 @@ export const RecipesGroup = ({
           </Button>
         </FlexContainer>
       ) : null}
-    </Container>
+    </CustomContainer>
   );
 };
