@@ -3,13 +3,11 @@ import { Button, Container } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import { StyledCol, StyledDetailsWrapper } from "../RecipesStyles";
 import { FlexContainer } from "../../../styles/Containers";
-import { StyledH2 } from "../../../styles/StyledH2";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 
 export const RecipesGroup = ({
-  title,
   array,
   onClick,
   marginBottom,
@@ -18,10 +16,10 @@ export const RecipesGroup = ({
 }) => {
   return (
     <Container>
-      <StyledH2>{title}</StyledH2>
       <Row
         xs={1}
         sm={1}
+        md={2}
         lg={2}
         xl={3}
         className="g-4"
@@ -34,7 +32,7 @@ export const RecipesGroup = ({
               style={{ textDecoration: "none", color: "black" }}
             >
               <StyledDetailsWrapper>
-                <h5>{recipe.name}</h5>
+                <h5 style={{fontWeight: 700}}>{recipe.name}</h5>
                 <div>
                   <FontAwesomeIcon icon={faClock} />
                   <span style={{ marginBottom: 0, marginLeft: 10}}>

@@ -139,6 +139,9 @@ export const SingleRecipe = () => {
                   ) : null}
                 </Wrapper>
               </div>
+              <div style={{marginTop: 20, fontSize: 20}}>
+                Polubienia: <strong>{searchedRecipe.likes}</strong>
+              </div>
               <div>
                 <div sm={5} style={{ marginTop: 10 }}>
                   <RecipeDescription>

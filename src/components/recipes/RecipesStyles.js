@@ -4,25 +4,29 @@ import { Link } from "react-router-dom";
 
 export const StyledCol = styled(Col)`
     transition: 0.3s;
+    margin-left: auto;
+    margin-right: auto;
 
     &:hover {
         transform: scale(0.95);
         opacity: 0.7;
     }
+
+
 `
 
 export const StyledDetailsWrapper = styled.div`
   box-shadow: 0 0 4px rgb(0, 0, 0);
   border-radius: 8px;
   width: 100%;
-  min-height: 200px;
+  min-height: 220px;
   padding: 20px 160px 20px 10px;
   position: relative;
   background-color: white;
   text-align: left;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-evenly;
   word-wrap: break-word;
 `;
 
@@ -88,10 +92,13 @@ export const RecipeTagsWrapper = styled.div`
   flex-direction: column;
   gap: 10px;
   margin-bottom: 20px;
+  width: 40%;
+  margin: 20px auto;
 
   @media (min-width: 992px) {
     flex-direction: row;
     flex-wrap: wrap;
+    width: 100%;
   }
 `;
 
