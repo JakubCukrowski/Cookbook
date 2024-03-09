@@ -94,7 +94,7 @@ export const StyledSearchedRecipes = styled.ul`
   list-style: none;
   border-radius: 10px;
   position: absolute;
-  top: 70%;
+  top: 85%;
   left: 0;
   padding: 0;
   overflow-y: auto;

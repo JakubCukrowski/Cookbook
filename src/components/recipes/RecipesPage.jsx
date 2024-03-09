@@ -7,6 +7,7 @@ import { Spinner } from "react-bootstrap";
 import { SpinnerContainer } from "../../styles/Containers";
 import { NewestRecipes } from "./main_page_recipes/NewestRecipes";
 import {PopularRecipes} from './main_page_recipes/PopularRecipes'
+import { StyledH2 } from "../../styles/StyledH2";
 
 export const RecipesPage = () => {
   const {
@@ -47,8 +48,8 @@ export const RecipesPage = () => {
     <>
       {isDownloaded ? (
         <section style={{minHeight: 'calc(100vh - 192.8px)'}}>
+          <StyledH2>{queryText.length > 0 && queryResults.length > 0 ? `Przepisy zawierające: ${query}` : `Brak wyników dla: ${query}`}</StyledH2>
           <RecipesGroup
-            title={queryText.length > 0 && queryResults.length > 0 ? `Przepisy zawierające: ${query}` : `Brak wyników dla: ${query}`}
             array={queryResults}
           />
           {queryResults.length > 0 ? null : <><PopularRecipes /><NewestRecipes /></>}
