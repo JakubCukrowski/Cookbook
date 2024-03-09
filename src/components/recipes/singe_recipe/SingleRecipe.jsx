@@ -32,25 +32,27 @@ export const SingleRecipe = () => {
   const { recipeId } = useParams();
   const {
     user,
+    recipes,
     userLikedRecipes,
     updateUserLikedRecipes,
     isRecipeLiked,
     updateIsRecipeLiked,
   } = UserAuth();
-  const [searchedRecipe, setSearchedRecipe] = useState(null);
+  const [searchedRecipe, setSearchedRecipe] = useState({});
   const [isFound, setIsFound] = useState(false);
+
+  const userRef = doc(db, "users", user.uid);
+  const recipeRef = doc(db, "recipes", recipeId);
 
   //donwload the recipe, get author name, check if liked by current user
   useEffect(() => {
-    const getSingleRecipeData = async () => {
-      const recipeRef = doc(db, "recipes", recipeId);
-      const recipeSnap = await getDoc(recipeRef);
-      setSearchedRecipe(recipeSnap.data());
-      setIsFound(true);
-    };
 
-    getSingleRecipeData();
-  }, []);
+    if (recipes.length > 0) {
+      const filterSearchedRecipe = recipes.find(recipe => recipe.id === recipeId)
+      setSearchedRecipe(filterSearchedRecipe)
+      setIsFound(true)
+    }
+  }, [recipes]);
 
   //checks if recipe has been already liked
   useEffect(() => {
@@ -67,8 +69,7 @@ export const SingleRecipe = () => {
 
   //on like button click
   const handleLikeRecipe = async () => {
-    const userRef = doc(db, "users", user.uid);
-    const recipeRef = doc(db, "recipes", recipeId);
+
 
     if (!isRecipeLiked) {
       await updateDoc(userRef, {

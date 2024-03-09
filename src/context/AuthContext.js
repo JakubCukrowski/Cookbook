@@ -13,15 +13,13 @@ import {
   getDoc,
   getDocs,
   collection,
-  updateDoc,
+  onSnapshot,
+  query,
 } from "firebase/firestore";
-import { storage } from "../firebase";
-import { ref, getDownloadURL, listAll } from "firebase/storage";
 
 const userContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-
   const [user, setUser] = useState(null);
   const anonImage =
     "https://firebasestorage.googleapis.com/v0/b/cookbook-a4b98.appspot.com/o/profile%2Fanon-chef1.png?alt=media&token=76a571b2-6999-4a5e-a553-5d5ae628b522";
@@ -50,8 +48,8 @@ export const AuthContextProvider = ({ children }) => {
   //check if recipe was liked
   const [isRecipeLiked, setIsRecipeLiked] = useState(false);
 
-  //recipes liked by user 
-  const [userLikedRecipes, setUserLikedRecipes] = useState([])
+  //recipes liked by user
+  const [userLikedRecipes, setUserLikedRecipes] = useState([]);
 
   //create user in firebase with firestore data
   const createUser = (displayName, email, password) => {
@@ -86,8 +84,8 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const updateRecipes = (value) => {
-    setRecipes(value)
-  }
+    setRecipes(value);
+  };
 
   //logic for query results
   const updateQueryResults = (array) => {
@@ -101,21 +99,19 @@ export const AuthContextProvider = ({ children }) => {
 
   //donwload recipes from firebase
   useEffect(() => {
-
-    const getRecipes = async () => {
-      //get to the collection first
-      const recipesRef = collection(db, "recipes");
-      const recipesFromFirebase = await getDocs(recipesRef);
-
-      recipesFromFirebase.forEach(recipe => {
-        setRecipes(prev => [...prev, {...recipe.data(), id: recipe.id}])
-      })
+    const getRecipes = () => {
+      const q = query(collection(db, "recipes"));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const tempRecipes = [];
+        querySnapshot.forEach((recipe) => {
+          tempRecipes.push({ ...recipe.data(), id: recipe.id });
+        });
+        setRecipes(tempRecipes);
+      });
     };
 
     getRecipes();
   }, []);
-
-  console.log(recipes);
 
   //clear querytext and queryresults
   useEffect(() => {
@@ -153,9 +149,9 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   //update recipes liked by user array
-  const updateUserLikedRecipes = value => {
-    setUserLikedRecipes(value)
-  }
+  const updateUserLikedRecipes = (value) => {
+    setUserLikedRecipes(value);
+  };
 
   return (
     <userContext.Provider
