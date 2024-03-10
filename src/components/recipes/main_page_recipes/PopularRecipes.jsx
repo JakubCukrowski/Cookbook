@@ -21,7 +21,7 @@ export const PopularRecipes = () => {
         array={popular}
         onClick={handleClick}
         addButton={true}
-        sliceBy={8}
+        sliceBy={4}
       />
     </>
   );

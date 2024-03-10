@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { StyledH2 } from "../../../styles/StyledH2";
 
 export const NewestRecipes = () => {
-    const {recipes, isRecipeAdded} = UserAuth()
+    const {recipes} = UserAuth()
     const checkDate = (date) => new Date(date)
     const navigate = useNavigate()
     const [sortedRecipes, setSortedRecipes] = useState([])
@@ -14,7 +14,7 @@ export const NewestRecipes = () => {
     useEffect(() => {
         const sorted = [...recipes].sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt))
         setSortedRecipes(sorted)
-    }, [recipes, isRecipeAdded])
+    }, [recipes])
        
     const handleClick = () => {
         navigate('/category/newest-recipes')
@@ -23,7 +23,7 @@ export const NewestRecipes = () => {
     return (
         <>
         <StyledH2>Najnowsze przepisy</StyledH2>
-        <RecipesGroup title="Najnowsze przepisy" array={sortedRecipes} onClick={handleClick} addButton={true} sliceBy={8}/>
+        <RecipesGroup title="Najnowsze przepisy" array={sortedRecipes} onClick={handleClick} addButton={true} sliceBy={4}/>
         </>
     )
 }
