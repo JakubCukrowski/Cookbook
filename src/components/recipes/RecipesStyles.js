@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Col } from "react-bootstrap";
+import { Col, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export const StyledCol = styled(Col)`
@@ -150,6 +150,16 @@ export const AuthorData = styled.div`
 export const PrepTimeInfo = styled.div`
   span {
     margin-left: 6px;
+  }
+`
+
+export const FilterFormStyle = styled(Form)`
+  margin-bottom: 30px;
+
+  @media (min-width: 992px) {
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
   }
 `
 

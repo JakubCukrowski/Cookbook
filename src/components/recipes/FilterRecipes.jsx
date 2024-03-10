@@ -9,6 +9,7 @@ import { FormCategory } from "./form_elements/FormCategory";
 import { FormDifficulty } from "./form_elements/FormDifficulty";
 import { FormPrepTime } from "./form_elements/FormPrepTime";
 import { FakeSpinnerContainer } from "../../styles/Containers";
+import { FilterFormStyle } from "./RecipesStyles";
 
 export const FilterRecipes = () => {
   const { recipes } = UserAuth();
@@ -163,7 +164,7 @@ export const FilterRecipes = () => {
         <section>
           <Container>
             <StyledH2>{categories[categoryName]}</StyledH2>
-            <Form>
+            <FilterFormStyle>
               <p>Szukanie zaawansowane</p>
               <Container>
                 <Form.Label htmlFor="category_filter">Kategoria</Form.Label>
@@ -195,7 +196,7 @@ export const FilterRecipes = () => {
                   </Container>
                 </>
               ) : null}
-            </Form>
+            </FilterFormStyle>
             {!isFilterSelected ? (
               <>
                 <RecipesGroup array={filteredList} />
