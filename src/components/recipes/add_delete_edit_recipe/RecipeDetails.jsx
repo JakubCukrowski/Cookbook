@@ -1,15 +1,10 @@
-import {
-  faCamera,
-  faPlusCircle,
-  faTrashCan,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Button, Form, FormGroup, Spinner } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 import { FormCategory } from "../form_elements/FormCategory";
 import { FormDifficulty } from "../form_elements/FormDifficulty";
 import { FormPrepTime } from "../form_elements/FormPrepTime";
+import { HandleImage } from "./HandleImage";
 
 export const RecipeDetails = ({
   details,
@@ -19,92 +14,6 @@ export const RecipeDetails = ({
   gibberishCheck,
   updateNewRecipeErrors,
 }) => {
-  const [imageTypeError, setImageTypeError] = useState(false);
-  const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
-
-  const imageTypes = [
-    "image/apng",
-    "image/avif",
-    "image/gif",
-    "image/jpeg",
-    "image/png",
-    "image/svg+xml",
-    "image/webp",
-  ];
-
-  const setImageErrorToFalse = () => {
-    updateNewRecipeErrors((prev) => {
-      return {
-        ...prev,
-        imageError: false,
-      };
-    });
-  };
-
-  //handle image on drop/add
-  const updateRecipeImage = async (file) => {
-    if (imageTypes.includes(file.type)) {
-      setIsSpinnerVisible(true);
-      const fr = new FileReader();
-      fr.addEventListener("load", () => {
-        const res = fr.result;
-        setImagePreview(res);
-      });
-      fr.readAsDataURL(file);
-      updateImage(file);
-      setImageTypeError(false);
-      setImageErrorToFalse();
-    } else {
-      setImageTypeError(true);
-    }
-  };
-
-  useEffect(() => {
-    if (isSpinnerVisible) {
-      const timeout = setTimeout(() => {
-        setIsSpinnerVisible(false);
-      }, 1000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [isSpinnerVisible]);
-
-  //drop image
-  const handleOnDrop = async (ev) => {
-    ev.preventDefault();
-    const file = ev.dataTransfer.items[0].getAsFile();
-    if (file) {
-      setImageTypeError(false);
-      setImageErrorToFalse();
-      updateRecipeImage(file);
-    } else {
-      //match src of dropped file
-      const regex = /src="?([^"\s]+)"?\s*/;
-      await fetch(regex.exec(ev.dataTransfer.getData("text/html"))[1])
-        .then(async (res) => {
-          return res.blob();
-        })
-        .then((blob) => {
-          const file = new File([blob], "image", { type: blob.type });
-          updateRecipeImage(file);
-          setImageTypeError(false);
-          setImageErrorToFalse();
-        })
-        .catch(() => {
-          setImageTypeError(true);
-        });
-    }
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  //upload image on change
-  const onImageChange = (e) => {
-    updateRecipeImage(e.target.files[0]);
-  };
 
   const options = [
     "wybierz",
@@ -146,80 +55,7 @@ export const RecipeDetails = ({
             onChange={(e) => updateRecipeDetails(e)}
           />
         </FormGroup>
-        {details.image === "" && errors.imageError && !imageTypeError ? (
-          <Alert variant="danger">Musisz dodać zdjęcie</Alert>
-        ) : null}
-        {details.image !== "" && !imageTypeError ? (
-          <Alert variant="success">Plik jest poprawny</Alert>
-        ) : null}
-        {imageTypeError ? (
-          <Alert variant="danger">Plik nie jest poprawny</Alert>
-        ) : null}
-        <FormGroup
-          className={`mb-3 form_group_sfg ${
-            imageTypeError || errors.imageError ? "form_group_error" : null
-          }`}
-          onDrop={details.image === "" ? (e) => handleOnDrop(e) : null}
-          onDragOver={handleDragOver}
-        >
-          {details.image === "" ? (
-            <>
-              <Form.Label
-                style={{ cursor: "pointer", lineHeight: 4 }}
-                htmlFor="recipe_photo"
-              >
-                Dodaj zdjęcie <br />{" "}
-                <FontAwesomeIcon icon={faPlusCircle} size="3x" /> <br /> lub
-                upuść plik
-              </Form.Label>
-              <div>
-                <FontAwesomeIcon icon={faCamera} size="6x" />
-              </div>
-              <Form.Control
-                style={{ display: "none" }}
-                type="file"
-                id="recipe_photo"
-                onChange={onImageChange}
-                accept="image/*"
-              />
-            </>
-          ) : (
-            <>
-              <div style={{ width: 200, height: 200 }}>
-                {isSpinnerVisible ? (
-                  <Spinner />
-                ) : (
-                  <>
-                    <p>Podgląd</p>
-                    <img
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        borderRadius: "50%",
-                        aspectRatio: "auto",
-                      }}
-                      src={
-                        window.location.pathname.includes("edit") && !imagePreview
-                          ? details.image
-                          : imagePreview
-                      }
-                    />
-                  </>
-                )}
-              </div>
-              <Button
-                style={{ marginTop: 30 }}
-                variant="dark"
-                onClick={() => {
-                  updateImage("");
-                }}
-              >
-                <FontAwesomeIcon icon={faTrashCan} />
-              </Button>
-            </>
-          )}
-        </FormGroup>
+        <HandleImage updateImage={updateImage} updateNewRecipeErrors={updateNewRecipeErrors} details={details} errors={errors}/>
         <FormGroup className="mb-3">
           <Form.Label htmlFor="preparation_time">Czas przygotowania</Form.Label>
           <FormPrepTime
