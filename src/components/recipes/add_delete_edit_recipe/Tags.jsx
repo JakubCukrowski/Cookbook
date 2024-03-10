@@ -28,6 +28,7 @@ export const Tags = ({updateRecipeTags, newRecipeDetails, updateTagsArray}) => {
     "kuchnia tradycyjna",
     "kuchnia meksykańska",
     "kuchnia indyjska",
+    "okazje"
   ];
 
   const splitTags = [];

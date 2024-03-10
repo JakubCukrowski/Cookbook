@@ -22,6 +22,7 @@ import {
   DataDesktopWrapper,
   DashboardDesktopRecipes,
 } from "./DashboardStyles";
+import { auth } from "../../firebase";
 
 export const Dashboard = () => {
   const {
@@ -61,14 +62,17 @@ export const Dashboard = () => {
     const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`);
     await uploadBytes(profileImageRef, e.target.files[0])
       .then(async () => {
-        await getDownloadURL(profileImageRef).then((url) => {
-          updateProfile(user, {
+        await getDownloadURL(profileImageRef).then(async (url) => {
+          await updateProfile(auth.currentUser, {
             photoURL: url,
           });
           setIsUserImageUploaded(true);
         });
       })
-      .catch(() => setUserPhotoError(true));
+      .catch((err) => {
+        console.log(err);
+        setUserPhotoError(true);
+      });
 
     const timeoutID = setTimeout(() => {
       setIsUserImageUploaded(false);

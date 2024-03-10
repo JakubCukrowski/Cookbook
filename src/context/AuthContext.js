@@ -128,7 +128,7 @@ export const AuthContextProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, [setUser]);
+  }, [isUserImageUploaded]);
 
   //set display name for dashboard and navbar, download user docs
   useEffect(() => {
