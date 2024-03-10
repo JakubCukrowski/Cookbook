@@ -20,6 +20,8 @@ export const SignIn = () => {
     password: false,
   });
 
+  const [accountExists, setAccountExists] = useState("");
+
   const handleInputs = (e) => {
     const { name, value } = e.target;
 
@@ -30,12 +32,12 @@ export const SignIn = () => {
       };
     });
 
-    setCredentialsErrors((prev) => {
-      return {
-        ...prev,
-        [name]: false,
-      };
+    setCredentialsErrors({
+      email: false,
+      password: false,
     });
+
+    setAccountExists(true);
   };
 
   const handleLogin = async (e) => {
@@ -66,6 +68,10 @@ export const SignIn = () => {
             };
           });
         }
+
+        if (error.message === "Firebase: Error (auth/invalid-credential).") {
+          setAccountExists(false);
+        }
       }
     }
   };
@@ -91,6 +97,9 @@ export const SignIn = () => {
           userData.password.length > 0 ? (
             <Alert variant="danger">Nie znaleźliśmy konta</Alert>
           ) : null}
+          {accountExists === false ? (
+            <Alert variant="danger">Email lub hasło się nie zgadza</Alert>
+          ) : null}
           <Form.Group className="mb-3" controlId="formGroupEmail">
             <Form.Label>Email</Form.Label>
             {credentialsErrors.email && userData.email.length === 0 ? (
@@ -98,11 +107,14 @@ export const SignIn = () => {
             ) : null}
             <Form.Control
               isInvalid={
-                (credentialsErrors.email && userData.email.length === 0) ||
+                (credentialsErrors.email &&
+                  userData.email.length === 0 &&
+                  accountExists !== false) ||
                 (credentialsErrors.email &&
                   credentialsErrors.password &&
                   userData.email.length > 0 &&
-                  userData.password.length)
+                  userData.password.length) ||
+                (accountExists === false)
               }
               onChange={handleInputs}
               value={userData.email}
@@ -128,7 +140,8 @@ export const SignIn = () => {
                 (credentialsErrors.email &&
                   credentialsErrors.password &&
                   userData.email.length > 0 &&
-                  userData.password.length)
+                  userData.password.length) ||
+                (accountExists === false)
               }
               onChange={handleInputs}
               value={userData.password}
@@ -142,10 +155,21 @@ export const SignIn = () => {
             Potwierdź
           </Button>
         </StyledForm>
-        <div style={{backgroundColor: "white", color: "black", padding: 20, borderRadius: 6}}>
+        <div
+          style={{
+            backgroundColor: "white",
+            color: "black",
+            padding: 20,
+            borderRadius: 6,
+          }}
+        >
           <h3>Test account</h3>
-          <p>email: <strong>test@test.com</strong></p>
-          <p>password: <strong>123456</strong></p>
+          <p>
+            email: <strong>test@test.com</strong>
+          </p>
+          <p>
+            password: <strong>123456</strong>
+          </p>
         </div>
       </FlexContainer>
     </StyledSignSection>
