@@ -102,6 +102,7 @@ export const Hero = () => {
 
     if (e.key === "Enter" && queryResults.length > 0 && activeIndex !== "") {
       navigate(`/recipes/${queryResults[activeIndex].id}`);
+      updateQueryText('')
     }
 
     if (e.key === "Enter" && activeIndex === "" && queryText.length >= 2) {
