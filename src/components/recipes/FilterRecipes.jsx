@@ -65,9 +65,7 @@ export const FilterRecipes = () => {
 
     const filterRecipesByPrepTime = (array) => {
       return array.filter(
-        (element) =>
-          element.preparationTime ===
-          filterData.prepTime
+        (element) => element.preparationTime === filterData.prepTime
       );
     };
 
@@ -90,13 +88,13 @@ export const FilterRecipes = () => {
       categories[categoryName] === "Najpopularniejsze przepisy" &&
       filterData.prepTime === "Wszystko"
     ) {
-      const popular = [...recipes].sort((a, b) => b.likes - a.likes)
+      const popular = [...recipes].sort((a, b) => b.likes - a.likes);
       setFilteredList(popular);
     } else if (
       categories[categoryName] === "Najpopularniejsze przepisy" &&
       filterData.prepTime !== "Wszystko"
     ) {
-      const popularByPrepTime = filterRecipesByPrepTime([...recipes])
+      const popularByPrepTime = filterRecipesByPrepTime([...recipes]);
       const popularSorted = popularByPrepTime.sort((a, b) => b.likes - a.likes);
       setFilteredList(popularSorted);
     }
@@ -106,14 +104,18 @@ export const FilterRecipes = () => {
       categories[categoryName] !== "Najnowsze przepisy" &&
       filterData.prepTime === "Wszystko"
     ) {
-      const filterByCategory = [...recipes].filter(recipe => recipe.category === categories[categoryName]);
+      const filterByCategory = [...recipes].filter(
+        (recipe) => recipe.category === categories[categoryName]
+      );
       setFilteredList(filterByCategory);
     } else if (
       categories[categoryName] !== "Najpopularniejsze przepisy" &&
       categories[categoryName] !== "Najnowsze przepisy" &&
       filterData.prepTime !== "Wszystko"
     ) {
-      const filterByCategory = [...recipes].filter(recipe => recipe.category === categories[categoryName])
+      const filterByCategory = [...recipes].filter(
+        (recipe) => recipe.category === categories[categoryName]
+      );
       console.log(filterByCategory);
       const filteredByPrepTime = filterRecipesByPrepTime(filterByCategory);
       setFilteredList(filteredByPrepTime);
@@ -165,7 +167,9 @@ export const FilterRecipes = () => {
           <Container>
             <StyledH2>{categories[categoryName]}</StyledH2>
             <FilterFormStyle>
-              <p>Szukanie zaawansowane</p>
+              <h4>
+                <strong>Szukanie zaawansowane</strong>
+              </h4>
               <Container>
                 <Form.Label htmlFor="category_filter">Kategoria</Form.Label>
                 <FormCategory

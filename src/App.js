@@ -21,6 +21,7 @@ import { FilterRecipes } from "./components/recipes/FilterRecipes";
 import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditRecipe";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { SearchedTag } from "./components/recipes/Tags/SearchedTag"
+import { MainDishes } from "./components/recipes/main_page_recipes/MainDishes";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
                   <Hero />
                   <NewestRecipes />
                   <PopularRecipes />
+                  <MainDishes />
                   <Soups />
                   <Desserts />
                 </>
