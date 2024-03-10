@@ -14,8 +14,8 @@ export const Preparation = ({
 }) => {
   const handleInputChange = (e, index) => {
     const newStepsArray = details.preparationSteps;
-    newStepsArray[index] = e.target.value
-    
+    newStepsArray[index] = e.target.value;
+
     handleStepsArray(newStepsArray);
 
     // clear errors
@@ -25,13 +25,13 @@ export const Preparation = ({
   };
 
   const handleDeleteButton = (index) => {
-    const newStepsArray = [...details.preparationSteps]
-    const newErrorsArray = [...errors.preparationStepsErrors]
-    const filterSteps = newStepsArray.filter((_, i) => i !== index)
-    handleStepsArray(filterSteps)
+    const newStepsArray = [...details.preparationSteps];
+    const newErrorsArray = [...errors.preparationStepsErrors];
+    const filterSteps = newStepsArray.filter((_, i) => i !== index);
+    handleStepsArray(filterSteps);
 
-    const filterErrors = newErrorsArray.filter((_, i) => i !== index)
-    handleStepsErrors(filterErrors)
+    const filterErrors = newErrorsArray.filter((_, i) => i !== index);
+    handleStepsErrors(filterErrors);
   };
 
   return (
@@ -60,12 +60,17 @@ export const Preparation = ({
                 onChange={(e) => handleInputChange(e, index)}
                 value={value}
               />
-              <DeleteButton
-                type="button"
-                onClick={() => handleDeleteButton(index)}
-              >
-                <FontAwesomeIcon icon={faTrashCan} color="rgba(0, 0, 0, 0.4)" />
-              </DeleteButton>
+              {details.preparationSteps.length > 1 ? (
+                <DeleteButton
+                  type="button"
+                  onClick={() => handleDeleteButton(index)}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrashCan}
+                    color="rgba(0, 0, 0, 0.4)"
+                  />
+                </DeleteButton>
+              ) : null}
             </div>
           </FormGroup>
         );
