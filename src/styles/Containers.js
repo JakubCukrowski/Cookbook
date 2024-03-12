@@ -67,6 +67,7 @@ export const SingleRecipeContainer = styled(Container)`
     display: flex;
     justify-content: space-around;
     gap: 100px;
+    margin-bottom: 20px;
   }
 `;
 

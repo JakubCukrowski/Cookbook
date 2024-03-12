@@ -58,7 +58,7 @@ export const SignIn = () => {
     if (!credentialsErrors.email && !credentialsErrors.password) {
       try {
         await login(userData.email, userData.password);
-        navigate("/dashboard");
+        navigate(-1);
       } catch (error) {
         if (error.message === "Firebase: Error (auth/invalid-email).") {
           setCredentialsErrors(() => {
