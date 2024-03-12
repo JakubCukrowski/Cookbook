@@ -14,11 +14,11 @@ Current features include:
 - Searching for a recipe <br></br>
 - Advanced search filters <br></br>
 - Updating recipes <br></br>
+- Deleting recipes <br></br>
 
 To be added: 
 
 - Commenting on recipes <br></br>
-- Deleting recipes <br></br>
 - Handling <hero /> component buttons for the most popular categories <br></br>
 - The ability to change email addresses <br></br>
 - Including special characters when creating a password <br></br>
