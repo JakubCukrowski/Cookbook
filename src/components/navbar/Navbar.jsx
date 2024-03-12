@@ -27,7 +27,6 @@ export const CustomNavbar = () => {
     try {
       await signout();
       setLoggedOut(true);
-      navigate("/");
 
       const timeout = setTimeout(() => {
         setLoggedOut(false);

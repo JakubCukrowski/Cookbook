@@ -28,6 +28,7 @@ import {
 import { UserAuth } from "../../../context/AuthContext";
 import { H1wrapper } from "../../../styles/H1wrapper";
 import { Wrapper } from "../../../styles/Wrapper";
+import { Comments } from "../../comments/Comments";
 export const SingleRecipe = () => {
   const { recipeId } = useParams();
   const {
@@ -43,11 +44,12 @@ export const SingleRecipe = () => {
 
   //donwload the recipe, get author name, check if liked by current user
   useEffect(() => {
-
     if (recipes.length > 0) {
-      const filterSearchedRecipe = recipes.find(recipe => recipe.id === recipeId)
-      setSearchedRecipe(filterSearchedRecipe)
-      setIsFound(true)
+      const filterSearchedRecipe = recipes.find(
+        (recipe) => recipe.id === recipeId
+      );
+      setSearchedRecipe(filterSearchedRecipe);
+      setIsFound(true);
     }
   }, [recipes]);
 
@@ -137,7 +139,7 @@ export const SingleRecipe = () => {
                   ) : null}
                 </Wrapper>
               </div>
-              <div style={{marginTop: 20, fontSize: 20}}>
+              <div style={{ marginTop: 20, fontSize: 20 }}>
                 Polubienia: <strong>{searchedRecipe.likes}</strong>
               </div>
               <div>
@@ -176,6 +178,7 @@ export const SingleRecipe = () => {
               </div>
             </Wrapper>
           </SingleRecipeContainer>
+          <Comments />
         </>
       )}
     </section>
