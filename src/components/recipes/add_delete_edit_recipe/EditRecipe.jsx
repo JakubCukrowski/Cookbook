@@ -163,7 +163,6 @@ export const EditRecipe = () => {
       });
     }
 
-    handleAddedRecipe();
     navigate("/dashboard");
   };
 
