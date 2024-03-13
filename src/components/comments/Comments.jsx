@@ -30,7 +30,7 @@ export const Comments = () => {
               as="textarea"
               aria-label="With textarea"
             />
-            <Button variant="dark">Opublikuj</Button>
+            <Button onClick={() => alert('Pracujemy nad tym')} variant="dark">Opublikuj</Button>
           </InputGroup>
         </>
       ) : (
