@@ -22,7 +22,7 @@ import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditReci
 import { ScrollToTop } from "./components/ScrollToTop";
 import { SearchedTag } from "./components/recipes/Tags/SearchedTag";
 import { MainDishes } from "./components/recipes/main_page_recipes/MainDishes";
-import { BlockedRoute } from "./components/comments/blocked_route/BlockedRoute";
+import { BlockedRoute } from "./components/blocked_route/BlockedRoute";
 
 function App() {
   return (

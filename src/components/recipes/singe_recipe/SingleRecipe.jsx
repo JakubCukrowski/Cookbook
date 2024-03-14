@@ -28,6 +28,7 @@ import {
 import { UserAuth } from "../../../context/AuthContext";
 import { H1wrapper } from "../../../styles/H1wrapper";
 import { Wrapper } from "../../../styles/Wrapper";
+import { AddComment } from "../../comments/AddComment";
 import { Comments } from "../../comments/Comments";
 export const SingleRecipe = () => {
   const { recipeId } = useParams();
@@ -174,6 +175,7 @@ export const SingleRecipe = () => {
               </div>
             </Wrapper>
           </SingleRecipeContainer>
+          <AddComment />
           <Comments />
         </>
       )}
