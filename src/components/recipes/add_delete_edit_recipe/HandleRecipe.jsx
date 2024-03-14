@@ -288,7 +288,7 @@ export const HandleRecipe = ({
           <h2 style={{ textAlign: "center", paddingBottom: 50 }}>
             {h2Text} przepis {currentStepIndex + 1} / {currentStep.length}
           </h2>
-          <Form className="new-recipe-form" onSubmit={handleSubmitForm}>
+          <Form style={{minHeight: '50vh'}} className="new-recipe-form" onSubmit={handleSubmitForm}>
             {currentStep[currentStepIndex]}
 
             <ButtonsContainer>

@@ -11,8 +11,8 @@ import {
   arrayRemove,
   arrayUnion,
   doc,
-  getDoc,
   increment,
+  onSnapshot,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebase";
@@ -56,13 +56,9 @@ export const SingleRecipe = () => {
   //checks if recipe has been already liked
   useEffect(() => {
     if (user) {
-      const checkIfLiked = async () => {
-        const loggedUserRef = doc(db, "users", user.uid);
-        const userData = await getDoc(loggedUserRef);
-        updateIsRecipeLiked(userData.data().liked.includes(recipeId));
-      };
-
-      checkIfLiked();
+      const unsub = onSnapshot(doc(db, 'users', user.uid), doc => {
+        updateIsRecipeLiked(doc.data().liked.includes(recipeId))
+      })
     }
   }, [userLikedRecipes]);
 
@@ -140,7 +136,7 @@ export const SingleRecipe = () => {
                 </Wrapper>
               </div>
               <div style={{ marginTop: 20, fontSize: 20 }}>
-                Polubienia: <strong>{searchedRecipe.likes}</strong>
+                Polubienia: <strong>{searchedRecipe.likedBy.length}</strong>
               </div>
               <div>
                 <div sm={5} style={{ marginTop: 10 }}>
