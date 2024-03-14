@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Button, Form, FormGroup, Spinner } from "react-bootstrap";
+import React from "react";
+import { Button, Form, FormGroup } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 import { FormCategory } from "../form_elements/FormCategory";
 import { FormDifficulty } from "../form_elements/FormDifficulty";
