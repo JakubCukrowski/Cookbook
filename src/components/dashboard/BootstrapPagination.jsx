@@ -42,7 +42,7 @@ export const BootstrapPagination = ({ recipes, isUserRecipe }) => {
         />
       ))}
 
-      {recipes.length > 3 ? <Pagination>{items}</Pagination> : null}
+      {recipes.length > 2 ? <Pagination>{items}</Pagination> : null}
     </>
   );
 };

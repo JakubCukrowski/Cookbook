@@ -24,6 +24,7 @@ export const AddRecipe = () => {
     preparationSteps: ["", "", ""],
     tags: [],
     likedBy: [],
+    comments: [],
   });
 
   const [newRecipeErrors, setNewRecipeErrors] = useState({
@@ -36,6 +37,14 @@ export const AddRecipe = () => {
 
   //block submiting multiple times
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  //preview image on add
+  const [imagePreview, setImagePreview] = useState(null)
+
+  //update image preview 
+  const updateImagePreview = (value) => {
+    setImagePreview(value)
+  }
 
   const updateNewRecipeDetails = (value) => {
     setNewRecipeDetails(value);
@@ -80,6 +89,7 @@ export const AddRecipe = () => {
       description: newRecipeDetails.description,
       steps: newRecipeDetails.preparationSteps,
       tags: newRecipeDetails.tags,
+      comments: newRecipeDetails.comments,
     });
 
     //create a storage for the image
@@ -145,6 +155,8 @@ export const AddRecipe = () => {
         handleSubmitForm={handleSubmitForm}
         updateRecipeTags={updateRecipeTags}
         updateTagsArray={updateTagsArray}
+        imagePreview={imagePreview}
+        updateImagePreview={updateImagePreview}
       />
     </>
   );

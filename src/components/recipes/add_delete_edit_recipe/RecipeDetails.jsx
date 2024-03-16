@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, FormGroup } from "react-bootstrap";
+import { Form, FormGroup } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 import { FormCategory } from "../form_elements/FormCategory";
 import { FormDifficulty } from "../form_elements/FormDifficulty";
@@ -13,8 +13,9 @@ export const RecipeDetails = ({
   updateRecipeDetails,
   gibberishCheck,
   updateNewRecipeErrors,
+  imagePreview,
+  updateImagePreview,
 }) => {
-
   const options = [
     "wybierz",
     "Dania główne",
@@ -55,7 +56,14 @@ export const RecipeDetails = ({
             onChange={(e) => updateRecipeDetails(e)}
           />
         </FormGroup>
-        <HandleImage updateImage={updateImage} updateNewRecipeErrors={updateNewRecipeErrors} details={details} errors={errors}/>
+        <HandleImage
+          updateImage={updateImage}
+          updateNewRecipeErrors={updateNewRecipeErrors}
+          details={details}
+          errors={errors}
+          imagePreview={imagePreview}
+          updateImagePreview={updateImagePreview}
+        />
         <FormGroup className="mb-3">
           <Form.Label htmlFor="preparation_time">Czas przygotowania</Form.Label>
           <FormPrepTime
