@@ -21,7 +21,7 @@ export const FilterRecipes = () => {
   const [filterData, setFilterData] = useState({
     category: "",
     prepTime: "Wszystko",
-    difficulty: "Wszystko",
+    difficulty: "all",
   });
 
   const [isFilterSelected, setIsFilterSelected] = useState(true);
@@ -69,40 +69,54 @@ export const FilterRecipes = () => {
       );
     };
 
+    const filterRecipesByDifficulty = (array) => {
+      return array.filter(
+        (element) => element.difficulty === filterData.difficulty
+      );
+    };
+
     if (
-      categories[categoryName] === "Najnowsze przepisy" &&
-      filterData.prepTime === "Wszystko"
+      (categories[categoryName] === "Najnowsze przepisy" ||
+        categories[categoryName] === "Najpopularniejsze przepisy") &&
+      filterData.prepTime === "Wszystko" &&
+      filterData.difficulty === "all"
     ) {
       const newest = sortRecipes([...recipes]);
       setFilteredList(newest);
     } else if (
-      categories[categoryName] === "Najnowsze przepisy" &&
-      filterData.prepTime !== "Wszystko"
+      (categories[categoryName] === "Najnowsze przepisy" ||
+        categories[categoryName] === "Najpopularniejsze przepisy") &&
+      filterData.prepTime !== "Wszystko" &&
+      filterData.difficulty === "all"
     ) {
       const newestByPrepTime = filterRecipesByPrepTime([...recipes]);
       const newestSorted = sortRecipes(newestByPrepTime);
       setFilteredList(newestSorted);
-    }
-
-    if (
-      categories[categoryName] === "Najpopularniejsze przepisy" &&
-      filterData.prepTime === "Wszystko"
-    ) {
-      const popular = [...recipes].sort((a, b) => b.likes - a.likes);
-      setFilteredList(popular);
     } else if (
-      categories[categoryName] === "Najpopularniejsze przepisy" &&
-      filterData.prepTime !== "Wszystko"
+      (categories[categoryName] === "Najnowsze przepisy" ||
+        categories[categoryName] === "Najpopularniejsze przepisy") &&
+      filterData.prepTime === "Wszystko" &&
+      filterData.difficulty !== "all"
     ) {
-      const popularByPrepTime = filterRecipesByPrepTime([...recipes]);
-      const popularSorted = popularByPrepTime.sort((a, b) => b.likes - a.likes);
-      setFilteredList(popularSorted);
+      const newestByDifficulty = filterRecipesByDifficulty([...recipes]);
+      setFilteredList(newestByDifficulty);
+    } else if (
+      (categories[categoryName] === "Najnowsze przepisy" ||
+        categories[categoryName] === "Najpopularniejsze przepisy") &&
+      filterData.prepTime !== "Wszystko" &&
+      filterData.difficulty !== "all"
+    ) {
+      const newestOfPrepAndDifficulty = filterRecipesByPrepTime(
+        filterRecipesByDifficulty([...recipes])
+      );
+      setFilteredList(newestOfPrepAndDifficulty);
     }
 
     if (
       categories[categoryName] !== "Najpopularniejsze przepisy" &&
       categories[categoryName] !== "Najnowsze przepisy" &&
-      filterData.prepTime === "Wszystko"
+      filterData.prepTime === "Wszystko" &&
+      filterData.difficulty === "all"
     ) {
       const filterByCategory = [...recipes].filter(
         (recipe) => recipe.category === categories[categoryName]
@@ -111,14 +125,38 @@ export const FilterRecipes = () => {
     } else if (
       categories[categoryName] !== "Najpopularniejsze przepisy" &&
       categories[categoryName] !== "Najnowsze przepisy" &&
-      filterData.prepTime !== "Wszystko"
+      filterData.prepTime !== "Wszystko" &&
+      filterData.difficulty === "all"
     ) {
       const filterByCategory = [...recipes].filter(
         (recipe) => recipe.category === categories[categoryName]
       );
-      console.log(filterByCategory);
       const filteredByPrepTime = filterRecipesByPrepTime(filterByCategory);
       setFilteredList(filteredByPrepTime);
+    } else if (
+      categories[categoryName] !== "Najpopularniejsze przepisy" &&
+      categories[categoryName] !== "Najnowsze przepisy" &&
+      filterData.prepTime !== "Wszystko" &&
+      filterData.difficulty !== "all"
+    ) {
+      const filterByCategory = [...recipes].filter(
+        (recipe) => recipe.category === categories[categoryName]
+      );
+      const filterByPrepAndDifficulty = filterRecipesByPrepTime(
+        filterRecipesByDifficulty(filterByCategory)
+      );
+      setFilteredList(filterByPrepAndDifficulty);
+    } else if (
+      categories[categoryName] !== "Najpopularniejsze przepisy" &&
+      categories[categoryName] !== "Najnowsze przepisy" &&
+      filterData.prepTime === "Wszystko" &&
+      filterData.difficulty !== "all"
+    ) {
+      const filterByCategory = [...recipes].filter(
+        (recipe) => recipe.category === categories[categoryName]
+      );
+      const filterByDifficulty = filterRecipesByDifficulty(filterByCategory);
+      setFilteredList(filterByDifficulty);
     }
 
     if (isFilterSelected) {
@@ -127,13 +165,19 @@ export const FilterRecipes = () => {
       }, 500);
       return () => clearTimeout(timeout);
     }
-  }, [isFilterSelected, categories[categoryName], recipes]);
+  }, [
+    isFilterSelected,
+    categories[categoryName],
+    filterData.category,
+    recipes,
+  ]);
 
   const handleChangeCategory = (e) => {
     setFilterData((prev) => {
       return {
         ...prev,
         prepTime: "Wszystko",
+        difficulty: "all",
       };
     });
     const arrayFromObject = Object.entries(categories);
@@ -155,6 +199,17 @@ export const FilterRecipes = () => {
       return {
         ...prev,
         prepTime: e.target.value,
+      };
+    });
+    setIsFilterSelected(true);
+  };
+
+  const handleDifficulty = (e) => {
+    console.log(e.target.value);
+    setFilterData((prev) => {
+      return {
+        ...prev,
+        difficulty: e.target.value,
       };
     });
     setIsFilterSelected(true);
@@ -196,7 +251,11 @@ export const FilterRecipes = () => {
                   </Container>
                   <Container>
                     <Form.Label>Poziom trudności</Form.Label>
-                    <FormDifficulty />
+                    <FormDifficulty
+                      everything={true}
+                      onChange={handleDifficulty}
+                      value={filterData.difficulty}
+                    />
                   </Container>
                 </>
               ) : null}
@@ -205,7 +264,7 @@ export const FilterRecipes = () => {
               <>
                 <RecipesGroup array={filteredList} />
                 {filteredList.length === 0 ? (
-                  <div style={{ textAlign: "center", height: 100 }}>
+                  <div style={{ textAlign: "center", minHeight: 400 }}>
                     <h5>Brak wyników</h5>
                   </div>
                 ) : null}

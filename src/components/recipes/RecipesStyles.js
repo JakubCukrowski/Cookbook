@@ -154,7 +154,7 @@ export const PrepTimeInfo = styled.div`
 `
 
 export const FilterFormStyle = styled(Form)`
-  margin-bottom: 30px;
+  margin-bottom: 60px;
 
   @media (min-width: 992px) {
     width: 40%;
