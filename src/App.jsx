@@ -17,7 +17,7 @@ import { PrivateRoute } from "./components/private_route/PrivateRoute";
 import { ProfanityViolation } from "./components/profanity/ProfanityViolation";
 import { Soups } from "./components/recipes/main_page_recipes/Soups";
 import { Desserts } from "./components/recipes/main_page_recipes/Desserts";
-import { FilterRecipes } from "./components/recipes/FilterRecipes";
+import { FilterRecipes } from "./components/recipes/filter_recipes/FilterRecipes";
 import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditRecipe";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { SearchedTag } from "./components/recipes/Tags/SearchedTag";
