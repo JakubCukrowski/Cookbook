@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import heroBackgroundImage from "../../images/heroImage.jpg";
-import {
-  HeroFlexContainer,
-} from "../../styles/Containers";
+import { HeroFlexContainer } from "../../styles/Containers";
 import {
   SearchBarContainer,
   StyledHeroSection,
@@ -137,7 +135,7 @@ export const Hero = () => {
     }
 
     const fuse = new Fuse(recipes, {
-      keys: ["name"],
+      keys: ["name", "tags"],
       threshold: 0.3,
       includeMatches: true,
     });
@@ -183,7 +181,7 @@ export const Hero = () => {
                 onBlur={handleFocusOut}
                 type="search"
                 placeholder={
-                  isFocused ? "Wpisz nazwę potrawy" : "Znajdź przepis"
+                  isFocused ? "Wpisz nazwę potrawy lub rodzaj posiłku" : "Znajdź przepis"
                 }
                 name="searchbar"
                 value={queryText}
