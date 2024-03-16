@@ -13,9 +13,8 @@ import {
 import { storage } from "../../../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 
-
 export const EditRecipe = () => {
-  const { handleAddedRecipe, recipes, user } = UserAuth();
+  const { recipes, user } = UserAuth();
   const navigate = useNavigate();
   const { recipeId } = useParams();
 
@@ -24,7 +23,6 @@ export const EditRecipe = () => {
     createdAt: "",
     image: "",
     ingredients: "",
-    likedBy: "",
     name: "",
     preparationTime: "",
     difficulty: "",
@@ -41,6 +39,14 @@ export const EditRecipe = () => {
     preparationStepsErrors: [false, false, false],
   });
 
+   //preview image on add
+   const [imagePreview, setImagePreview] = useState(null)
+
+   //update image preview 
+   const updateImagePreview = (value) => {
+     setImagePreview(value)
+   }
+
 
   useEffect(() => {
     const recipeToEdit = recipes.find((recipe) => recipe.id === recipeId);
@@ -55,7 +61,6 @@ export const EditRecipe = () => {
         createdAt: recipeToEdit.createdAt,
         image: recipeToEdit.image,
         ingredients: recipeToEdit.ingredients,
-        likedBy: recipeToEdit.likedBy,
         name: recipeToEdit.name,
         preparationTime: recipeToEdit.preparationTime,
         difficulty: recipeToEdit.difficulty,
@@ -122,7 +127,6 @@ export const EditRecipe = () => {
       ingredients: recipeDetails.ingredients,
       name: recipeDetails.name,
       image: recipeDetails.image.name !== undefined ? "" : recipeDetails.image,
-      likedBy: recipeDetails.likedBy,
       preparationTime: recipeDetails.preparationTime,
       difficulty: recipeDetails.difficulty,
       description: recipeDetails.description,
@@ -130,7 +134,6 @@ export const EditRecipe = () => {
       tags: recipeDetails.tags,
     });
 
-    //HANDLE TO ON UPDATING IMAGE DELETE OLD ONE
     //create a storage for the image
     if (recipeDetails.image.name !== undefined) {
       //delete old image
@@ -175,6 +178,8 @@ export const EditRecipe = () => {
         handleSubmitForm={handleSubmitForm}
         updateRecipeTags={updateRecipeTags}
         updateTagsArray={updateTagsArray}
+        imagePreview={imagePreview}
+        updateImagePreview={updateImagePreview}
       />
     </>
   );

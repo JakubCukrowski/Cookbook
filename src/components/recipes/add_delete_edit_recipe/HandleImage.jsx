@@ -12,9 +12,10 @@ export const HandleImage = ({
   updateNewRecipeErrors,
   details,
   errors,
+  imagePreview,
+  updateImagePreview
 }) => {
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
   const [imageTypeError, setImageTypeError] = useState(false);
 
   const imageTypes = [
@@ -53,7 +54,7 @@ export const HandleImage = ({
       const fr = new FileReader();
       fr.addEventListener("load", () => {
         const res = fr.result;
-        setImagePreview(res);
+        updateImagePreview(res);
       });
       fr.readAsDataURL(file);
       updateImage(file);

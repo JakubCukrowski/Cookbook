@@ -22,7 +22,9 @@ export const HandleRecipe = ({
   isSubmitted,
   handleSubmitForm,
   updateRecipeTags,
-  updateTagsArray
+  updateTagsArray,
+  imagePreview,
+  updateImagePreview
 }) => {
   const { user } = UserAuth();
   //steps state
@@ -143,6 +145,8 @@ export const HandleRecipe = ({
       updateImage={updateImage}
       updateRecipeDetails={updateRecipeDetails}
       gibberishCheck={gibberishCheck}
+      imagePreview={imagePreview}
+      updateImagePreview={updateImagePreview}
     />,
     <Ingredients
       details={newRecipeDetails}
