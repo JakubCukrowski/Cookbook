@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Container, Card } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import { StyledCol } from "../RecipesStyles";
 import { CustomContainer, FlexContainer } from "../../../styles/Containers";
@@ -45,7 +45,7 @@ export const RecipesGroup = ({
                     <span>{recipe.preparationTime}</span>
                   </PrepTimeInfo>
                   <Card.Text>
-                    Polubienia: <strong>{recipe.likes}</strong>
+                    Polubienia: <strong>{recipe.likedBy.length}</strong>
                   </Card.Text>
                   <Link to={`/recipes/${recipe.id}`}>
                     <Button variant="dark">Przejdź do przepisu</Button>
