@@ -6,6 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Alert, FormGroup, Form, Spinner, Button } from "react-bootstrap";
+import { FakeSpinnerContainer } from "../../../styles/Containers";
 
 export const HandleImage = ({
   updateImage,
@@ -13,7 +14,7 @@ export const HandleImage = ({
   details,
   errors,
   imagePreview,
-  updateImagePreview
+  updateImagePreview,
 }) => {
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
   const [imageTypeError, setImageTypeError] = useState(false);
@@ -32,7 +33,7 @@ export const HandleImage = ({
     if (isSpinnerVisible) {
       const timeout = setTimeout(() => {
         setIsSpinnerVisible(false);
-      }, 1000);
+      }, 500);
 
       return () => clearTimeout(timeout);
     }
@@ -77,7 +78,7 @@ export const HandleImage = ({
       //match src of dropped file
       const regex = /src="?([^"\s]+)"?\s*/;
       await fetch(regex.exec(ev.dataTransfer.getData("text/html"))[1])
-        .then(async (res) => {
+        .then((res) => {
           return res.blob();
         })
         .then((blob) => {
@@ -88,6 +89,7 @@ export const HandleImage = ({
         })
         .catch(() => {
           setImageTypeError(true);
+          alert("CORS restriced");
         });
     }
   };
@@ -106,7 +108,7 @@ export const HandleImage = ({
       {details.image === "" && errors.imageError && !imageTypeError ? (
         <Alert variant="danger">Musisz dodać zdjęcie</Alert>
       ) : null}
-      {details.image !== "" && !imageTypeError ? (
+      {details.image !== "" && !imageTypeError && !isSpinnerVisible ? (
         <Alert variant="success">Plik jest poprawny</Alert>
       ) : null}
       {imageTypeError ? (
@@ -144,7 +146,9 @@ export const HandleImage = ({
           <>
             <div style={{ width: 200, height: 200 }}>
               {isSpinnerVisible ? (
-                <Spinner />
+                <FakeSpinnerContainer>
+                  <Spinner />
+                </FakeSpinnerContainer>
               ) : (
                 <>
                   <p>Podgląd</p>
@@ -165,15 +169,17 @@ export const HandleImage = ({
                 </>
               )}
             </div>
-            <Button
-              style={{ marginTop: 30 }}
-              variant="dark"
-              onClick={() => {
-                updateImage("");
-              }}
-            >
-              <FontAwesomeIcon icon={faTrashCan} />
-            </Button>
+            {details.image !== "" && !imageTypeError && !isSpinnerVisible ? (
+              <Button
+                style={{ marginTop: 30 }}
+                variant="dark"
+                onClick={() => {
+                  updateImage("");
+                }}
+              >
+                <FontAwesomeIcon icon={faTrashCan} />
+              </Button>
+            ) : null}
           </>
         )}
       </FormGroup>
