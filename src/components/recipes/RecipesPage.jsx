@@ -26,7 +26,7 @@ export const RecipesPage = () => {
     updateQueryText(query);
 
     const fuse = new Fuse(recipes, {
-      keys: ["name"],
+      keys: ["name", ["tags"]],
       threshold: 0.3,
       includeMatches: true,
     });
