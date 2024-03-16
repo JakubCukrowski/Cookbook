@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import heroBackgroundImage from "../../images/heroImage.jpg";
 import {
   HeroFlexContainer,
-  PopularButtonsContainer,
 } from "../../styles/Containers";
 import {
   SearchBarContainer,
@@ -20,6 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import { PopularButtons } from "./PopularButtons";
 
 export const Hero = () => {
   const {
@@ -102,7 +102,7 @@ export const Hero = () => {
 
     if (e.key === "Enter" && queryResults.length > 0 && activeIndex !== "") {
       navigate(`/recipes/${queryResults[activeIndex].id}`);
-      updateQueryText('')
+      updateQueryText("");
     }
 
     if (e.key === "Enter" && activeIndex === "" && queryText.length >= 2) {
@@ -161,9 +161,9 @@ export const Hero = () => {
         justify="center"
         align="center"
         fluid
-        >
+      >
         <SearchBarContainer>
-        <StyledH1>Cześć, na co masz dzisiaj ochotę?</StyledH1>
+          <StyledH1>Cześć, na co masz dzisiaj ochotę?</StyledH1>
           <SearchBarWrapper className={inputError ? "search-bar-error" : null}>
             <OverlayTrigger
               placement="top"
@@ -223,17 +223,7 @@ export const Hero = () => {
             </StyledSearchedRecipes>
           ) : null}
         </SearchBarContainer>
-
-        <div>
-          <h2>Popularne kategorie</h2>
-
-          <PopularButtonsContainer>
-            <Button variant="dark">Popularne</Button>
-            <Button variant="dark">Popularne</Button>
-            <Button variant="dark">Popularne</Button>
-            <Button variant="dark">Popularne</Button>
-          </PopularButtonsContainer>
-        </div>
+        <PopularButtons />
       </HeroFlexContainer>
     </StyledHeroSection>
   );
