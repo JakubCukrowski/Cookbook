@@ -25,7 +25,7 @@ export const RecipesGroup = ({
         lg={3}
         xl={4}
         className="g-4"
-        style={{ paddingBottom: 20 }}
+        style={{ paddingBottom: 20, minHeight: '70vh' }}
       >
         {array.slice(0, sliceBy).map((recipe, idx) => (
           <StyledCol key={idx}>
