@@ -1,17 +1,19 @@
 import { useState } from "react";
-import { CustomPaginationItem } from "../../styles/CustomPaginationItem";
-import { DashboardRecipes } from "./DashboardRecipes";
+import { CustomPaginationItem } from "../../../styles/CustomPaginationItem";
+import { RecipesGroup } from "../main_page_recipes/RecipesGroup";
+import { UserAuth } from "../../../context/AuthContext";
 import { Pagination } from "react-bootstrap";
 
-export const BootstrapPagination = ({ recipes, isUserRecipe }) => {
+export const FilterBootstrapPagination = ({ array }) => {
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [recipesPerPage, setRecipesPerPage] = useState(2);
+  const [recipesPerPage, setRecipesPerPage] = useState(12);
+  const { recipes } = UserAuth();
 
   //bootstrap pagination
   const lastRecipeIndex = currentPage * recipesPerPage;
   const firstRecipeIndex = lastRecipeIndex - recipesPerPage;
-  const slicedRecipes = recipes.slice(firstRecipeIndex, lastRecipeIndex);
+  const slicedRecipes = array.slice(firstRecipeIndex, lastRecipeIndex);
 
   let items = [];
   for (
@@ -32,17 +34,10 @@ export const BootstrapPagination = ({ recipes, isUserRecipe }) => {
 
   return (
     <>
-      {slicedRecipes.map((recipe, index) => (
-        <DashboardRecipes
-          key={index}
-          linkTo={recipe.id}
-          recipeName={recipe.name}
-          recipeImage={recipe.image}
-          isUserRecipe={isUserRecipe}
-        />
-      ))}
-
-      {recipes.length > 2 ? <Pagination>{items}</Pagination> : null}
+      <RecipesGroup array={slicedRecipes} />
+      <div style={{width: '100%', display: "flex", justifyContent: "center"}}>
+        {array.length > 12 ? <Pagination>{items}</Pagination> : null}
+      </div>
     </>
   );
 };

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { UserAuth } from "../../context/AuthContext";
+import { UserAuth } from "../../../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { Container, FormLabel, Spinner } from "react-bootstrap";
-import { StyledH2 } from "../../styles/StyledH2";
-import { RecipesGroup } from "./main_page_recipes/RecipesGroup";
+import { StyledH2 } from "../../../styles/StyledH2";
+import { RecipesGroup } from "../main_page_recipes/RecipesGroup";
 import { Form } from "react-bootstrap";
-import { FormCategory } from "./form_elements/FormCategory";
-import { FormDifficulty } from "./form_elements/FormDifficulty";
-import { FormPrepTime } from "./form_elements/FormPrepTime";
-import { FakeSpinnerContainer } from "../../styles/Containers";
-import { FilterFormStyle } from "./RecipesStyles";
+import { FormCategory } from "../form_elements/FormCategory";
+import { FormDifficulty } from "../form_elements/FormDifficulty";
+import { FormPrepTime } from "../form_elements/FormPrepTime";
+import { FakeSpinnerContainer } from "../../../styles/Containers";
+import { FilterFormStyle } from "../RecipesStyles";
+import { FilterBootstrapPagination } from "./FilterBootstrapPagination";
 
 export const FilterRecipes = () => {
   const { recipes } = UserAuth();
@@ -262,7 +263,7 @@ export const FilterRecipes = () => {
             </FilterFormStyle>
             {!isFilterSelected ? (
               <>
-                <RecipesGroup array={filteredList} />
+                <FilterBootstrapPagination array={filteredList}/>
                 {filteredList.length === 0 ? (
                   <div style={{ textAlign: "center", minHeight: 400 }}>
                     <h5>Brak wyników</h5>

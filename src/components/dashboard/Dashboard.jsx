@@ -11,7 +11,7 @@ import { BootstrapModal } from "../BootstrapModal";
 import { SpinnerContainer } from "../../styles/Containers";
 import { StyledH2 } from "../../styles/StyledH2";
 import { UpdateUserPhoto } from "./UpdateUserPhoto";
-import { BootstrapPagination } from "./BootstrapPagination";
+import { DashboardBootstrapPagination } from "./DashboardBootstrapPagination";
 import { updateProfile } from "firebase/auth";
 import { DashboardElement } from "./DashboardElement";
 import {
@@ -168,16 +168,17 @@ export const Dashboard = () => {
                   {userRecipes.length === 0 ? (
                     <p>Aktualnie nie dodałeś żadnego przepisu</p>
                   ) : (
-                    <BootstrapPagination
+                    <DashboardBootstrapPagination
                       recipes={userRecipes}
                       isUserRecipe={true}
+                      showRecipesOnPage={2}
                     />
                   )}
                 </DataWrapper>
                 <DataWrapper>
                   <h2>Polubione przepisy</h2>
                   {userLikedRecipes.length > 0 ? (
-                    <BootstrapPagination recipes={userLikedRecipes} />
+                    <DashboardBootstrapPagination recipes={userLikedRecipes} />
                   ) : (
                     <p>Nie polubiłeś żadnego przepisu</p>
                   )}
