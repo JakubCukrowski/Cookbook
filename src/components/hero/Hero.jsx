@@ -191,6 +191,7 @@ export const Hero = () => {
             </OverlayTrigger>
 
             <Button
+              variant="dark"
               onClick={(e) => {
                 e.preventDefault();
 
