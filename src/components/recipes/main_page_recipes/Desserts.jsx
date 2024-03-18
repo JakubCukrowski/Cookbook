@@ -6,7 +6,6 @@ import { StyledH2 } from "../../../styles/StyledH2";
 
 export const Desserts = () => {
   const { recipes, isRecipeAdded } = UserAuth();
-  const checkDate = (date) => new Date(date);
   const navigate = useNavigate();
   const [sortedRecipes, setSortedRecipes] = useState([]);
 
@@ -15,7 +14,7 @@ export const Desserts = () => {
       (recipie) => recipie.category === "Desery"
     );
     const sortedDesserts = desserts.sort(
-      (a, b) => checkDate(b.createdAt) - checkDate(a.createdAt)
+      (a, b) => b.likedBy.length - a.likedBy.length
     );
     setSortedRecipes(sortedDesserts);
   }, [recipes, isRecipeAdded]);

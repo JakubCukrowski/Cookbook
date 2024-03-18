@@ -14,7 +14,7 @@ export const Soups = () => {
     const soups = [...recipes].filter((recipe) => recipe.category === "Zupy");
     const sortedSoupsByAddDate = [...soups].sort(
       (a, b) => checkDate(b.createdAt) - checkDate(a.createdAt)
-    );
+    ).sort((a, b) => b.likedBy.length - a.likedBy.length)
     setSortedRecipes(sortedSoupsByAddDate);
   }, [recipes, isRecipeAdded]);
 
