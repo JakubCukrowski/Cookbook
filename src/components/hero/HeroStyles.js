@@ -101,7 +101,7 @@ export const StyledSearchedRecipes = styled.ul`
   scroll-behavior: smooth;
 
   @media (min-width: 992px) {
-    max-height: 260px;
+    max-height: 300px;
   }
 
   &::-webkit-scrollbar {
@@ -122,11 +122,21 @@ export const StyledSearchedRecipes = styled.ul`
     background: #b30000;
   }
 
+  li {
+    @media (min-width: 992px) {
+      height: 50px !important;
+    }
+  }
+
   a {
     text-decoration: none;
     color: black;
     display: block;
     padding: 10px;
+
+    @media (min-width: 992px) {
+      height: 100%
+    }
 
     /* add different background every one link!! */
   }
