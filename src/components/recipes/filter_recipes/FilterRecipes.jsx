@@ -76,69 +76,103 @@ export const FilterRecipes = () => {
       );
     };
 
+    let category = categories[categoryName];
+    let prepTime = filterData.prepTime;
+    let difficulty = filterData.difficulty;
+
     if (
-      (categories[categoryName] === "Najnowsze przepisy" ||
-        categories[categoryName] === "Najpopularniejsze przepisy") &&
-      filterData.prepTime === "Wszystko" &&
-      filterData.difficulty === "all"
+      category === "Najnowsze przepisy" &&
+      prepTime === "Wszystko" &&
+      difficulty === "all"
     ) {
-      const newest = sortRecipes([...recipes]);
+      const newest = sortRecipes([...recipes].splice(0, 20));
       setFilteredList(newest);
     } else if (
-      (categories[categoryName] === "Najnowsze przepisy" ||
-        categories[categoryName] === "Najpopularniejsze przepisy") &&
-      filterData.prepTime !== "Wszystko" &&
-      filterData.difficulty === "all"
+      category === "Najnowsze przepisy" &&
+      prepTime !== "Wszystko" &&
+      difficulty === "all"
     ) {
       const newestByPrepTime = filterRecipesByPrepTime([...recipes]);
-      const newestSorted = sortRecipes(newestByPrepTime);
+      const newestSorted = sortRecipes(newestByPrepTime).splice(0, 20);
       setFilteredList(newestSorted);
     } else if (
-      (categories[categoryName] === "Najnowsze przepisy" ||
-        categories[categoryName] === "Najpopularniejsze przepisy") &&
-      filterData.prepTime === "Wszystko" &&
-      filterData.difficulty !== "all"
+      category === "Najnowsze przepisy" &&
+      prepTime === "Wszystko" &&
+      difficulty !== "all"
     ) {
-      const newestByDifficulty = filterRecipesByDifficulty([...recipes]);
+      const newestByDifficulty = filterRecipesByDifficulty([...recipes]).splice(0, 20);
       setFilteredList(newestByDifficulty);
     } else if (
-      (categories[categoryName] === "Najnowsze przepisy" ||
-        categories[categoryName] === "Najpopularniejsze przepisy") &&
+      category === "Najnowsze przepisy" &&
       filterData.prepTime !== "Wszystko" &&
       filterData.difficulty !== "all"
     ) {
       const newestOfPrepAndDifficulty = filterRecipesByPrepTime(
-        filterRecipesByDifficulty([...recipes])
+        filterRecipesByDifficulty([...recipes]).splice(0, 20)
       );
       setFilteredList(newestOfPrepAndDifficulty);
     }
 
     if (
-      categories[categoryName] !== "Najpopularniejsze przepisy" &&
-      categories[categoryName] !== "Najnowsze przepisy" &&
-      filterData.prepTime === "Wszystko" &&
-      filterData.difficulty === "all"
+      category === "Najpopularniejsze przepisy" &&
+      prepTime === "Wszystko" &&
+      difficulty === "all"
+    ) {
+      const mostPopular = [...recipes].sort((a, b) => b.likedBy.length - a.likedBy.length).splice(0, 20);
+      setFilteredList(mostPopular);
+    } else if (
+      category === "Najpopularniejsze przepisy" &&
+      prepTime !== "Wszystko" &&
+      difficulty === "all"
+    ) {
+      const popularByPrepTime = filterRecipesByPrepTime([...recipes]);
+      const popularSorted = popularByPrepTime.sort((a, b) => b.likedBy.length - a.likedBy.length).splice(0, 20);
+      setFilteredList(popularSorted);
+    } else if (
+      category === "Najpopularniejsze przepisy" &&
+      prepTime === "Wszystko" &&
+      difficulty !== "all"
+    ) {
+      const newestByDifficulty = filterRecipesByDifficulty([...recipes]);
+      const newestSorted = newestByDifficulty.sort((a, b) => b.likedBy.length - a.likedBy.length).splice(0, 20)
+      setFilteredList(newestSorted);
+    } else if (
+      category === "Najpopularniejsze przepisy" &&
+      filterData.prepTime !== "Wszystko" &&
+      filterData.difficulty !== "all"
+    ) {
+      const newestOfPrepAndDifficulty = filterRecipesByPrepTime(
+        filterRecipesByDifficulty([...recipes].sort((a, b) => b.likedBy.length - a.likedBy.length)).splice(0, 20)
+      );
+      setFilteredList(newestOfPrepAndDifficulty);
+    }
+
+    if (
+      category !== "Najpopularniejsze przepisy" &&
+      category !== "Najnowsze przepisy" &&
+      prepTime === "Wszystko" &&
+      difficulty === "all"
     ) {
       const filterByCategory = [...recipes].filter(
-        (recipe) => recipe.category === categories[categoryName]
+        (recipe) => recipe.category === category
       );
       setFilteredList(filterByCategory);
     } else if (
-      categories[categoryName] !== "Najpopularniejsze przepisy" &&
-      categories[categoryName] !== "Najnowsze przepisy" &&
-      filterData.prepTime !== "Wszystko" &&
-      filterData.difficulty === "all"
+      category !== "Najpopularniejsze przepisy" &&
+      category !== "Najnowsze przepisy" &&
+      prepTime !== "Wszystko" &&
+      difficulty === "all"
     ) {
       const filterByCategory = [...recipes].filter(
-        (recipe) => recipe.category === categories[categoryName]
+        (recipe) => recipe.category === category
       );
       const filteredByPrepTime = filterRecipesByPrepTime(filterByCategory);
       setFilteredList(filteredByPrepTime);
     } else if (
-      categories[categoryName] !== "Najpopularniejsze przepisy" &&
-      categories[categoryName] !== "Najnowsze przepisy" &&
-      filterData.prepTime !== "Wszystko" &&
-      filterData.difficulty !== "all"
+      category !== "Najpopularniejsze przepisy" &&
+      category !== "Najnowsze przepisy" &&
+      prepTime !== "Wszystko" &&
+      difficulty !== "all"
     ) {
       const filterByCategory = [...recipes].filter(
         (recipe) => recipe.category === categories[categoryName]
@@ -148,13 +182,13 @@ export const FilterRecipes = () => {
       );
       setFilteredList(filterByPrepAndDifficulty);
     } else if (
-      categories[categoryName] !== "Najpopularniejsze przepisy" &&
-      categories[categoryName] !== "Najnowsze przepisy" &&
-      filterData.prepTime === "Wszystko" &&
-      filterData.difficulty !== "all"
+      category !== "Najpopularniejsze przepisy" &&
+      category !== "Najnowsze przepisy" &&
+      prepTime === "Wszystko" &&
+      difficulty !== "all"
     ) {
       const filterByCategory = [...recipes].filter(
-        (recipe) => recipe.category === categories[categoryName]
+        (recipe) => recipe.category === category
       );
       const filterByDifficulty = filterRecipesByDifficulty(filterByCategory);
       setFilteredList(filterByDifficulty);
@@ -168,8 +202,6 @@ export const FilterRecipes = () => {
     }
   }, [
     isFilterSelected,
-    categories[categoryName],
-    filterData.category,
     recipes,
   ]);
 
@@ -263,7 +295,7 @@ export const FilterRecipes = () => {
             </FilterFormStyle>
             {!isFilterSelected ? (
               <>
-                <FilterBootstrapPagination array={filteredList}/>
+                <FilterBootstrapPagination array={filteredList} />
                 {filteredList.length === 0 ? (
                   <div style={{ textAlign: "center", minHeight: 400 }}>
                     <h5>Brak wyników</h5>
