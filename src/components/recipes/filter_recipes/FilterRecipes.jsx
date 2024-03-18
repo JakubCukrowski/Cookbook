@@ -100,7 +100,10 @@ export const FilterRecipes = () => {
       prepTime === "Wszystko" &&
       difficulty !== "all"
     ) {
-      const newestByDifficulty = filterRecipesByDifficulty([...recipes]).splice(0, 20);
+      const newestByDifficulty = filterRecipesByDifficulty([...recipes]).splice(
+        0,
+        20
+      );
       setFilteredList(newestByDifficulty);
     } else if (
       category === "Najnowsze przepisy" &&
@@ -118,7 +121,10 @@ export const FilterRecipes = () => {
       prepTime === "Wszystko" &&
       difficulty === "all"
     ) {
-      const mostPopular = [...recipes].sort((a, b) => b.likedBy.length - a.likedBy.length).splice(0, 20);
+      const mostPopular = [...recipes]
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .sort((a, b) => b.likedBy.length - a.likedBy.length)
+        .splice(0, 90);
       setFilteredList(mostPopular);
     } else if (
       category === "Najpopularniejsze przepisy" &&
@@ -126,7 +132,9 @@ export const FilterRecipes = () => {
       difficulty === "all"
     ) {
       const popularByPrepTime = filterRecipesByPrepTime([...recipes]);
-      const popularSorted = popularByPrepTime.sort((a, b) => b.likedBy.length - a.likedBy.length).splice(0, 20);
+      const popularSorted = popularByPrepTime
+        .sort((a, b) => b.likedBy.length - a.likedBy.length)
+        .splice(0, 90);
       setFilteredList(popularSorted);
     } else if (
       category === "Najpopularniejsze przepisy" &&
@@ -134,7 +142,9 @@ export const FilterRecipes = () => {
       difficulty !== "all"
     ) {
       const newestByDifficulty = filterRecipesByDifficulty([...recipes]);
-      const newestSorted = newestByDifficulty.sort((a, b) => b.likedBy.length - a.likedBy.length).splice(0, 20)
+      const newestSorted = newestByDifficulty
+        .sort((a, b) => b.likedBy.length - a.likedBy.length)
+        .splice(0, 90);
       setFilteredList(newestSorted);
     } else if (
       category === "Najpopularniejsze przepisy" &&
@@ -142,7 +152,9 @@ export const FilterRecipes = () => {
       filterData.difficulty !== "all"
     ) {
       const newestOfPrepAndDifficulty = filterRecipesByPrepTime(
-        filterRecipesByDifficulty([...recipes].sort((a, b) => b.likedBy.length - a.likedBy.length)).splice(0, 20)
+        filterRecipesByDifficulty(
+          [...recipes].sort((a, b) => b.likedBy.length - a.likedBy.length)
+        ).splice(0, 90)
       );
       setFilteredList(newestOfPrepAndDifficulty);
     }
@@ -156,7 +168,8 @@ export const FilterRecipes = () => {
       const filterByCategory = [...recipes].filter(
         (recipe) => recipe.category === category
       );
-      setFilteredList(filterByCategory);
+
+      setFilteredList(sortRecipes(filterByCategory));
     } else if (
       category !== "Najpopularniejsze przepisy" &&
       category !== "Najnowsze przepisy" &&
@@ -167,7 +180,7 @@ export const FilterRecipes = () => {
         (recipe) => recipe.category === category
       );
       const filteredByPrepTime = filterRecipesByPrepTime(filterByCategory);
-      setFilteredList(filteredByPrepTime);
+      setFilteredList(sortRecipes(filteredByPrepTime));
     } else if (
       category !== "Najpopularniejsze przepisy" &&
       category !== "Najnowsze przepisy" &&
@@ -180,7 +193,7 @@ export const FilterRecipes = () => {
       const filterByPrepAndDifficulty = filterRecipesByPrepTime(
         filterRecipesByDifficulty(filterByCategory)
       );
-      setFilteredList(filterByPrepAndDifficulty);
+      setFilteredList(sortRecipes(filterByPrepAndDifficulty));
     } else if (
       category !== "Najpopularniejsze przepisy" &&
       category !== "Najnowsze przepisy" &&
@@ -191,7 +204,7 @@ export const FilterRecipes = () => {
         (recipe) => recipe.category === category
       );
       const filterByDifficulty = filterRecipesByDifficulty(filterByCategory);
-      setFilteredList(filterByDifficulty);
+      setFilteredList(sortRecipes(filterByDifficulty));
     }
 
     if (isFilterSelected) {
@@ -200,10 +213,7 @@ export const FilterRecipes = () => {
       }, 500);
       return () => clearTimeout(timeout);
     }
-  }, [
-    isFilterSelected,
-    recipes,
-  ]);
+  }, [isFilterSelected, recipes]);
 
   const handleChangeCategory = (e) => {
     setFilterData((prev) => {
