@@ -6,7 +6,7 @@ import { StyledH2 } from "../../../styles/StyledH2";
 
 export const PopularRecipes = () => {
   const { recipes } = UserAuth();
-  const popular = [...recipes].sort((a, b) => b.likes - a.likes);
+  const popular = [...recipes].sort((a, b) => b.likedBy.length - a.likedBy.length);
   const navigate = useNavigate();
 
   const handleClick = () => {
