@@ -17,7 +17,7 @@ or create a new account
 ### Current features include:
 
 - Creating an account <br></br>
-- Uploading user photos (the website checks if the file is actually an image file) <br></br>
+- Uploading user photos <br></br>
 - Adding recipes <br></br>
 - Liking recipes <br></br>
 - Storing recipes in a user's dashboard under 'liked' and 'created' <br></br>
@@ -30,7 +30,7 @@ or create a new account
 ### To be added: 
 
 - Commenting on recipes <br></br>
-- The ability to change email addresses <br></br>
-- Including special characters when creating a password <br></br>
+- A possibility to change email address <br></br>
+- Including special characters check when creating a password <br></br>
 - Adding the possibility to view all recipes added by the user once on the single recipe page <br></br>
 - Create a planner <br></br>
