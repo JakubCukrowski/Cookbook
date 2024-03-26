@@ -53,7 +53,7 @@ export const RecipeDescription = styled.p`
 
 export const RecipeTagLink = styled(Link)`
   text-decoration: none;
-  background-color: rgb(33, 37, 41);
+  background-color: #e19f25;
   color: white;
   padding: 4px;
   border-radius: 4px;

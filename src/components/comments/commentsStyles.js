@@ -10,5 +10,4 @@ export const StyledInputGroup = styled(InputGroup)`
   @media (min-width: 992px) {
     width: 60%;
   }
-
 `;

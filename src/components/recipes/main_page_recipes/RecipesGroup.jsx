@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { AuthorData } from "../RecipesStyles";
 import { PrepTimeInfo } from "../RecipesStyles";
+import { OrangeButton } from "../../../styles/OrangeButton";
 
 export const RecipesGroup = ({
   array,
@@ -48,7 +49,7 @@ export const RecipesGroup = ({
                     Polubienia: <strong>{recipe.likedBy.length}</strong>
                   </Card.Text>
                   <Link to={`/recipes/${recipe.id}`}>
-                    <Button variant="dark">Przejdź do przepisu</Button>
+                    <OrangeButton>Przejdź do przepisu</OrangeButton>
                   </Link>
                 </div>
               </Card.Body>
@@ -58,13 +59,13 @@ export const RecipesGroup = ({
       </Row>
       {addButton ? (
         <FlexContainer justify="center">
-          <Button
+          <OrangeButton
             style={{ marginBottom: marginBottom }}
             onClick={onClick}
             variant="dark"
           >
             Zobacz więcej
-          </Button>
+          </OrangeButton>
         </FlexContainer>
       ) : null}
     </CustomContainer>

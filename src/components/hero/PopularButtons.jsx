@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { PopularButtonsContainer } from "../../styles/Containers";
-import { Button } from "react-bootstrap";
 import { UserAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { OrangeButton } from "../../styles/OrangeButton";
 
 export const PopularButtons = () => {
   const { recipes } = UserAuth();
   const [popularTags, setPopularStates] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   //filter recipes by likes and tags, out of it create an object with the count of the tag and set it as a popularTags state
   useEffect(() => {
@@ -17,7 +17,9 @@ export const PopularButtons = () => {
 
     const mostPopular = {};
 
-    onlyTagsFilteredByLikes.forEach((tag) => (mostPopular[tag] = (mostPopular[tag] || 0) + 1));
+    onlyTagsFilteredByLikes.forEach(
+      (tag) => (mostPopular[tag] = (mostPopular[tag] || 0) + 1)
+    );
 
     const arrFromObj = Object.entries(mostPopular);
 
@@ -36,10 +38,13 @@ export const PopularButtons = () => {
 
       <PopularButtonsContainer>
         {popularTags.map((tag) => (
-          <Button onClick={() => navigate(`/popular/${tag.name}`)} variant="dark" key={tag.name}>
+          <OrangeButton
+            onClick={() => navigate(`/popular/${tag.name}`)}
+            key={tag.name}
+          >
             {tag.name.split("")[0].toUpperCase() +
               tag.name.split("").slice(1, tag.name.length).join("")}
-          </Button>
+          </OrangeButton>
         ))}
       </PopularButtonsContainer>
     </div>
