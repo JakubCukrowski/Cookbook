@@ -21,7 +21,7 @@ export const MainDishes = () => {
   };
 
   return (
-    <>
+    <section id="main_dishes">
       <StyledH2>Dania główne</StyledH2>
       <RecipesGroup
         array={mainDishes}
@@ -29,6 +29,6 @@ export const MainDishes = () => {
         addButton={true}
         sliceBy={4}
       />
-    </>
+    </section>
   );
 };
