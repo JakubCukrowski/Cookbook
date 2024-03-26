@@ -6,6 +6,7 @@ import {
   StyledNavbar,
   StyledNavbarColapse,
   LoggedUserImage,
+  NavbarLink,
 } from "./NavbarStyles";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
@@ -56,8 +57,6 @@ export const CustomNavbar = () => {
       <StyledNavbar
         fixed={pathname === "/" ? "top" : ""}
         sticky={pathname !== "/" ? "top" : ""}
-        variant="dark"
-        bg="dark"
         expand="lg"
       >
         <Container fluid>
@@ -68,13 +67,13 @@ export const CustomNavbar = () => {
               {user !== null ? (
                 <>
                   <Nav.Item>
-                    <Link className="nav-link" to="/dashboard">
+                    <NavbarLink className="nav-link" to="/dashboard">
                       Zalogowany: {user.displayName}{" "}
                       <LoggedUserImage
                         src={user.photoURL}
                         alt="profile_image"
                       />
-                    </Link>
+                    </NavbarLink>
                   </Nav.Item>
                   <Nav.Item>
                     <Button onClick={handleSignOut} variant="danger">

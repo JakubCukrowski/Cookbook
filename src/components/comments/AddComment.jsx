@@ -1,11 +1,10 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import { FlexContainer } from "../../styles/Containers";
 import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
 import { UserAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { StyledInputGroup } from "./commentsStyles";
+import { OrangeButton } from "../../styles/OrangeButton";
 
 export const AddComment = () => {
   const { user } = UserAuth();
@@ -24,9 +23,9 @@ export const AddComment = () => {
               as="textarea"
               aria-label="With textarea"
             />
-            <Button onClick={() => alert("Pracujemy nad tym")} variant="dark">
+            <OrangeButton onClick={() => alert("Pracujemy nad tym")}>
               Opublikuj
-            </Button>
+            </OrangeButton>
           </StyledInputGroup>
         </>
       ) : (

@@ -3,7 +3,7 @@ import { Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export const StyledNavbar = styled(Navbar)`
-    /* margin-bottom: 30px; */
+    background-color: #e19f25;
 `
 
 export const StyledLink = styled(Link)`
@@ -30,4 +30,8 @@ export const LoggedUserImage = styled.img`
     width: 40px;
     height: 40px;
     border-radius: 50%;
+`
+
+export const NavbarLink = styled(Link)`
+    color: white;
 `

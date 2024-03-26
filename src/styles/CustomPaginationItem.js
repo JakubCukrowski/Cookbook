@@ -4,12 +4,12 @@ import { Pagination } from "react-bootstrap";
 export const CustomPaginationItem = styled(Pagination.Item)`
     
     span {
-        background-color: rgb(33,37,41) !important;
-        border-color: rgb(33,37,41) !important;
+        background-color: #e19f25 !important;
+        border-color: #e19f25 !important;
     }
 
     .page-link {
-        color: rgb(33,37,41) !important;
+        color: black !important;
     }
 
     &.active > .page-link {

@@ -28,7 +28,7 @@ export const DashboardImage = styled.img`
 `;
 
 export const DashboardImageWrapper = styled.div`
-    border: 2px solid rgb(33, 37, 41);
+    border: 2px solid #e19f25;
     width: 300px;
     height: 300px;
     object-fit: cover;
@@ -100,7 +100,7 @@ export const UpdatePhotoWrapper = styled.div`
   align-items: center;
   position: absolute;
   z-index: 200;
-  background-color: rgb(33, 37, 41);
+  background-color: #e19f25;
   border-radius: 50%;
   width: 40px;
   height: 40px;

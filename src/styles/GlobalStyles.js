@@ -3,7 +3,7 @@ import { createGlobalStyle } from "styled-components";
 export const GlobalStyle = createGlobalStyle`
     body {
         font-family: 'Noto Sans', sans-serif;
-        background-color: rgb(234, 234, 234);
+        background-color: #ffffeb;
     }
 
     .no-radius-left-bottom {

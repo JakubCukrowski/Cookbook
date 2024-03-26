@@ -17,10 +17,11 @@ import {
   where,
   writeBatch,
   deleteDoc,
-  doc
+  doc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { BootstrapModal } from "../BootstrapModal";
+import { OrangeButton } from "../../styles/OrangeButton";
 
 export const DashboardRecipes = ({
   linkTo,
@@ -32,11 +33,11 @@ export const DashboardRecipes = ({
   //hover status of user added recipe to show utility buttons
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
-  const [progress, setProgress] = useState(0)
+  const [progress, setProgress] = useState(0);
   //show modal with confirmation/cancelation of deleting the recipe
   const [showModal, setShowModal] = useState(false);
   //renders a modal with progress bar
-  const [isDeleted, setIsDeleted] = useState(false)
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const handleHoverOver = () => {
     setIsHovered(true);
@@ -53,46 +54,48 @@ export const DashboardRecipes = ({
 
   //on actual delete confirmation
   const handleDeleteRecipe = async () => {
-    await deleteDoc(doc(db, 'recipes', linkTo))
+    await deleteDoc(doc(db, "recipes", linkTo));
     const q = query(
       collection(db, "users"),
       where("liked", "array-contains", linkTo)
     );
 
-    const batch = writeBatch(db)
+    const batch = writeBatch(db);
 
     //gets all users who liked the recipe in the past, and filters it out
-    const querySnapshot = await getDocs(q)
-    querySnapshot.forEach(doc => {
-      const userRef = doc.ref
-      const filterLikedRecipes = doc.data().liked.filter(recipe => recipe !== linkTo)
-      batch.update(userRef, {'liked': filterLikedRecipes})
-    })
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const userRef = doc.ref;
+      const filterLikedRecipes = doc
+        .data()
+        .liked.filter((recipe) => recipe !== linkTo);
+      batch.update(userRef, { liked: filterLikedRecipes });
+    });
 
     try {
       await batch.commit();
-      setShowModal(false)
-      setIsDeleted(true)
+      setShowModal(false);
+      setIsDeleted(true);
 
       const timeout = setTimeout(() => {
-        setIsDeleted(false)
+        setIsDeleted(false);
       }, 2000);
 
-      return () => clearTimeout(timeout)
+      return () => clearTimeout(timeout);
     } catch (e) {
       console.error("Error updating documents: ", e);
     }
-  }
+  };
 
   useEffect(() => {
     if (isDeleted) {
       const interval = setInterval(() => {
         setProgress((prev) => prev + 5);
       }, 50);
-    
+
       return () => clearInterval(interval);
     }
-  }, [isDeleted])
+  }, [isDeleted]);
 
   return (
     <>
@@ -105,7 +108,9 @@ export const DashboardRecipes = ({
           onConfirm={handleDeleteRecipe}
         />
       ) : null}
-      {isDeleted ? <BootstrapModal title={'Usunięto pomyślnie'} progress={progress}/> : null}
+      {isDeleted ? (
+        <BootstrapModal title={"Usunięto pomyślnie"} progress={progress} />
+      ) : null}
       <div style={{ paddingTop: 10, textAlign: "center", width: "100%" }}>
         <span>{recipeName}</span>
         {user && isUserRecipe ? (
@@ -118,18 +123,16 @@ export const DashboardRecipes = ({
               >
                 {isHovered ? (
                   <div className="util_buttons">
-                    <Button
-                      variant="dark"
+                    <OrangeButton
                       onClick={() => navigate(`/recipes/edit/${linkTo}`)}
                     >
                       <FontAwesomeIcon icon={faEdit} />
-                    </Button>
-                    <Button
-                      variant="dark"
+                    </OrangeButton>
+                    <OrangeButton
                       onClick={() => navigate(`/recipes/${linkTo}`)}
                     >
                       <FontAwesomeIcon icon={faArrowRight} />
-                    </Button>
+                    </OrangeButton>
                     <Button variant="danger" onClick={handleDeleteButton}>
                       <FontAwesomeIcon icon={faTrashCan} />
                     </Button>
