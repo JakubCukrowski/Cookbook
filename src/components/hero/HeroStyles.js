@@ -114,7 +114,7 @@ export const StyledSearchedRecipes = styled.ul`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgb(33, 37, 41);
+    background: #e19f25;
     border-radius: 10px;
   }
 
@@ -140,7 +140,7 @@ export const StyledSearchedRecipes = styled.ul`
   }
 
   .active {
-    background-color: rgb(33, 37, 41) !important;
+    background-color: #e19f25 !important;
     color: white !important;
   }
 `;

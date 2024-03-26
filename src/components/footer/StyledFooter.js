@@ -1,11 +1,10 @@
 import styled from "styled-components";
 
 export const StyledFooter = styled.footer`
-    background-color: #cd8500;
+    background-color: #e19f25;
     color: white;
     padding: 10px 0;
-
-    margin-top: 30px;
+    margin-top: auto;
 
     p {
         margin: 8px 0;

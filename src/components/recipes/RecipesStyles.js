@@ -149,4 +149,6 @@ export const FilterFormStyle = styled(Form)`
     margin-right: auto;
   }
 `
-
+export const NoResults = styled.div`
+  text-align: center;
+`
