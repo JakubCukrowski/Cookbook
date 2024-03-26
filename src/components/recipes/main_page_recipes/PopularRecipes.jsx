@@ -14,7 +14,7 @@ export const PopularRecipes = () => {
   };
 
   return (
-    <>
+    <section id="popular">
       <StyledH2>Najpopularniejsze przepisy</StyledH2>
       <RecipesGroup
         title="Najpopularniejsze przepisy"
@@ -23,6 +23,6 @@ export const PopularRecipes = () => {
         addButton={true}
         sliceBy={4}
       />
-    </>
+    </section>
   );
 };

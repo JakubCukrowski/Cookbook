@@ -24,7 +24,7 @@ export const Desserts = () => {
   };
 
   return (
-    <>
+    <section id="desserts">
       <StyledH2>Desery</StyledH2>
       <RecipesGroup
         title="Desery"
@@ -33,6 +33,6 @@ export const Desserts = () => {
         addButton={true}
         sliceBy={4}
       />
-    </>
+    </section>
   );
 };

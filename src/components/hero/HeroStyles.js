@@ -137,8 +137,6 @@ export const StyledSearchedRecipes = styled.ul`
     @media (min-width: 992px) {
       height: 100%
     }
-
-    /* add different background every one link!! */
   }
 
   .active {
