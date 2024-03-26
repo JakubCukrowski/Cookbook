@@ -18,6 +18,7 @@ import Fuse from "fuse.js";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import { PopularButtons } from "./PopularButtons";
+import { OrangeButton } from "../../styles/OrangeButton";
 
 export const Hero = () => {
   const {
@@ -213,8 +214,8 @@ export const Hero = () => {
               />
             </OverlayTrigger>
 
-            <Button
-              variant="dark"
+            <OrangeButton
+              
               onClick={(e) => {
                 e.preventDefault();
 
@@ -226,7 +227,7 @@ export const Hero = () => {
               }}
             >
               <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </Button>
+            </OrangeButton>
           </SearchBarWrapper>
           {queryText.length >= 2 && queryResults.length > 0 && isFocused ? (
             <StyledSearchedRecipes ref={ulRef}>

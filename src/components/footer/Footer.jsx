@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { StyledFooter } from "./StyledFooter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { Link } from "react-router-dom";
-import {UserAuth} from '../../context/AuthContext'
 
 export const Footer = () => {
-    const {pathname} = UserAuth()
+    const pathname = window.location.pathname
 
     return (
         <StyledFooter className={pathname === '/violation' ? 'position_fixed' : null}>

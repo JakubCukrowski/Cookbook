@@ -9,7 +9,7 @@ import { FormCategory } from "../form_elements/FormCategory";
 import { FormDifficulty } from "../form_elements/FormDifficulty";
 import { FormPrepTime } from "../form_elements/FormPrepTime";
 import { FakeSpinnerContainer } from "../../../styles/Containers";
-import { FilterFormStyle } from "../RecipesStyles";
+import { FilterFormStyle, NoResults } from "../RecipesStyles";
 import { FilterBootstrapPagination } from "./FilterBootstrapPagination";
 
 export const FilterRecipes = () => {
@@ -248,7 +248,6 @@ export const FilterRecipes = () => {
   };
 
   const handleDifficulty = (e) => {
-    console.log(e.target.value);
     setFilterData((prev) => {
       return {
         ...prev,
@@ -307,9 +306,9 @@ export const FilterRecipes = () => {
               <>
                 <FilterBootstrapPagination array={filteredList} />
                 {filteredList.length === 0 ? (
-                  <div style={{ textAlign: "center", minHeight: 400 }}>
+                  <NoResults>
                     <h5>Brak wyników</h5>
-                  </div>
+                  </NoResults>
                 ) : null}
               </>
             ) : (

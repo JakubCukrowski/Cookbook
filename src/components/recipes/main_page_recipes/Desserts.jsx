@@ -24,7 +24,7 @@ export const Desserts = () => {
   };
 
   return (
-    <section id="desserts">
+    <section id="desserts" className="lax_m">
       <StyledH2>Desery</StyledH2>
       <RecipesGroup
         title="Desery"

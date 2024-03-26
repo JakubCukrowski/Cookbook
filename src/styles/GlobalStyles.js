@@ -1,6 +1,12 @@
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
+    #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
     body {
         font-family: 'Noto Sans', sans-serif;
         background-color: #ffffeb;
@@ -80,5 +86,9 @@ export const GlobalStyle = createGlobalStyle`
 
     .text-error {
         color: red;
+    }
+
+    .lax_m {
+        margin-bottom: 20px;
     }
 `;
