@@ -24,17 +24,6 @@ export const StyledCol = styled(Col)`
 
 export const AuthorImageWrapper = styled.div`
     border-radius: 50%;
-    position: relative;
-    &::after {
-        content: '';
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        border-radius: 50%;
-        position: absolute;
-        background-color: rgba(255, 255, 255, 0.5);
-    }
 
   img {
     width: 80px;
@@ -48,8 +37,6 @@ export const RecipeAuthor = styled.p`
   font-size: 30px;
   align-self: flex-end;
   margin-bottom: 0;
-  position: absolute;
-  left: 50px;
 `;
 
 export const RecipeAuthorWrapper = styled.div`
