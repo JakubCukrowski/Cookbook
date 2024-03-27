@@ -30,7 +30,7 @@ export const RecipesGroup = ({
       >
         {array.slice(0, sliceBy).map((recipe, idx) => (
           <StyledCol key={idx}>
-            <Card style={{ height: "100%" }}>
+            <Card style={{ height: "100%", backgroundColor: "rgba(0, 0, 0, 0.05)"}}>
               <Card.Img
                 src={recipe.image}
               />

@@ -11,7 +11,6 @@ import {
 } from "./HeroStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "react-bootstrap";
 import { UserAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
@@ -19,6 +18,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import { PopularButtons } from "./PopularButtons";
 import { OrangeButton } from "../../styles/OrangeButton";
+import { BackToTop } from "../back_to_top/BackToTop";
 
 export const Hero = () => {
   const {
@@ -40,6 +40,9 @@ export const Hero = () => {
 
   //checks if query is longer than or equal to 2
   const [inputError, setInputError] = useState(false);
+
+  //back to top button visible?
+  const [visible, setVisible] = useState(false)
 
   const addLinkRef = (el) => {
     //if element exsists and it's not included in linkrefs array, it's pushed to the array
@@ -126,8 +129,6 @@ export const Hero = () => {
     }
   };
 
-  console.log(count);
-
   //close the results on focus out
   const handleFocusOut = () => {
     const timeoutId = setTimeout(() => {
@@ -173,8 +174,25 @@ export const Hero = () => {
   const resetActiveIndex = () => {
     if (activeIndex !== "") setActiveIndex("");
     setCount(0)
-  };
+  }
 
+  //show back to top button?
+  useEffect(() => {
+    const condition = () => {
+      if (window.scrollY > 700) {
+        setVisible(true)
+      }
+
+      if (window.scrollY === 0) {
+        setVisible(false)
+      }
+    }
+
+    window.addEventListener('scroll', condition)
+    
+    return () => window.removeEventListener('scroll', condition)
+  }, [])
+  
   return (
     <StyledHeroSection backgroundimage={heroBackgroundImage}>
       <HeroFlexContainer
@@ -248,8 +266,9 @@ export const Hero = () => {
             </StyledSearchedRecipes>
           ) : null}
         </SearchBarContainer>
-        <PopularButtons />
+        <PopularButtons/>
       </HeroFlexContainer>
+      {visible ? <BackToTop/> : null}
     </StyledHeroSection>
   );
 };

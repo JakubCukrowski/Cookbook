@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Navbar } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
 
 export const StyledNavbar = styled(Navbar)`
     background-color: #e19f25;
@@ -34,4 +34,12 @@ export const LoggedUserImage = styled.img`
 
 export const NavbarLink = styled(Link)`
     color: white;
+`
+
+export const StyledNavbarToggle = styled(Navbar.Toggle)`
+    border-color: white;
+
+    span {
+        color: white;
+    }
 `
