@@ -3,8 +3,7 @@ import { FlexContainer } from "../../styles/Containers";
 import Form from "react-bootstrap/Form";
 import { UserAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
-import { StyledInputGroup } from "./commentsStyles";
-import { OrangeButton } from "../../styles/OrangeButton";
+import { AddCommentButton, StyledInputGroup } from "./commentsStyles";
 
 export const AddComment = () => {
   const { user } = UserAuth();
@@ -23,9 +22,9 @@ export const AddComment = () => {
               as="textarea"
               aria-label="With textarea"
             />
-            <OrangeButton onClick={() => alert("Pracujemy nad tym")}>
+            <AddCommentButton onClick={() => alert("Pracujemy nad tym")}>
               Opublikuj
-            </OrangeButton>
+            </AddCommentButton>
           </StyledInputGroup>
         </>
       ) : (

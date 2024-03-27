@@ -9,7 +9,6 @@ export const GlobalStyle = createGlobalStyle`
 
     body {
         font-family: 'Noto Sans', sans-serif;
-        background-color: #ffffeb;
     }
 
     .no-radius-left-bottom {
@@ -90,5 +89,9 @@ export const GlobalStyle = createGlobalStyle`
 
     .lax_m {
         margin-bottom: 20px;
+    }
+
+    .nav-link {
+        color: white;
     }
 `;

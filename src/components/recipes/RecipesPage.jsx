@@ -7,6 +7,7 @@ import { Spinner } from "react-bootstrap";
 import { SpinnerContainer } from "../../styles/Containers";
 import { NewestRecipes } from "./main_page_recipes/NewestRecipes";
 import {PopularRecipes} from './main_page_recipes/PopularRecipes'
+import {Desserts} from './main_page_recipes/Desserts'
 import { StyledH2 } from "../../styles/StyledH2";
 
 export const RecipesPage = () => {
@@ -52,7 +53,7 @@ export const RecipesPage = () => {
           <RecipesGroup
             array={queryResults}
           />
-          {queryResults.length > 0 ? null : <><PopularRecipes /><NewestRecipes /></>}
+          {queryResults.length > 0 ? null : <><PopularRecipes /><NewestRecipes /><Desserts /></>}
         </section>
       ) : (
         <SpinnerContainer>

@@ -1,12 +1,12 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
 import {
   StyledLink,
   StyledNavbar,
   StyledNavbarColapse,
   LoggedUserImage,
   NavbarLink,
+  StyledNavbarToggle
 } from "./NavbarStyles";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
@@ -61,7 +61,7 @@ export const CustomNavbar = () => {
       >
         <Container fluid>
           <StyledLink to={"/"}>Przepisowa pasja</StyledLink>
-          <Navbar.Toggle aria-controls="navbar-dark-example" />
+          <StyledNavbarToggle />
           <StyledNavbarColapse id="navbar-dark-example">
             <Nav>
               {user !== null ? (
