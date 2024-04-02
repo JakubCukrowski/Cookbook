@@ -196,7 +196,7 @@ export const SignUp = () => {
                   }
                   variant="danger"
                 >
-                  Hasło jest za krótkie
+                  Hasło musi posiadać przynajmniej 6 znaków
                 </Alert>
                 <Alert
                   show={

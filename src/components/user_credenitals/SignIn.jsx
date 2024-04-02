@@ -113,8 +113,7 @@ export const SignIn = () => {
                 (credentialsErrors.email &&
                   credentialsErrors.password &&
                   userData.email.length > 0 &&
-                  userData.password.length) ||
-                (accountExists === false)
+                  userData.password.length)
               }
               onChange={handleInputs}
               value={userData.email}
@@ -140,8 +139,7 @@ export const SignIn = () => {
                 (credentialsErrors.email &&
                   credentialsErrors.password &&
                   userData.email.length > 0 &&
-                  userData.password.length) ||
-                (accountExists === false)
+                  userData.password.length)
               }
               onChange={handleInputs}
               value={userData.password}
