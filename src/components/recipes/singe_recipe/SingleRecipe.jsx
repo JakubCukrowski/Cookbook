@@ -175,8 +175,8 @@ export const SingleRecipe = () => {
               </div>
             </Wrapper>
           </SingleRecipeContainer>
-          <AddComment />
-          <Comments />
+          <AddComment searchedRecipe={searchedRecipe}/>
+          <Comments comments={searchedRecipe.comments}/>
         </>
       )}
     </section>
