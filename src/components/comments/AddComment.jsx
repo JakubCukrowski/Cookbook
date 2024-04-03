@@ -30,7 +30,7 @@ export const AddComment = ({ searchedRecipe }) => {
           user: user.displayName,
           userPhoto: user.photoURL,
           comment: comment,
-          addDate: new Date().toLocaleDateString(),
+          addDate: Date.now(),
           likes: 0,
         }),
       });
