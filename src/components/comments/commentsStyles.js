@@ -31,9 +31,13 @@ export const AddCommentButton = styled(OrangeButton)`
 `;
 
 export const CommentWrapper = styled.div`
-  margin: 30px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 30px 0;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
-  padding: 20px 40px;
+  padding: 20px 10px;
   line-height: 30px;
   border-radius: 6px;
 
@@ -54,4 +58,29 @@ export const UserImage = styled.img`
 
 export const Content = styled.p`
   margin: 0;
+`
+
+export const UserName = styled.strong`
+  margin-right: 10px;
+`
+
+export const AddDate = styled.span`
+
+`
+
+export const LikesWrapper = styled.div`
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  background-color: rgba(225, 159, 37, 0.3);
+  padding: 6px;
+  border-radius: 4px;
+
+  @media (min-width: 992px) {
+    flex-direction: column;
+  }
+`
+
+export const CommentLikes = styled.span`
+  font-weight: 700;
 `
