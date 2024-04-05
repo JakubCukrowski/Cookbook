@@ -43,6 +43,9 @@ export const SingleRecipe = () => {
   const [searchedRecipe, setSearchedRecipe] = useState({});
   const [isFound, setIsFound] = useState(false);
 
+  const userRef = doc(db, "users", user.uid);
+  const recipeRef = doc(db, "recipes", recipeId);
+
   //donwload the recipe, get author name, check if liked by current user
   useEffect(() => {
     if (recipes.length > 0) {
@@ -57,17 +60,14 @@ export const SingleRecipe = () => {
   //checks if recipe has been already liked
   useEffect(() => {
     if (user) {
-      const unsub = onSnapshot(doc(db, 'users', user.uid), doc => {
-        updateIsRecipeLiked(doc.data().liked.includes(recipeId))
-      })
+      const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
+        updateIsRecipeLiked(doc.data().liked.includes(recipeId));
+      });
     }
   }, [userLikedRecipes]);
 
   //on like button click
   const handleLikeRecipe = async () => {
-    const userRef = doc(db, "users", user.uid);
-    const recipeRef = doc(db, "recipes", recipeId);
-
     if (!isRecipeLiked) {
       await updateDoc(userRef, {
         liked: arrayUnion(recipeId),
@@ -175,8 +175,12 @@ export const SingleRecipe = () => {
               </div>
             </Wrapper>
           </SingleRecipeContainer>
-          <AddComment searchedRecipe={searchedRecipe}/>
-          <Comments comments={searchedRecipe.comments}/>
+          <AddComment searchedRecipe={searchedRecipe} recipeRef={recipeRef} />
+          <Comments
+            recipe={searchedRecipe}
+            comments={searchedRecipe.comments}
+            recipeRef={recipeRef}
+          />
         </>
       )}
     </section>
