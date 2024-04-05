@@ -4,13 +4,11 @@ import Form from "react-bootstrap/Form";
 import { UserAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { AddCommentButton, StyledInputGroup } from "./commentsStyles";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { arrayUnion, updateDoc } from "firebase/firestore";
 import { Alert } from "react-bootstrap";
 
-export const AddComment = ({ searchedRecipe }) => {
+export const AddComment = ({ searchedRecipe, recipeRef }) => {
   const { user } = UserAuth();
-  const recipeRef = doc(db, "recipes", searchedRecipe.id);
   const [comment, setComment] = useState("");
   const [error, setError] = useState(false);
 

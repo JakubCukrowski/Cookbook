@@ -32,22 +32,36 @@ export const AddCommentButton = styled(OrangeButton)`
 
 export const CommentWrapper = styled.div`
   display: flex;
-  flex-direction: column-reverse;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
   gap: 10px;
   margin: 30px 0;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
   padding: 20px 10px;
   line-height: 30px;
+  word-wrap: break-word;
   border-radius: 6px;
 
-  @media (min-width: 992px) {
+  @media (min-width: 992px) { 
     width: 60%;
     margin-left: auto;
     margin-right: auto;
-  }
+    flex-wrap: nowrap;
+    align-items: flex-start;
+   }
+
+
 
 `;
+
+export const CommentDataWrapper = styled.div`
+  width: 100%;
+
+  @media (min-width: 992px) {
+    width: auto;
+  }
+`
 
 export const UserImage = styled.img`
   margin-right: 10px;
@@ -65,7 +79,6 @@ export const UserName = styled.strong`
 `
 
 export const AddDate = styled.span`
-
 `
 
 export const LikesWrapper = styled.div`
@@ -78,9 +91,32 @@ export const LikesWrapper = styled.div`
 
   @media (min-width: 992px) {
     flex-direction: column;
+    order: -1;
   }
 `
 
 export const CommentLikes = styled.span`
   font-weight: 700;
+`
+
+export const CommentButtonsWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+
+  @media (min-width: 992px) {
+    align-self: flex-start;
+    margin-left: auto;
+  }
+`
+
+const CommentUtilityButton = styled.button`
+  background-color: transparent;
+  border: none;
+`
+
+export const DeleteCommentButton = styled(CommentUtilityButton)`
+  color: red;
+`
+
+export const EditCommentButton = styled(CommentUtilityButton)`
 `
