@@ -152,3 +152,10 @@ export const FilterFormStyle = styled(Form)`
 export const NoResults = styled.div`
   text-align: center;
 `
+
+export const StyledCommentsDiv = styled.div`
+  @media (min-width: 992px) {
+    width: 60%;
+    margin: 0 auto;
+  }
+`

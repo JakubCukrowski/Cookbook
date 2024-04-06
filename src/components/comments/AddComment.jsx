@@ -31,7 +31,8 @@ export const AddComment = ({ searchedRecipe }) => {
           userPhoto: user.photoURL,
           comment: comment,
           addDate: Date.now(),
-          ratedBy: []
+          ratedBy: [],
+          replies: []
         }),
       });
       setComment("");
