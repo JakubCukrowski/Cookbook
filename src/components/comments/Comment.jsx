@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   CommentWrapper,
   Content,
@@ -10,25 +11,35 @@ import {
   CommentButtonsWrapper,
   DeleteCommentButton,
   EditCommentButton,
-  CommentDataWrapper
+  CommentDataWrapper,
 } from "./commentsStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faMinus,
   faPlus,
+  faReply,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { OrangeButton } from "../../styles/OrangeButton";
+import { updateDoc, doc } from "firebase/firestore";
+import { UserAuth } from "../../context/AuthContext";
+import { db } from "../../firebase";
 
-export const SingleComment = ({ data, recipe, recipeRef, index }) => {
+export const SingleComment = ({ data, index }) => {
+  const { user, recipes } = UserAuth();
+
+  const { recipeId } = useParams();
+  const recipeRef = doc(db, "recipes", recipeId);
+
+  //calculate elapsed time based on date when comment was added
   const [currentDate, setCurrentDate] = useState(Date.now());
   useEffect(() => {
-      const intervalId = setInterval(() => {
-        setCurrentDate(Date.now());
-      }, 1000);
+    const intervalId = setInterval(() => {
+      setCurrentDate(Date.now());
+    }, 1000);
 
-      return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId);
   }, []);
 
   const calculateElapsedTimeInMinutes = (date) => {
@@ -66,13 +77,44 @@ export const SingleComment = ({ data, recipe, recipeRef, index }) => {
     }
   };
 
-  const handleLikeComment = async (e) => {
-    e.preventDefault()
-//HANDLE THIS FUNCTION
-  }
+  const handleLikeComment = async (index) => {
+    const findRecipe = recipes.find((recipe) => recipe.id === recipeId);
+    const recipeComments = findRecipe.comments;
+    const findComment = recipeComments[index];
+
+    if (user) {
+      if (!findComment.ratedBy.includes(user.displayName)) {
+        findComment.ratedBy.push(user.displayName);
+      }
+    } else {
+      alert("Musisz być zalogowany, żeby polubić komentarz.");
+    }
+
+    await updateDoc(recipeRef, {
+      comments: recipeComments,
+    });
+  };
+
+  const handleDislikeComment = async (index) => {
+    const findRecipe = recipes.find((recipe) => recipe.id === recipeId);
+    const recipeComments = findRecipe.comments;
+    const findComment = recipeComments[index];
+
+    if (findComment.ratedBy.includes(user.displayName)) {
+      const dislike = findComment.ratedBy.filter(
+        (username) => username !== user.displayName
+      );
+
+      findComment.ratedBy = dislike;
+    }
+
+    await updateDoc(recipeRef, {
+      comments: recipeComments,
+    });
+  };
 
   return (
-    <CommentWrapper className={`comment-${index}`}>
+    <CommentWrapper>
       <CommentDataWrapper>
         <UserImage src={data.userPhoto} alt="user" />
         <UserName>{data.user}</UserName>
@@ -80,21 +122,25 @@ export const SingleComment = ({ data, recipe, recipeRef, index }) => {
         <Content>{data.comment}</Content>
       </CommentDataWrapper>
       <LikesWrapper>
-        <OrangeButton onClick={handleLikeComment}>
+        <OrangeButton onClick={() => handleLikeComment(index)}>
           <FontAwesomeIcon icon={faPlus} />
         </OrangeButton>
-        <CommentLikes>{data.likes}</CommentLikes>
-        <OrangeButton>
+        <CommentLikes>{data.ratedBy.length}</CommentLikes>
+        <OrangeButton onClick={() => handleDislikeComment(index)}>
           <FontAwesomeIcon icon={faMinus} />
         </OrangeButton>
       </LikesWrapper>
       <CommentButtonsWrapper>
-        <DeleteCommentButton>
-          <FontAwesomeIcon icon={faTrashCan} /> {""} Skasuj
-        </DeleteCommentButton>
-        <EditCommentButton>
-          <FontAwesomeIcon icon={faEdit} /> {""} Edytuj
-        </EditCommentButton>
+        {user && user.displayName === data.user ? (
+          <>
+            <DeleteCommentButton>
+              <FontAwesomeIcon icon={faTrashCan} /> {""} Skasuj
+            </DeleteCommentButton>
+            <EditCommentButton>
+              <FontAwesomeIcon icon={faEdit} /> {""} Edytuj
+            </EditCommentButton>
+          </>
+        ) : <EditCommentButton><FontAwesomeIcon icon={faReply}/> <br /> {""} Odpowiedz</EditCommentButton>}
       </CommentButtonsWrapper>
     </CommentWrapper>
   );

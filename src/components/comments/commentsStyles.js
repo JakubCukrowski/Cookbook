@@ -72,6 +72,7 @@ export const UserImage = styled.img`
 
 export const Content = styled.p`
   margin: 0;
+  width: 80%;
 `
 
 export const UserName = styled.strong`
