@@ -24,6 +24,7 @@ import {
   RecipeAuthorWrapper,
   RecipeTagsWrapper,
   RecipeTagLink,
+  StyledCommentsDiv,
 } from "../RecipesStyles";
 import { UserAuth } from "../../../context/AuthContext";
 import { H1wrapper } from "../../../styles/H1wrapper";
@@ -174,11 +175,13 @@ export const SingleRecipe = () => {
               </div>
             </Wrapper>
           </SingleRecipeContainer>
-          <AddComment searchedRecipe={searchedRecipe} />
-          <Comments
-            recipe={searchedRecipe}
-            comments={searchedRecipe.comments}
-          />
+          <StyledCommentsDiv>
+            <AddComment searchedRecipe={searchedRecipe} />
+            <Comments
+              recipe={searchedRecipe}
+              comments={searchedRecipe.comments}
+            />
+          </StyledCommentsDiv>
         </>
       )}
     </section>

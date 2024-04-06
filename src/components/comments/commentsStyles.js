@@ -14,9 +14,7 @@ export const StyledInputGroup = styled(InputGroup)`
     border-bottom-right-radius: 4px !important;
   }
 
-  @media (min-width: 992px) {
-    width: 60%;
-  }
+  
 `;
 
 export const AddCommentButton = styled(OrangeButton)`
@@ -43,16 +41,24 @@ export const CommentWrapper = styled.div`
   word-wrap: break-word;
   border-radius: 6px;
 
-  @media (min-width: 992px) { 
-    width: 60%;
+  @media (min-width: 992px) {
     margin-left: auto;
     margin-right: auto;
     flex-wrap: nowrap;
     align-items: flex-start;
-   }
+  }
+`;
 
+export const ReplyContainer = styled.div`
+  border-left: 1px solid black;
+  width: 95%;
+  margin-left: auto;
+`;
 
-
+export const ReplyWrapper = styled(CommentWrapper)`
+  width: 95%;
+  margin-left: auto;
+  margin-right: 0;
 `;
 
 export const CommentDataWrapper = styled.div`
@@ -61,7 +67,7 @@ export const CommentDataWrapper = styled.div`
   @media (min-width: 992px) {
     width: auto;
   }
-`
+`;
 
 export const UserImage = styled.img`
   margin-right: 10px;
@@ -73,14 +79,13 @@ export const UserImage = styled.img`
 export const Content = styled.p`
   margin: 0;
   width: 80%;
-`
+`;
 
 export const UserName = styled.strong`
   margin-right: 10px;
-`
+`;
 
-export const AddDate = styled.span`
-`
+export const AddDate = styled.span``;
 
 export const LikesWrapper = styled.div`
   display: flex;
@@ -94,11 +99,11 @@ export const LikesWrapper = styled.div`
     flex-direction: column;
     order: -1;
   }
-`
+`;
 
 export const CommentLikes = styled.span`
   font-weight: 700;
-`
+`;
 
 export const CommentButtonsWrapper = styled.div`
   display: flex;
@@ -108,16 +113,15 @@ export const CommentButtonsWrapper = styled.div`
     align-self: flex-start;
     margin-left: auto;
   }
-`
+`;
 
 const CommentUtilityButton = styled.button`
   background-color: transparent;
   border: none;
-`
+`;
 
 export const DeleteCommentButton = styled(CommentUtilityButton)`
   color: red;
-`
+`;
 
-export const EditCommentButton = styled(CommentUtilityButton)`
-`
+export const EditCommentButton = styled(CommentUtilityButton)``;

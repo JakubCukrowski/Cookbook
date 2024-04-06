@@ -25,6 +25,7 @@ import { OrangeButton } from "../../styles/OrangeButton";
 import { updateDoc, doc } from "firebase/firestore";
 import { UserAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
+import { Reply } from "./Reply";
 
 export const SingleComment = ({ data, index }) => {
   const { user, recipes } = UserAuth();
@@ -77,10 +78,16 @@ export const SingleComment = ({ data, index }) => {
     }
   };
 
-  const handleLikeComment = async (index) => {
+  //search for the comment
+  const searchForComment = () => {
     const findRecipe = recipes.find((recipe) => recipe.id === recipeId);
     const recipeComments = findRecipe.comments;
-    const findComment = recipeComments[index];
+    return recipeComments;
+  };
+
+  //plus button
+  const handleLikeComment = async (index) => {
+    const findComment = searchForComment()[index];
 
     if (user) {
       if (!findComment.ratedBy.includes(user.displayName)) {
@@ -91,14 +98,13 @@ export const SingleComment = ({ data, index }) => {
     }
 
     await updateDoc(recipeRef, {
-      comments: recipeComments,
+      comments: searchForComment(),
     });
   };
 
+  //minus button
   const handleDislikeComment = async (index) => {
-    const findRecipe = recipes.find((recipe) => recipe.id === recipeId);
-    const recipeComments = findRecipe.comments;
-    const findComment = recipeComments[index];
+    const findComment = searchForComment()[index];
 
     if (findComment.ratedBy.includes(user.displayName)) {
       const dislike = findComment.ratedBy.filter(
@@ -109,39 +115,57 @@ export const SingleComment = ({ data, index }) => {
     }
 
     await updateDoc(recipeRef, {
-      comments: recipeComments,
+      comments: searchForComment(),
     });
   };
 
   return (
-    <CommentWrapper>
-      <CommentDataWrapper>
-        <UserImage src={data.userPhoto} alt="user" />
-        <UserName>{data.user}</UserName>
-        <AddDate>{calculateElapsedTimeInMinutes(data.addDate)}</AddDate>
-        <Content>{data.comment}</Content>
-      </CommentDataWrapper>
-      <LikesWrapper>
-        <OrangeButton onClick={() => handleLikeComment(index)}>
-          <FontAwesomeIcon icon={faPlus} />
-        </OrangeButton>
-        <CommentLikes>{data.ratedBy.length}</CommentLikes>
-        <OrangeButton onClick={() => handleDislikeComment(index)}>
-          <FontAwesomeIcon icon={faMinus} />
-        </OrangeButton>
-      </LikesWrapper>
-      <CommentButtonsWrapper>
-        {user && user.displayName === data.user ? (
-          <>
-            <DeleteCommentButton>
-              <FontAwesomeIcon icon={faTrashCan} /> {""} Skasuj
-            </DeleteCommentButton>
+    <>
+      <CommentWrapper>
+        <CommentDataWrapper>
+          <UserImage src={data.userPhoto} alt="user" />
+          <UserName>{data.user}</UserName>
+          <AddDate>{calculateElapsedTimeInMinutes(data.addDate)}</AddDate>
+          <Content>{data.comment}</Content>
+        </CommentDataWrapper>
+        <LikesWrapper>
+          <OrangeButton onClick={() => handleLikeComment(index)}>
+            <FontAwesomeIcon icon={faPlus} />
+          </OrangeButton>
+          <CommentLikes>{data.ratedBy.length}</CommentLikes>
+          <OrangeButton onClick={() => handleDislikeComment(index)}>
+            <FontAwesomeIcon icon={faMinus} />
+          </OrangeButton>
+        </LikesWrapper>
+        <CommentButtonsWrapper>
+          {user && user.displayName === data.user ? (
+            <>
+              <DeleteCommentButton>
+                <FontAwesomeIcon icon={faTrashCan} /> {""} Skasuj
+              </DeleteCommentButton>
+              <EditCommentButton>
+                <FontAwesomeIcon icon={faEdit} /> {""} Edytuj
+              </EditCommentButton>
+            </>
+          ) : (
             <EditCommentButton>
-              <FontAwesomeIcon icon={faEdit} /> {""} Edytuj
+              <FontAwesomeIcon icon={faReply} /> <br /> {""} Odpowiedz
             </EditCommentButton>
-          </>
-        ) : <EditCommentButton><FontAwesomeIcon icon={faReply}/> <br /> {""} Odpowiedz</EditCommentButton>}
-      </CommentButtonsWrapper>
-    </CommentWrapper>
+          )}
+        </CommentButtonsWrapper>
+      </CommentWrapper>
+      {searchForComment()[index].replies.length > 0
+        ? searchForComment()[index].replies.map((reply, index) => {
+            return (
+              <Reply
+                key={index}
+                data={reply}
+                index={index}
+                calculateElapsedTimeInMinutes={calculateElapsedTimeInMinutes}
+              />
+            );
+          })
+        : null}
+    </>
   );
 };
