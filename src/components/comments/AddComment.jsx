@@ -4,13 +4,15 @@ import Form from "react-bootstrap/Form";
 import { UserAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { AddCommentButton, StyledInputGroup } from "./commentsStyles";
-import { arrayUnion, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { Alert } from "react-bootstrap";
+import { db } from "../../firebase";
 
-export const AddComment = ({ searchedRecipe, recipeRef }) => {
+export const AddComment = ({ searchedRecipe }) => {
   const { user } = UserAuth();
   const [comment, setComment] = useState("");
   const [error, setError] = useState(false);
+  const recipeRef = doc(db, 'recipes', searchedRecipe.id)
 
   const handleInput = (e) => {
     setComment(e.target.value);
@@ -29,7 +31,7 @@ export const AddComment = ({ searchedRecipe, recipeRef }) => {
           userPhoto: user.photoURL,
           comment: comment,
           addDate: Date.now(),
-          likes: 0,
+          ratedBy: []
         }),
       });
       setComment("");
