@@ -2,7 +2,7 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import { SingleComment } from "./Comment";
 
-export const Comments = ({ comments }) => {
+export const Comments = ({ comments, currentDate }) => {
 
   return (
     <Container>
@@ -12,6 +12,7 @@ export const Comments = ({ comments }) => {
           data={data}
           key={index}
           index={index}
+          currentDate={currentDate}
         />
       ))}
     </Container>

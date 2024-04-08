@@ -27,21 +27,11 @@ import { UserAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
 import { Reply } from "./Reply";
 
-export const SingleComment = ({ data, index }) => {
+export const SingleComment = ({ data, index, currentDate }) => {
   const { user, recipes } = UserAuth();
 
   const { recipeId } = useParams();
   const recipeRef = doc(db, "recipes", recipeId);
-
-  //calculate elapsed time based on date when comment was added
-  const [currentDate, setCurrentDate] = useState(Date.now());
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentDate(Date.now());
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
 
   const calculateElapsedTimeInMinutes = (date) => {
     const convertToMinutes = Math.floor((currentDate - date) / 1000 / 60);
