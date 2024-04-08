@@ -99,6 +99,18 @@ export const SingleRecipe = () => {
     }
   };
 
+  //calculate elapsed time based on date when comment was added
+  const [currentDate, setCurrentDate] = useState(Date.now());
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentDate(Date.now());
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  console.log(currentDate);
+
   return (
     <section>
       {!isFound ? (
@@ -178,8 +190,8 @@ export const SingleRecipe = () => {
           <StyledCommentsDiv>
             <AddComment searchedRecipe={searchedRecipe} />
             <Comments
-              recipe={searchedRecipe}
               comments={searchedRecipe.comments}
+              currentDate={currentDate}
             />
           </StyledCommentsDiv>
         </>
