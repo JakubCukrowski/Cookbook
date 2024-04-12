@@ -1,37 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  CommentWrapper,
-  Content,
-  UserImage,
-  UserName,
-  AddDate,
-  LikesWrapper,
-  CommentLikes,
-  CommentButtonsWrapper,
-  DeleteCommentButton,
-  EditCommentButton,
-  CommentDataWrapper,
-} from "./commentsStyles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEdit,
-  faMinus,
-  faPlus,
-  faReply,
-  faTrashCan,
-} from "@fortawesome/free-solid-svg-icons";
-import { OrangeButton } from "../../styles/OrangeButton";
 import { updateDoc, doc } from "firebase/firestore";
 import { UserAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
 import { Reply } from "./Reply";
+import { CommentStructure } from "./CommentStructure";
+import { CommentWrapper } from "./commentsStyles";
 
 export const SingleComment = ({ data, index, currentDate }) => {
   const { user, recipes } = UserAuth();
-
   const { recipeId } = useParams();
   const recipeRef = doc(db, "recipes", recipeId);
+  const [recipeComments, setRecipeComments] = useState([]);
+
+  useEffect(() => {
+    //search for the comment
+    const searchForComments = () => {
+      const findRecipe = recipes.find((recipe) => recipe.id === recipeId);
+      const recipeComments = findRecipe.comments;
+      setRecipeComments(recipeComments);
+    };
+
+    return searchForComments()
+  }, [recipes]);
 
   const calculateElapsedTimeInMinutes = (date) => {
     const convertToMinutes = Math.floor((currentDate - date) / 1000 / 60);
@@ -68,90 +59,55 @@ export const SingleComment = ({ data, index, currentDate }) => {
     }
   };
 
-  //search for the comment
-  const searchForComment = () => {
-    const findRecipe = recipes.find((recipe) => recipe.id === recipeId);
-    const recipeComments = findRecipe.comments;
-    return recipeComments;
-  };
-
-  //plus button
-  const handleLikeComment = async (index) => {
-    const findComment = searchForComment()[index];
+  //rating buttons
+  const handleRateComment = async (index) => {
+    const comments = recipeComments
+    const findComment = comments[index];
 
     if (user) {
       if (!findComment.ratedBy.includes(user.displayName)) {
         findComment.ratedBy.push(user.displayName);
+      } else {
+        const dislike = findComment.ratedBy.filter(
+          (username) => username !== user.displayName
+        );
+  
+        findComment.ratedBy = dislike;
       }
     } else {
-      alert("Musisz być zalogowany, żeby polubić komentarz.");
+      alert("Musisz być zalogowany, żeby polubić.");
     }
 
     await updateDoc(recipeRef, {
-      comments: searchForComment(),
-    });
-  };
-
-  //minus button
-  const handleDislikeComment = async (index) => {
-    const findComment = searchForComment()[index];
-
-    if (findComment.ratedBy.includes(user.displayName)) {
-      const dislike = findComment.ratedBy.filter(
-        (username) => username !== user.displayName
-      );
-
-      findComment.ratedBy = dislike;
-    }
-
-    await updateDoc(recipeRef, {
-      comments: searchForComment(),
+      comments: comments,
     });
   };
 
   return (
     <>
       <CommentWrapper>
-        <CommentDataWrapper>
-          <UserImage src={data.userPhoto} alt="user" />
-          <UserName>{data.user}</UserName>
-          <AddDate>{calculateElapsedTimeInMinutes(data.addDate)}</AddDate>
-          <Content>{data.comment}</Content>
-        </CommentDataWrapper>
-        <LikesWrapper>
-          <OrangeButton onClick={() => handleLikeComment(index)}>
-            <FontAwesomeIcon icon={faPlus} />
-          </OrangeButton>
-          <CommentLikes>{data.ratedBy.length}</CommentLikes>
-          <OrangeButton onClick={() => handleDislikeComment(index)}>
-            <FontAwesomeIcon icon={faMinus} />
-          </OrangeButton>
-        </LikesWrapper>
-        <CommentButtonsWrapper>
-          {user && user.displayName === data.user ? (
-            <>
-              <DeleteCommentButton>
-                <FontAwesomeIcon icon={faTrashCan} /> {""} Skasuj
-              </DeleteCommentButton>
-              <EditCommentButton>
-                <FontAwesomeIcon icon={faEdit} /> {""} Edytuj
-              </EditCommentButton>
-            </>
-          ) : (
-            <EditCommentButton>
-              <FontAwesomeIcon icon={faReply} /> <br /> {""} Odpowiedz
-            </EditCommentButton>
-          )}
-        </CommentButtonsWrapper>
+        <CommentStructure
+          userImage={data.userPhoto}
+          userName={data.user}
+          elapsedTime={calculateElapsedTimeInMinutes(data.addDate)}
+          commentContent={data.comment}
+          handleLikeComment={() => handleRateComment(index)}
+          handleDislikeComment={() => handleRateComment(index)}
+          commentLikes={data.ratedBy.length}
+          //plus button disabled when rated, if not, minus button disabled
+          disabled={data.ratedBy.includes(user.displayName)}
+        />
       </CommentWrapper>
-      {searchForComment()[index].replies.length > 0
-        ? searchForComment()[index].replies.map((reply, index) => {
+      {recipeComments[index]?.replies.length > 0
+        ? recipeComments[index].replies.map((reply, indx) => {
             return (
               <Reply
-                key={index}
+                key={indx}
                 data={reply}
                 index={index}
                 calculateElapsedTimeInMinutes={calculateElapsedTimeInMinutes}
+                recipeRef={recipeRef}
+                recipeComments={recipeComments}
               />
             );
           })

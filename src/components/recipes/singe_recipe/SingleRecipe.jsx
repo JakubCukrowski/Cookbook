@@ -109,8 +109,6 @@ export const SingleRecipe = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  console.log(currentDate);
-
   return (
     <section>
       {!isFound ? (
