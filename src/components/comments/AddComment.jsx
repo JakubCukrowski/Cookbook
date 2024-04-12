@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import { UserAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { AddCommentButton, StyledInputGroup } from "./commentsStyles";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, setDoc } from "firebase/firestore";
 import { Alert } from "react-bootstrap";
 import { db } from "../../firebase";
 
@@ -12,7 +12,6 @@ export const AddComment = ({ searchedRecipe }) => {
   const { user } = UserAuth();
   const [comment, setComment] = useState("");
   const [error, setError] = useState(false);
-  const recipeRef = doc(db, 'recipes', searchedRecipe.id)
 
   const handleInput = (e) => {
     setComment(e.target.value);
@@ -25,14 +24,14 @@ export const AddComment = ({ searchedRecipe }) => {
     if (comment.length < 5) {
       setError(true);
     } else {
-      await updateDoc(recipeRef, {
+      await setDoc(doc(db, 'comments', searchedRecipe.id), {
         comments: arrayUnion({
           user: user.displayName,
           userPhoto: user.photoURL,
           comment: comment,
           addDate: Date.now(),
           ratedBy: [],
-          replies: []
+          comments: []
         }),
       });
       setComment("");
@@ -42,17 +41,18 @@ export const AddComment = ({ searchedRecipe }) => {
   return (
     <FlexContainer justify="center" align="center" direction="column">
       <h3 style={{ marginBottom: 30 }}>
-        {searchedRecipe.comments.length > 0
+        {/* {searchedRecipe.comments.length > 0
           ? "Komentarze"
-          : "Przepis nie ma jeszcze komentarzy"}
+          : "Przepis nie ma jeszcze komentarzy"} */}
+          Przepis nie ma jeszcze komentarzy
       </h3>
 
       {user ? (
         <>
           <p>Dodaj komentarz</p>
-          {error && comment.length < 5 ? (
+          {/* {error && comment.length < 5 ? (
             <Alert variant="danger">Za krótko</Alert>
-          ) : null}
+          ) : null} */}
           <StyledInputGroup>
             <Form.Control
               isInvalid={error && comment.length < 5}

@@ -1,13 +1,13 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import { SingleComment } from "./Comment";
+import { Comment } from "./Comment";
 
 export const Comments = ({ comments, currentDate }) => {
 
   return (
     <Container>
       {comments.map((data, index) => (
-        <SingleComment
+        <Comment
           comments={comments}
           data={data}
           key={index}
