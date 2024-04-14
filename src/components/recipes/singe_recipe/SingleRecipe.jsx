@@ -11,6 +11,7 @@ import {
   arrayRemove,
   arrayUnion,
   doc,
+  getDoc,
   increment,
   onSnapshot,
   updateDoc,
@@ -43,6 +44,7 @@ export const SingleRecipe = () => {
   } = UserAuth();
   const [searchedRecipe, setSearchedRecipe] = useState({});
   const [isFound, setIsFound] = useState(false);
+  const [comments, setComments] = useState([])
 
   //donwload the recipe, get author name, check if liked by current user
   useEffect(() => {
@@ -108,6 +110,18 @@ export const SingleRecipe = () => {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  //download comments
+  useEffect(() => {
+    const getRecipeComments = async () => {
+      const commentsRef = doc(db, 'comments', searchedRecipe.id)
+      const commentsSnap = await getDoc(commentsRef)
+
+      setComments(commentsSnap.data().comments)
+    }
+
+    getRecipeComments()
+  }, [searchedRecipe])
 
   return (
     <section>
@@ -187,10 +201,7 @@ export const SingleRecipe = () => {
           </SingleRecipeContainer>
           <StyledCommentsDiv>
             <AddComment searchedRecipe={searchedRecipe} />
-            <Comments
-              comments={searchedRecipe.comments}
-              currentDate={currentDate}
-            />
+            <Comments comments={comments} currentDate={currentDate}/>
           </StyledCommentsDiv>
         </>
       )}

@@ -3,11 +3,10 @@ import { useParams } from "react-router-dom";
 import { updateDoc, doc } from "firebase/firestore";
 import { UserAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
-import { Reply } from "./Reply";
 import { CommentStructure } from "./CommentStructure";
 import { CommentWrapper } from "./commentsStyles";
 
-export const SingleComment = ({ data, index, currentDate }) => {
+export const Comment = ({ data, index, currentDate }) => {
   const { user, recipes } = UserAuth();
   const { recipeId } = useParams();
   const recipeRef = doc(db, "recipes", recipeId);
@@ -98,20 +97,6 @@ export const SingleComment = ({ data, index, currentDate }) => {
           disabled={data.ratedBy.includes(user.displayName)}
         />
       </CommentWrapper>
-      {recipeComments[index]?.replies.length > 0
-        ? recipeComments[index].replies.map((reply, indx) => {
-            return (
-              <Reply
-                key={indx}
-                data={reply}
-                index={index}
-                calculateElapsedTimeInMinutes={calculateElapsedTimeInMinutes}
-                recipeRef={recipeRef}
-                recipeComments={recipeComments}
-              />
-            );
-          })
-        : null}
     </>
   );
 };
