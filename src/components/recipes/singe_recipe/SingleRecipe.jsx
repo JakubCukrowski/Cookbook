@@ -11,8 +11,6 @@ import {
   arrayRemove,
   arrayUnion,
   doc,
-  getDoc,
-  increment,
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
@@ -77,7 +75,6 @@ export const SingleRecipe = () => {
 
       await updateDoc(recipeRef, {
         likedBy: arrayUnion(user.uid),
-        likes: increment(1),
       });
 
       updateIsRecipeLiked((prev) => !prev);
@@ -91,7 +88,6 @@ export const SingleRecipe = () => {
 
       await updateDoc(recipeRef, {
         likedBy: arrayRemove(user.uid),
-        likes: increment(-1),
       });
       const newActualUserLikedRecipes = userLikedRecipes;
       const filterLikedRecipes = newActualUserLikedRecipes.filter(
@@ -113,14 +109,18 @@ export const SingleRecipe = () => {
 
   //download comments
   useEffect(() => {
-    const getRecipeComments = async () => {
-      const commentsRef = doc(db, 'comments', searchedRecipe.id)
-      const commentsSnap = await getDoc(commentsRef)
-
-      setComments(commentsSnap.data().comments)
+    if (searchedRecipe.id) {
+      const getRecipeComments = async () => {
+        onSnapshot(doc(db, 'comments', searchedRecipe.id), (comments) => {
+          //check if there's any comment/s
+          if (comments.data() !== undefined) {
+            setComments(comments.data().comments)
+          }
+        })
+      }
+  
+      getRecipeComments()
     }
-
-    getRecipeComments()
   }, [searchedRecipe])
 
   return (

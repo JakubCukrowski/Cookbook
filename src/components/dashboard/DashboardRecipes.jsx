@@ -55,10 +55,12 @@ export const DashboardRecipes = ({
   //on actual delete confirmation
   const handleDeleteRecipe = async () => {
     await deleteDoc(doc(db, "recipes", linkTo));
+    await deleteDoc(doc(db, 'comments', linkTo))
     const q = query(
       collection(db, "users"),
       where("liked", "array-contains", linkTo)
     );
+
 
     const batch = writeBatch(db);
 

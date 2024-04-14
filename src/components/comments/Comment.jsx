@@ -6,22 +6,10 @@ import { db } from "../../firebase";
 import { CommentStructure } from "./CommentStructure";
 import { CommentWrapper } from "./commentsStyles";
 
-export const Comment = ({ data, index, currentDate }) => {
-  const { user, recipes } = UserAuth();
+export const Comment = ({ data, index, currentDate, comments }) => {
+  const { user } = UserAuth();
   const { recipeId } = useParams();
   const recipeRef = doc(db, "recipes", recipeId);
-  const [recipeComments, setRecipeComments] = useState([]);
-
-  useEffect(() => {
-    //search for the comment
-    const searchForComments = () => {
-      const findRecipe = recipes.find((recipe) => recipe.id === recipeId);
-      const recipeComments = findRecipe.comments;
-      setRecipeComments(recipeComments);
-    };
-
-    return searchForComments()
-  }, [recipes]);
 
   const calculateElapsedTimeInMinutes = (date) => {
     const convertToMinutes = Math.floor((currentDate - date) / 1000 / 60);
@@ -60,8 +48,8 @@ export const Comment = ({ data, index, currentDate }) => {
 
   //rating buttons
   const handleRateComment = async (index) => {
-    const comments = recipeComments
-    const findComment = comments[index];
+    const recipeComments = comments
+    const findComment = recipeComments[index];
 
     if (user) {
       if (!findComment.ratedBy.includes(user.displayName)) {
@@ -78,7 +66,7 @@ export const Comment = ({ data, index, currentDate }) => {
     }
 
     await updateDoc(recipeRef, {
-      comments: comments,
+      comments: recipeComments,
     });
   };
 
@@ -94,7 +82,7 @@ export const Comment = ({ data, index, currentDate }) => {
           handleDislikeComment={() => handleRateComment(index)}
           commentLikes={data.ratedBy.length}
           //plus button disabled when rated, if not, minus button disabled
-          disabled={data.ratedBy.includes(user.displayName)}
+          disabled={user && data.ratedBy.includes(user.displayName)}
         />
       </CommentWrapper>
     </>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../../../context/AuthContext";
 import { HandleRecipe } from "./HandleRecipe";
-import { collection, updateDoc, addDoc, doc } from "firebase/firestore";
+import { collection, updateDoc, addDoc, doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../firebase";
@@ -24,7 +24,6 @@ export const AddRecipe = () => {
     preparationSteps: ["", "", ""],
     tags: [],
     likedBy: [],
-    comments: [],
   });
 
   const [newRecipeErrors, setNewRecipeErrors] = useState({
@@ -89,8 +88,8 @@ export const AddRecipe = () => {
       description: newRecipeDetails.description,
       steps: newRecipeDetails.preparationSteps,
       tags: newRecipeDetails.tags,
-      comments: newRecipeDetails.comments,
     });
+
 
     //create a storage for the image
     const recipesRef = ref(
