@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlexContainer } from "../../styles/Containers";
 import Form from "react-bootstrap/Form";
 import { UserAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { AddCommentButton, StyledInputGroup } from "./commentsStyles";
-import { arrayUnion, doc, setDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { Alert } from "react-bootstrap";
 import { db } from "../../firebase";
 
@@ -13,27 +13,44 @@ export const AddComment = ({ searchedRecipe }) => {
   const [comment, setComment] = useState("");
   const [error, setError] = useState(false);
 
-  const handleInput = (e) => {
+  const handleCommentInput = (e) => {
     setComment(e.target.value);
     setError(false);
   };
 
-  const handleAddRecipe = async (e) => {
+  const handleAddComment = async (e) => {
     e.preventDefault();
 
     if (comment.length < 5) {
       setError(true);
     } else {
-      await setDoc(doc(db, 'comments', searchedRecipe.id), {
-        comments: arrayUnion({
-          user: user.displayName,
-          userPhoto: user.photoURL,
-          comment: comment,
-          addDate: Date.now(),
-          ratedBy: [],
-          comments: []
-        }),
-      });
+      const recipeCommentsRef = await getDoc(
+        doc(db, "comments", searchedRecipe.id)
+      );
+      if (recipeCommentsRef.exists()) {
+        await updateDoc(doc(db, "comments", searchedRecipe.id), {
+          comments: arrayUnion({
+            user: user.displayName,
+            userPhoto: user.photoURL,
+            comment: comment,
+            addDate: Date.now(),
+            ratedBy: [],
+            comments: [],
+          }),
+        });
+      } else {
+        await setDoc(doc(db, "comments", searchedRecipe.id), {
+          comments: arrayUnion({
+            user: user.displayName,
+            userPhoto: user.photoURL,
+            comment: comment,
+            addDate: Date.now(),
+            ratedBy: [],
+            comments: [],
+          }),
+        });
+        setComment("");
+      }
       setComment("");
     }
   };
@@ -44,7 +61,7 @@ export const AddComment = ({ searchedRecipe }) => {
         {/* {searchedRecipe.comments.length > 0
           ? "Komentarze"
           : "Przepis nie ma jeszcze komentarzy"} */}
-          Przepis nie ma jeszcze komentarzy
+        Przepis nie ma jeszcze komentarzy
       </h3>
 
       {user ? (
@@ -56,14 +73,14 @@ export const AddComment = ({ searchedRecipe }) => {
           <StyledInputGroup>
             <Form.Control
               isInvalid={error && comment.length < 5}
-              onChange={handleInput}
+              onChange={handleCommentInput}
               value={comment}
               style={{ resize: "none", width: "100%", height: 120 }}
               size="sm"
               as="textarea"
               aria-label="With textarea"
             />
-            <AddCommentButton onClick={handleAddRecipe}>
+            <AddCommentButton onClick={handleAddComment}>
               Opublikuj
             </AddCommentButton>
           </StyledInputGroup>
