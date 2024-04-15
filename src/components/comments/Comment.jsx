@@ -1,15 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { updateDoc, doc } from "firebase/firestore";
 import { UserAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
-import { CommentStructure } from "./CommentStructure";
 import { CommentWrapper } from "./commentsStyles";
+import {
+  Content,
+  UserImage,
+  UserName,
+  AddDate,
+  LikesWrapper,
+  CommentLikes,
+  CommentButtonsWrapper,
+  DeleteCommentButton,
+  EditCommentButton,
+  CommentDataWrapper,
+} from "./commentsStyles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEdit,
+  faMinus,
+  faPlus,
+  faReply,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
+import { OrangeButton } from "../../styles/OrangeButton";
+import { AddReply } from "./AddReply";
 
-export const Comment = ({ data, index, currentDate, comments }) => {
+export const Comment = ({ comment, index, currentDate, comments }) => {
   const { user } = UserAuth();
   const { recipeId } = useParams();
   const recipeRef = doc(db, "recipes", recipeId);
+  const [isReplying, setIsReplying] = useState(false);
 
   const calculateElapsedTimeInMinutes = (date) => {
     const convertToMinutes = Math.floor((currentDate - date) / 1000 / 60);
@@ -48,7 +70,7 @@ export const Comment = ({ data, index, currentDate, comments }) => {
 
   //rating buttons
   const handleRateComment = async (index) => {
-    const recipeComments = comments
+    const recipeComments = comments;
     const findComment = recipeComments[index];
 
     if (user) {
@@ -58,7 +80,7 @@ export const Comment = ({ data, index, currentDate, comments }) => {
         const dislike = findComment.ratedBy.filter(
           (username) => username !== user.displayName
         );
-  
+
         findComment.ratedBy = dislike;
       }
     } else {
@@ -70,20 +92,72 @@ export const Comment = ({ data, index, currentDate, comments }) => {
     });
   };
 
+  //handle reply button
+  const handleReply = (e) => {
+    e.preventDefault();
+    setIsReplying((prev) => !prev);
+  };
+
   return (
     <>
       <CommentWrapper>
-        <CommentStructure
-          userImage={data.userPhoto}
-          userName={data.user}
-          elapsedTime={calculateElapsedTimeInMinutes(data.addDate)}
-          commentContent={data.comment}
-          handleLikeComment={() => handleRateComment(index)}
-          handleDislikeComment={() => handleRateComment(index)}
-          commentLikes={data.ratedBy.length}
-          //plus button disabled when rated, if not, minus button disabled
-          disabled={user && data.ratedBy.includes(user.displayName)}
-        />
+        <CommentDataWrapper>
+          <UserImage src={comment.userPhoto} alt="user" />
+          <UserName>{comment.user}</UserName>
+          <AddDate>{calculateElapsedTimeInMinutes(comment.addDate)}</AddDate>
+          <Content>{comment.comment}</Content>
+        </CommentDataWrapper>
+        <LikesWrapper>
+          <OrangeButton
+            disabled={user && comment.ratedBy.includes(user.displayName)}
+            onClick={() => handleRateComment(index)}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+          </OrangeButton>
+          <CommentLikes>{comment.ratedBy.length}</CommentLikes>
+          <OrangeButton
+            disabled={user && !comment.ratedBy.includes(user.displayName)}
+            onClick={() => handleRateComment(index)}
+          >
+            <FontAwesomeIcon icon={faMinus} />
+          </OrangeButton>
+        </LikesWrapper>
+        <CommentButtonsWrapper>
+          {user && user.displayName === comment.user ? (
+            <>
+              <DeleteCommentButton>
+                <FontAwesomeIcon icon={faTrashCan} /> {""} Skasuj
+              </DeleteCommentButton>
+              <EditCommentButton>
+                <FontAwesomeIcon icon={faEdit} /> {""} Edytuj
+              </EditCommentButton>
+            </>
+          ) : (
+            <EditCommentButton onClick={handleReply}>
+              {isReplying ? (
+                <strong>Anuluj</strong>
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faReply} /> <br /> {""} Odpowiedz
+                </>
+              )}
+            </EditCommentButton>
+          )}
+        </CommentButtonsWrapper>
+        <div>
+          {comment.comments?.map((reply, indx) => (
+            <Comment
+              comments={reply.comments}
+              comment={reply}
+              key={indx}
+              index={indx}
+              currentDate={currentDate}
+            />
+          ))}
+        </div>
+        {isReplying ? (
+          <AddReply comments={comments} commentToReply={comment} />
+        ) : null}
       </CommentWrapper>
     </>
   );

@@ -37,14 +37,12 @@ export const CommentWrapper = styled.div`
   margin: 30px 0;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
   padding: 20px 10px;
-  line-height: 30px;
   word-wrap: break-word;
   border-radius: 6px;
 
   @media (min-width: 992px) {
     margin-left: auto;
     margin-right: auto;
-    flex-wrap: nowrap;
     align-items: flex-start;
   }
 `;
@@ -77,8 +75,7 @@ export const UserImage = styled.img`
 `;
 
 export const Content = styled.p`
-  margin: 0;
-  width: 80%;
+  margin: 10px auto;
 `;
 
 export const UserName = styled.strong`
@@ -106,12 +103,11 @@ export const CommentLikes = styled.span`
 `;
 
 export const CommentButtonsWrapper = styled.div`
-  display: flex;
-  gap: 10px;
+  margin-left: auto;
 
   @media (min-width: 992px) {
     align-self: flex-start;
-    margin-left: auto;
+    
   }
 `;
 

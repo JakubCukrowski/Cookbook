@@ -6,10 +6,10 @@ export const Comments = ({ comments, currentDate }) => {
 
   return (
     <Container>
-      {comments.map((data, index) => (
+      {comments.map((comment, index) => (
         <Comment
           comments={comments}
-          data={data}
+          comment={comment}
           key={index}
           index={index}
           currentDate={currentDate}

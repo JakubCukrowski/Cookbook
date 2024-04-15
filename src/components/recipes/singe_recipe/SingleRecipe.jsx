@@ -42,7 +42,7 @@ export const SingleRecipe = () => {
   } = UserAuth();
   const [searchedRecipe, setSearchedRecipe] = useState({});
   const [isFound, setIsFound] = useState(false);
-  const [comments, setComments] = useState([])
+  const [comments, setComments] = useState([]);
 
   //donwload the recipe, get author name, check if liked by current user
   useEffect(() => {
@@ -111,17 +111,17 @@ export const SingleRecipe = () => {
   useEffect(() => {
     if (searchedRecipe.id) {
       const getRecipeComments = async () => {
-        onSnapshot(doc(db, 'comments', searchedRecipe.id), (comments) => {
+        onSnapshot(doc(db, "comments", searchedRecipe.id), (comments) => {
           //check if there's any comment/s
           if (comments.data() !== undefined) {
-            setComments(comments.data().comments)
+            setComments(comments.data().comments);
           }
-        })
-      }
-  
-      getRecipeComments()
+        });
+      };
+
+      getRecipeComments();
     }
-  }, [searchedRecipe])
+  }, [searchedRecipe]);
 
   return (
     <section>
@@ -200,8 +200,14 @@ export const SingleRecipe = () => {
             </Wrapper>
           </SingleRecipeContainer>
           <StyledCommentsDiv>
+            <h3 style={{ marginBottom: 30, textAlign: "center" }}>
+              {comments.length > 0
+                ? "Komentarze"
+                : "Przepis nie ma jeszcze komentarzy"}
+            </h3>
+            {user && <p style={{ textAlign: "center" }}>Dodaj komentarz</p>}
             <AddComment searchedRecipe={searchedRecipe} />
-            <Comments comments={comments} currentDate={currentDate}/>
+            <Comments comments={comments} currentDate={currentDate} />
           </StyledCommentsDiv>
         </>
       )}
