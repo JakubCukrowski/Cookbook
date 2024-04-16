@@ -2,7 +2,7 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import { Comment } from "./Comment";
 
-export const Comments = ({ comments, currentDate }) => {
+export const Comments = ({ comments, currentDate, searchedRecipe }) => {
 
   return (
     <Container>
@@ -13,6 +13,7 @@ export const Comments = ({ comments, currentDate }) => {
           key={index}
           index={index}
           currentDate={currentDate}
+          searchedRecipe={searchedRecipe}
         />
       ))}
     </Container>
