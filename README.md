@@ -26,10 +26,12 @@ or create a new account
 - Updating recipes <br></br>
 - Deleting recipes <br></br>
 - Handling <hero /> component buttons for the most popular categories <br></br>
+Recently added 
+- Commenting on recipes with nested comments and rating <br></br>
+
 
 ### To be added: 
 
-- Commenting on recipes <br></br>
 - A possibility to change email address <br></br>
 - Including special characters check when creating a password <br></br>
 - Adding the possibility to view all recipes added by the user once on the single recipe page <br></br>
