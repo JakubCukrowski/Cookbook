@@ -33,12 +33,11 @@ export const Comment = ({
   index,
   currentDate,
   comments,
-  searchedRecipe,
 }) => {
   const { user } = UserAuth();
-  const { recipeId } = useParams();
-  const recipeRef = doc(db, "recipes", recipeId);
   const [isReplying, setIsReplying] = useState(false);
+  const {recipeId} = useParams()
+  const recipeRef = doc(db, 'comments', recipeId)
 
   const calculateElapsedTimeInMinutes = (date) => {
     const convertToMinutes = Math.floor((currentDate - date) / 1000 / 60);
@@ -75,10 +74,28 @@ export const Comment = ({
     }
   };
 
+  const findCommentToUpdate = (comments) => {
+    const commentIsMatched = comments.some(
+      (singleComment) => singleComment.comment === comment.comment
+    );
+
+    if (!commentIsMatched) {
+      for (let i = 0; i < comments.length; i++) {
+        const foundComment = findCommentToUpdate(comments[i].comments);
+
+        if (foundComment) {
+          return foundComment;
+        }
+      }
+    } else {
+      return comments.find(singleComment => singleComment.comment === comment.comment)
+    }
+  };
+
   //rating buttons
-  const handleRateComment = async (index) => {
+  const handleRateComment = async () => {
     const recipeComments = comments;
-    const findComment = recipeComments[index];
+    const findComment = findCommentToUpdate(recipeComments)
 
     if (user) {
       if (!findComment.ratedBy.includes(user.displayName)) {
@@ -159,10 +176,17 @@ export const Comment = ({
             </OrangeButton>
           )}
         </CommentButtonsWrapper>
+          {isReplying ? (
+            <AddReply
+              commentToReply={comment}
+              updateIsReplying={updateIsReplying}
+              findCommentToUpdate={findCommentToUpdate}
+            />
+          ) : null}
         <div style={{width: '95%', marginLeft: 'auto'}}>
           {comment.comments?.map((reply, indx) => (
             <Comment
-              comments={reply.comments}
+              comments={comments}
               comment={reply}
               key={indx}
               index={indx}
@@ -170,12 +194,6 @@ export const Comment = ({
             />
           ))}
         </div>
-        {isReplying ? (
-          <AddReply
-            commentToReply={comment}
-            updateIsReplying={updateIsReplying}
-          />
-        ) : null}
       </CommentWrapper>
     </>
   );

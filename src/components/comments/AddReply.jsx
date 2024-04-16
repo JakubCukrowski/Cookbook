@@ -5,7 +5,7 @@ import { db } from "../../firebase";
 import { UserAuth } from "../../context/AuthContext";
 import { useParams } from "react-router-dom";
 
-export const AddReply = ({ commentToReply, updateIsReplying }) => {
+export const AddReply = ({ updateIsReplying, findCommentToUpdate }) => {
   const { recipeId } = useParams();
   const { user, recipes } = UserAuth();
   const [comment, setComment] = useState("");
@@ -25,24 +25,6 @@ export const AddReply = ({ commentToReply, updateIsReplying }) => {
 
     getRecipeComments();
   }, [recipes]);
-
-  const findCommentToUpdate = (comments) => {
-    const commentIsMatched = comments.some(
-      (comment) => comment.comment === commentToReply.comment
-    );
-
-    if (!commentIsMatched) {
-      for (let i = 0; i < comments.length; i++) {
-        const foundComment = findCommentToUpdate(comments[i].comments);
-
-        if (foundComment) {
-          return foundComment;
-        }
-      }
-    } else {
-      return comments.find(comment => comment.comment === commentToReply.comment)
-    }
-  };
 
   const handleButtonClick = async (e) => {
     e.preventDefault();
