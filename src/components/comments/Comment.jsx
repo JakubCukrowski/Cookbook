@@ -23,11 +23,18 @@ import {
   faPlus,
   faReply,
   faTrashCan,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { OrangeButton } from "../../styles/OrangeButton";
 import { AddReply } from "./AddReply";
 
-export const Comment = ({ comment, index, currentDate, comments }) => {
+export const Comment = ({
+  comment,
+  index,
+  currentDate,
+  comments,
+  searchedRecipe,
+}) => {
   const { user } = UserAuth();
   const { recipeId } = useParams();
   const recipeRef = doc(db, "recipes", recipeId);
@@ -98,6 +105,11 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
     setIsReplying((prev) => !prev);
   };
 
+  //update isReplying from AddReply component
+  const updateIsReplying = (value) => {
+    setIsReplying(value)
+  }
+
   return (
     <>
       <CommentWrapper>
@@ -123,7 +135,7 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
           </OrangeButton>
         </LikesWrapper>
         <CommentButtonsWrapper>
-          {user && user.displayName === comment.user ? (
+          {user && user.displayName === comment.user && (
             <>
               <DeleteCommentButton>
                 <FontAwesomeIcon icon={faTrashCan} /> {""} Skasuj
@@ -132,19 +144,22 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
                 <FontAwesomeIcon icon={faEdit} /> {""} Edytuj
               </EditCommentButton>
             </>
-          ) : (
-            <EditCommentButton onClick={handleReply}>
+          )}
+          {user && user.displayName !== comment.user && (
+            <OrangeButton onClick={handleReply}>
               {isReplying ? (
-                <strong>Anuluj</strong>
+                <>
+                  <FontAwesomeIcon icon={faXmark} /> {""} Anuluj
+                </>
               ) : (
                 <>
-                  <FontAwesomeIcon icon={faReply} /> <br /> {""} Odpowiedz
+                  <FontAwesomeIcon icon={faReply} /> {""} Odpowiedz
                 </>
               )}
-            </EditCommentButton>
+            </OrangeButton>
           )}
         </CommentButtonsWrapper>
-        <div>
+        <div style={{width: '95%', marginLeft: 'auto'}}>
           {comment.comments?.map((reply, indx) => (
             <Comment
               comments={reply.comments}
@@ -156,7 +171,10 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
           ))}
         </div>
         {isReplying ? (
-          <AddReply comments={comments} commentToReply={comment} />
+          <AddReply
+            commentToReply={comment}
+            updateIsReplying={updateIsReplying}
+          />
         ) : null}
       </CommentWrapper>
     </>

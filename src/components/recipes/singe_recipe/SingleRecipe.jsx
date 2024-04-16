@@ -207,7 +207,7 @@ export const SingleRecipe = () => {
             </h3>
             {user && <p style={{ textAlign: "center" }}>Dodaj komentarz</p>}
             <AddComment searchedRecipe={searchedRecipe} />
-            <Comments comments={comments} currentDate={currentDate} />
+            <Comments comments={comments} currentDate={currentDate} searchedRecipe={searchedRecipe}/>
           </StyledCommentsDiv>
         </>
       )}
