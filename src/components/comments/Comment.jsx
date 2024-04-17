@@ -27,17 +27,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { OrangeButton } from "../../styles/OrangeButton";
 import { AddReply } from "./AddReply";
+import { Form } from "react-bootstrap";
 
-export const Comment = ({
-  comment,
-  index,
-  currentDate,
-  comments,
-}) => {
+export const Comment = ({ comment, index, currentDate, comments }) => {
   const { user } = UserAuth();
+  //state for reply button
   const [isReplying, setIsReplying] = useState(false);
-  const {recipeId} = useParams()
-  const recipeRef = doc(db, 'comments', recipeId)
+  //state for edit comment button
+  const [isEditing, setIsEditing] = useState(false);
+  //state of edited comment
+  const [editedComment, setEditedComment] = useState(comment.comment);
+  const { recipeId } = useParams();
+  const recipeRef = doc(db, "comments", recipeId);
 
   const calculateElapsedTimeInMinutes = (date) => {
     const convertToMinutes = Math.floor((currentDate - date) / 1000 / 60);
@@ -88,14 +89,16 @@ export const Comment = ({
         }
       }
     } else {
-      return comments.find(singleComment => singleComment.comment === comment.comment)
+      return comments.find(
+        (singleComment) => singleComment.comment === comment.comment
+      );
     }
   };
 
   //rating buttons
   const handleRateComment = async () => {
     const recipeComments = comments;
-    const findComment = findCommentToUpdate(recipeComments)
+    const findComment = findCommentToUpdate(recipeComments);
 
     if (user) {
       if (!findComment.ratedBy.includes(user.displayName)) {
@@ -124,8 +127,8 @@ export const Comment = ({
 
   //update isReplying from AddReply component
   const updateIsReplying = (value) => {
-    setIsReplying(value)
-  }
+    setIsReplying(value);
+  };
 
   return (
     <>
@@ -134,7 +137,21 @@ export const Comment = ({
           <UserImage src={comment.userPhoto} alt="user" />
           <UserName>{comment.user}</UserName>
           <AddDate>{calculateElapsedTimeInMinutes(comment.addDate)}</AddDate>
-          <Content>{comment.comment}</Content>
+          {isEditing ? (
+            <Form.Control
+              // isInvalid={error && comment.length < 5}
+              onChange={(e) => {
+                setEditedComment(e.target.value);
+              }}
+              value={editedComment}
+              style={{ resize: "none", width: "100%", height: 120 }}
+              size="sm"
+              as="textarea"
+              aria-label="With textarea"
+            />
+          ) : (
+            <Content>{comment.comment}</Content>
+          )}
         </CommentDataWrapper>
         <LikesWrapper>
           <OrangeButton
@@ -152,14 +169,23 @@ export const Comment = ({
           </OrangeButton>
         </LikesWrapper>
         <CommentButtonsWrapper>
-          {user && user.displayName === comment.user && (
+          {user && user.displayName === comment.user && !isEditing && (
             <>
               <DeleteCommentButton>
                 <FontAwesomeIcon icon={faTrashCan} /> {""} Skasuj
               </DeleteCommentButton>
-              <EditCommentButton>
+              <EditCommentButton onClick={() => setIsEditing((prev) => !prev)}>
                 <FontAwesomeIcon icon={faEdit} /> {""} Edytuj
               </EditCommentButton>
+            </>
+          )}
+          {isEditing && (
+            <>
+              <OrangeButton onClick={() => setIsEditing(false)}>Anuluj</OrangeButton> {" "}
+              <OrangeButton onClick={() => {
+                alert("Chwilowo nic się nie stało, ale pracujemy nad tym! :)")
+                setIsEditing(false)
+              }}>Potwierdź</OrangeButton>
             </>
           )}
           {user && user.displayName !== comment.user && (
@@ -176,14 +202,14 @@ export const Comment = ({
             </OrangeButton>
           )}
         </CommentButtonsWrapper>
-          {isReplying ? (
-            <AddReply
-              commentToReply={comment}
-              updateIsReplying={updateIsReplying}
-              findCommentToUpdate={findCommentToUpdate}
-            />
-          ) : null}
-        <div style={{width: '95%', marginLeft: 'auto'}}>
+        {isReplying ? (
+          <AddReply
+            commentToReply={comment}
+            updateIsReplying={updateIsReplying}
+            findCommentToUpdate={findCommentToUpdate}
+          />
+        ) : null}
+        <div style={{ width: "95%", marginLeft: "auto" }}>
           {comment.comments?.map((reply, indx) => (
             <Comment
               comments={comments}
