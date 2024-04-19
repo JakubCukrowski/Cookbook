@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { updateDoc, doc } from "firebase/firestore";
 import { UserAuth } from "../../context/AuthContext";
@@ -37,8 +37,12 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
   const [isEditing, setIsEditing] = useState(false);
   //state of edited comment
   const [editedComment, setEditedComment] = useState(comment.comment);
+
   const { recipeId } = useParams();
   const recipeRef = doc(db, "comments", recipeId);
+
+  //edit comment textarea reference
+  const textareaRef = useRef(null);
 
   const calculateElapsedTimeInMinutes = (date) => {
     const convertToMinutes = Math.floor((currentDate - date) / 1000 / 60);
@@ -75,6 +79,7 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
     }
   };
 
+  //find a comment, which has to be updated
   const findCommentToUpdate = (comments) => {
     const commentIsMatched = comments.some(
       (singleComment) => singleComment.comment === comment.comment
@@ -130,6 +135,23 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
     setIsReplying(value);
   };
 
+  //handle edit comment
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    const allRecipeComments = comments;
+    const commentToEdit = findCommentToUpdate(allRecipeComments);
+    commentToEdit.comment = textareaRef.current.value;
+
+    try {
+      await updateDoc(recipeRef, {
+        comments: allRecipeComments,
+      });
+      setIsEditing(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <CommentWrapper>
@@ -139,6 +161,7 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
           <AddDate>{calculateElapsedTimeInMinutes(comment.addDate)}</AddDate>
           {isEditing ? (
             <Form.Control
+              ref={textareaRef}
               // isInvalid={error && comment.length < 5}
               onChange={(e) => {
                 setEditedComment(e.target.value);
@@ -181,11 +204,10 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
           )}
           {isEditing && (
             <>
-              <OrangeButton onClick={() => setIsEditing(false)}>Anuluj</OrangeButton> {" "}
-              <OrangeButton onClick={() => {
-                alert("Chwilowo nic się nie stało, ale pracujemy nad tym! :)")
-                setIsEditing(false)
-              }}>Potwierdź</OrangeButton>
+              <OrangeButton onClick={() => setIsEditing(false)}>
+                Anuluj
+              </OrangeButton>{" "}
+              <OrangeButton onClick={handleEdit}>Potwierdź</OrangeButton>
             </>
           )}
           {user && user.displayName !== comment.user && (
