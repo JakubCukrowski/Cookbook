@@ -5,7 +5,7 @@ import { Comment } from "./Comment";
 export const Comments = ({ comments, currentDate, searchedRecipe }) => {
 
   return (
-    <Container>
+    <Container fluid>
       {comments.map((comment, index) => (
         <Comment
           comments={comments}
