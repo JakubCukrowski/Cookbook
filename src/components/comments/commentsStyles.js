@@ -47,23 +47,13 @@ export const CommentWrapper = styled.div`
   }
 `;
 
-export const ReplyContainer = styled.div`
-  border-left: 1px solid black;
-  width: 95%;
-  margin-left: auto;
-`;
-
-export const ReplyWrapper = styled(CommentWrapper)`
-  width: 95%;
-  margin-left: auto;
-  margin-right: 0;
-`;
-
 export const CommentDataWrapper = styled.div`
   width: 100%;
+  font-size: 14px;
 
   @media (min-width: 992px) {
-    width: auto;
+    width: 50%;
+    flex-grow: 2;
   }
 `;
 

@@ -167,7 +167,7 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
                 setEditedComment(e.target.value);
               }}
               value={editedComment}
-              style={{ resize: "none", width: "100%", height: 120 }}
+              style={{ resize: "none", width: "100%", height: 120, marginTop: 10 }}
               size="sm"
               as="textarea"
               aria-label="With textarea"
@@ -231,7 +231,7 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
             findCommentToUpdate={findCommentToUpdate}
           />
         ) : null}
-        <div style={{ width: "95%", marginLeft: "auto" }}>
+        <div style={{ width: "99%", marginLeft: "auto" }}>
           {comment.comments?.map((reply, indx) => (
             <Comment
               comments={comments}
