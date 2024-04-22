@@ -28,6 +28,7 @@ import {
 import { OrangeButton } from "../../styles/OrangeButton";
 import { AddReply } from "./AddReply";
 import { Form } from "react-bootstrap";
+import { BootstrapModal } from "../BootstrapModal";
 
 export const Comment = ({ comment, index, currentDate, comments }) => {
   const { user } = UserAuth();
@@ -43,6 +44,9 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
 
   //edit comment textarea reference
   const textareaRef = useRef(null);
+
+  //state for popup, after clicking delete comment button
+  const [isVisible, setIsVisible] = useState(false);
 
   const calculateElapsedTimeInMinutes = (date) => {
     const convertToMinutes = Math.floor((currentDate - date) / 1000 / 60);
@@ -100,20 +104,26 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
     }
   };
 
+  //function returns all recipe comments
+  const getRecipeComments = () => {
+    const recipeComments = comments;
+    return recipeComments;
+  };
+
   //rating buttons
   const handleRateComment = async () => {
-    const recipeComments = comments;
-    const findComment = findCommentToUpdate(recipeComments);
+    const recipeComments = getRecipeComments();
+    const commentToRate = findCommentToUpdate(recipeComments);
 
     if (user) {
-      if (!findComment.ratedBy.includes(user.displayName)) {
-        findComment.ratedBy.push(user.displayName);
+      if (!commentToRate.ratedBy.includes(user.displayName)) {
+        commentToRate.ratedBy.push(user.displayName);
       } else {
-        const dislike = findComment.ratedBy.filter(
+        const dislike = commentToRate.ratedBy.filter(
           (username) => username !== user.displayName
         );
 
-        findComment.ratedBy = dislike;
+        commentToRate.ratedBy = dislike;
       }
     } else {
       alert("Musisz być zalogowany, żeby polubić.");
@@ -138,13 +148,13 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
   //handle edit comment
   const handleEdit = async (e) => {
     e.preventDefault();
-    const allRecipeComments = comments;
-    const commentToEdit = findCommentToUpdate(allRecipeComments);
+    const recipeComments = getRecipeComments();
+    const commentToEdit = findCommentToUpdate(recipeComments);
     commentToEdit.comment = textareaRef.current.value;
 
     try {
       await updateDoc(recipeRef, {
-        comments: allRecipeComments,
+        comments: recipeComments,
       });
       setIsEditing(false);
     } catch (error) {
@@ -152,8 +162,60 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
     }
   };
 
+  //check if it's a top comment, if not, if it's included in the comment array
+  const checkIfIncluded = (comments, targetComment) => {
+    for (const comment of comments) {
+      //top level comment
+      if (comment === targetComment) {
+        return comment;
+      }
+
+      if (comment.comments && comment.comments.includes(targetComment)) {
+        return comment;
+      }
+
+      if (comment.comments) {
+        const upperLevelComment = checkIfIncluded(
+          comment.comments,
+          targetComment
+        );
+
+        if (upperLevelComment) {
+          return upperLevelComment;
+        }
+      }
+    }
+  };
+
+  //handle delete comment confirmation
+  const handleDelete = async (e) => {
+    const recipeComments = getRecipeComments();
+    const commentObject = checkIfIncluded(recipeComments, comment);
+    const updatedCommentsArray = commentObject.comments.filter(
+      (targetComment) => targetComment !== comment
+    );
+    commentObject.comments = updatedCommentsArray;
+
+    try {
+      await updateDoc(recipeRef, {
+        comments: recipeComments,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
+      {isVisible && (
+        <BootstrapModal
+          withTitle={true}
+          modalTitle="Czy napewno chcesz usunąć komentarz?"
+          title={`"${comment.comment}"`}
+          onCancel={() => setIsVisible(false)}
+          onConfirm={handleDelete}
+        />
+      )}
       <CommentWrapper>
         <CommentDataWrapper>
           <UserImage src={comment.userPhoto} alt="user" />
@@ -167,7 +229,12 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
                 setEditedComment(e.target.value);
               }}
               value={editedComment}
-              style={{ resize: "none", width: "100%", height: 120, marginTop: 10 }}
+              style={{
+                resize: "none",
+                width: "100%",
+                height: 120,
+                marginTop: 10,
+              }}
               size="sm"
               as="textarea"
               aria-label="With textarea"
@@ -194,7 +261,7 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
         <CommentButtonsWrapper>
           {user && user.displayName === comment.user && !isEditing && (
             <>
-              <DeleteCommentButton>
+              <DeleteCommentButton onClick={() => setIsVisible(true)}>
                 <FontAwesomeIcon icon={faTrashCan} /> {""} Skasuj
               </DeleteCommentButton>
               <EditCommentButton onClick={() => setIsEditing((prev) => !prev)}>
