@@ -167,7 +167,7 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
     for (const comment of comments) {
       //top level comment
       if (comment === targetComment) {
-        return comment;
+        return comments;
       }
 
       if (comment.comments && comment.comments.includes(targetComment)) {
@@ -190,19 +190,31 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
   //handle delete comment confirmation
   const handleDelete = async (e) => {
     const recipeComments = getRecipeComments();
-    const commentObject = checkIfIncluded(recipeComments, comment);
-    const updatedCommentsArray = commentObject.comments.filter(
-      (targetComment) => targetComment !== comment
-    );
-    commentObject.comments = updatedCommentsArray;
+    //object or array, depends of the comment's level
+    const commentItem = checkIfIncluded(recipeComments, comment);
 
-    try {
+    if (Array.isArray(commentItem)) {
+      const commentsWithoutDeleted = recipeComments.filter(targetComment => targetComment !== comment)
+
       await updateDoc(recipeRef, {
-        comments: recipeComments,
-      });
-    } catch (error) {
-      console.log(error);
+        comments: commentsWithoutDeleted
+      })
+      
+    } else {
+      const updatedCommentsArray = commentItem.comments.filter(
+        (targetComment) => targetComment !== comment
+      );
+      commentItem.comments = updatedCommentsArray;
+
+      try {
+        await updateDoc(recipeRef, {
+          comments: recipeComments,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
+
   };
 
   return (
