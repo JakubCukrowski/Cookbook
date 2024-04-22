@@ -26,8 +26,9 @@ or create a new account
 - Updating recipes <br></br>
 - Deleting recipes <br></br>
 - Handling <hero /> component buttons for the most popular categories <br></br>
-Recently added 
+### Recently added 
 - Commenting on recipes with nested comments and rating <br></br>
+- Editing and deleting comments
 
 
 ### To be added: 
