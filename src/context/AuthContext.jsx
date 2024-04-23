@@ -61,6 +61,10 @@ export const AuthContextProvider = ({ children }) => {
         });
         const docRef = await setDoc(userRef, {
           username: displayName,
+          normalizedName: displayName
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase(),
           email: email,
           liked: [],
         });
