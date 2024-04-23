@@ -214,7 +214,6 @@ export const Comment = ({ comment, index, currentDate, comments }) => {
         console.log(error);
       }
     }
-
   };
 
   return (

@@ -24,6 +24,7 @@ import { SearchedTag } from "./components/recipes/Tags/SearchedTag";
 import { MainDishes } from "./components/recipes/main_page_recipes/MainDishes";
 import { BlockedRoute } from "./components/blocked_route/BlockedRoute";
 import { PopularTags } from "./components/recipes/Tags/PopularTags";
+import { UserRecipes } from "./components/recipes/UserRecipes";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
             <Route path="/show" element={<SearchedTag />} />
             <Route path="/violation" element={<ProfanityViolation />} />
             <Route path="/popular/:tagName" element={<PopularTags />}/>
+            <Route path="/:username" element={<UserRecipes />} />
             <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/add-recipe" element={<AddRecipe />} />

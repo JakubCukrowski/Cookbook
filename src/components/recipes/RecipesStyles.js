@@ -134,6 +134,10 @@ export const AuthorData = styled.div`
   }
 `
 
+export const AuthorName = styled.span`
+  margin-left: 6px;
+`
+
 export const PrepTimeInfo = styled.div`
   span {
     margin-left: 6px;
