@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../../styles/StyledLink";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
-import { storage } from "../../firebase";
+import { db, storage } from "../../firebase";
 import { BootstrapModal } from "../BootstrapModal";
 import { SpinnerContainer } from "../../styles/Containers";
 import { StyledH2 } from "../../styles/StyledH2";
@@ -23,6 +23,7 @@ import {
   DashboardDesktopRecipes,
 } from "./DashboardStyles";
 import { auth } from "../../firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 export const Dashboard = () => {
   const {
@@ -60,25 +61,35 @@ export const Dashboard = () => {
   const uploadPhoto = async (e) => {
     setUserPhotoError(false);
     const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`);
-    await uploadBytes(profileImageRef, e.target.files[0])
-      .then(async () => {
-        await getDownloadURL(profileImageRef).then(async (url) => {
-          await updateProfile(auth.currentUser, {
-            photoURL: url,
+    const userRef = doc(db, "users", user.uid);
+    try {
+      await uploadBytes(profileImageRef, e.target.files[0])
+        .then(async () => {
+          await getDownloadURL(profileImageRef).then(async (url) => {
+            //update url in logged user object
+            await updateProfile(auth.currentUser, {
+              photoURL: url,
+            });
+            //update url in user docs
+            await updateDoc(userRef, {
+              profilePhoto: url,
+            });
+            setIsUserImageUploaded(true);
           });
-          setIsUserImageUploaded(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          setUserPhotoError(true);
         });
-      })
-      .catch((err) => {
-        console.log(err);
-        setUserPhotoError(true);
-      });
 
-    const timeoutID = setTimeout(() => {
-      setIsUserImageUploaded(false);
-    }, 2000);
+      const timeoutID = setTimeout(() => {
+        setIsUserImageUploaded(false);
+      }, 2000);
 
-    return () => clearTimeout(timeoutID);
+      return () => clearTimeout(timeoutID);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

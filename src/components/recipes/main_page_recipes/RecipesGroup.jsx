@@ -40,7 +40,7 @@ export const RecipesGroup = ({
                 <div style={{ position: "absolute", bottom: 20 }}>
                   <StyledLink
                     color="black"
-                    to={`${recipe.addedBy.user}`
+                    to={`/${recipe.addedBy.user}`
                       .normalize("NFD")
                       .replace(/[\u0300-\u036f]/g, "")
                       .toLowerCase()}
