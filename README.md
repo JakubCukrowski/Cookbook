@@ -29,7 +29,7 @@ or create a new account
 ### Recently added 
 - Commenting on recipes with nested comments and rating <br></br>
 - Editing and deleting comments <br></br>
-- A possibility to view all recipes added by the user once on the single recipe page <br></br>
+- A possibility to view all recipes added by the user once on the single recipe page by pressing a user name on a recipe card <br></br>
 
 
 ### To be added: 
