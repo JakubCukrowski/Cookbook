@@ -6,6 +6,7 @@ export const FlexContainer = styled(Container)`
   flex-direction: ${(props) => props.direction};
   justify-content: ${(props) => props.justify};
   align-items: ${(props) => props.align};
+  padding: ${(props) => props.padding};
 `;
 
 export const HeroFlexContainer = styled(FlexContainer)`
