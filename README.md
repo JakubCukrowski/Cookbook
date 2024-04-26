@@ -28,12 +28,12 @@ or create a new account
 - Handling <hero /> component buttons for the most popular categories <br></br>
 ### Recently added 
 - Commenting on recipes with nested comments and rating <br></br>
-- Editing and deleting comments
+- Editing and deleting comments <br></br>
+- A possibility to view all recipes added by the user once on the single recipe page <br></br>
 
 
 ### To be added: 
 
 - A possibility to change email address <br></br>
 - Including special characters check when creating a password <br></br>
-- Adding the possibility to view all recipes added by the user once on the single recipe page <br></br>
 - Create a planner <br></br>
