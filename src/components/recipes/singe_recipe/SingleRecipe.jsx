@@ -30,6 +30,7 @@ import { H1wrapper } from "../../../styles/H1wrapper";
 import { Wrapper } from "../../../styles/Wrapper";
 import { AddComment } from "../../comments/AddComment";
 import { Comments } from "../../comments/Comments";
+import { StyledLink } from "../../../styles/StyledLink";
 export const SingleRecipe = () => {
   const { recipeId } = useParams();
   const {
@@ -142,15 +143,17 @@ export const SingleRecipe = () => {
                 </Wrapper>
               </div>
               <div style={{ display: "flex" }}>
-                <RecipeAuthorWrapper>
-                  <AuthorImageWrapper>
-                    <img
-                      src={searchedRecipe.addedBy.photo}
-                      alt="profile_photo"
-                    />
-                  </AuthorImageWrapper>
-                  <RecipeAuthor>{searchedRecipe.addedBy.user}</RecipeAuthor>
-                </RecipeAuthorWrapper>
+                <StyledLink to={`/${searchedRecipe.addedBy.user.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()}`}>
+                  <RecipeAuthorWrapper>
+                    <AuthorImageWrapper>
+                      <img
+                        src={searchedRecipe.addedBy.photo}
+                        alt="profile_photo"
+                      />
+                    </AuthorImageWrapper>
+                    <RecipeAuthor>{searchedRecipe.addedBy.user}</RecipeAuthor>
+                  </RecipeAuthorWrapper>
+                </StyledLink>
                 <Wrapper justify="center">
                   {user && searchedRecipe.addedBy.user !== user.displayName ? (
                     <LikeButton
@@ -207,7 +210,11 @@ export const SingleRecipe = () => {
             </h3>
             {user && <p style={{ textAlign: "center" }}>Dodaj komentarz</p>}
             <AddComment searchedRecipe={searchedRecipe} />
-            <Comments comments={comments} currentDate={currentDate} searchedRecipe={searchedRecipe}/>
+            <Comments
+              comments={comments}
+              currentDate={currentDate}
+              searchedRecipe={searchedRecipe}
+            />
           </StyledCommentsDiv>
         </>
       )}

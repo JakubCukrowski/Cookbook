@@ -44,6 +44,14 @@ export const RecipeAuthorWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
+  text-decoration: none;
+  color: black;
+
+  &:hover {
+    p {
+      color: blue;
+    }
+  }
 `;
 
 export const RecipeDescription = styled.p`
