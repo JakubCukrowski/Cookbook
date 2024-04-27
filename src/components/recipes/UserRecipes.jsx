@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import { UserAuth } from "../../context/AuthContext";
 import { FlexContainer, SpinnerContainer } from "../../styles/Containers";
@@ -16,13 +25,13 @@ import { RecipesGroup } from "./main_page_recipes/RecipesGroup";
 import { OrangeButton } from "../../styles/OrangeButton";
 import { StyledH2 } from "../../styles/StyledH2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FormCategory } from "./form_elements/FormCategory";
 
 export const UserRecipes = () => {
   //username from url to match the recipes
   const { username } = useParams();
-  const { recipes } = UserAuth();
+  const { recipes, user } = UserAuth();
   //stota to download user data
   const [userData, setUserData] = useState(null);
   //recipes added by user
@@ -33,6 +42,8 @@ export const UserRecipes = () => {
   const [mealSelected, setMealSelected] = useState("Wszystko");
   //filter user recipes by a meal
   const [filteredUserRecipes, setFilteredUserRecipes] = useState([]);
+  // checks if user is already followed by logged user
+  const [isFollowed, setIsFollowed] = useState(false);
 
   //get data of the user
   useEffect(() => {
@@ -45,12 +56,17 @@ export const UserRecipes = () => {
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        setUserData({ ...doc.data(), id: doc.id });
+        setUserData({ ...doc.data(), id: doc.id, followers: [] });
+        if (doc.data().followers) {
+          setIsFollowed(doc.data()?.followers.includes(user.displayName))
+        } else {
+          setIsFollowed(false)
+        }
       });
     };
 
     getUserData();
-  }, [recipes, username]);
+  }, [username]);
 
   //then catch user recipes
   useEffect(() => {
@@ -104,6 +120,32 @@ export const UserRecipes = () => {
     setMealSelected(e.target.value);
   };
 
+  //handle follow/unfollow
+  const handleFollow = async () => {
+    const tempUserData = {...userData};
+    const docToUpdate = doc(db, "users", userData.id);
+    if (
+      tempUserData.followers &&
+      tempUserData.followers.includes(user.displayName)
+    ) {
+      await updateDoc(docToUpdate, {
+        followers: arrayRemove(user.displayName),
+      });
+      tempUserData.followers = tempUserData.followers.filter(
+        (follower) => follower !== user.displayName
+      );
+      setUserData(tempUserData)
+      setIsFollowed(false)
+    } else {
+      await updateDoc(docToUpdate, {
+        followers: arrayUnion(user.displayName),
+      });
+      tempUserData.followers.push(user.displayName);
+      setUserData(tempUserData);
+      setIsFollowed(true)
+    }
+  };
+
   return (
     <>
       {userData ? (
@@ -121,9 +163,19 @@ export const UserRecipes = () => {
                 <span>Dodane przepisy: {userRecipes.length}</span>
               </div>
               <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-                <OrangeButton>
-                  <FontAwesomeIcon icon={faPlus} /> Obserwuj
-                </OrangeButton>{" "}
+                {isFollowed ? (
+                  <>
+                    <OrangeButton onClick={handleFollow}>
+                      <FontAwesomeIcon icon={faCheck} /> Obserwujesz
+                    </OrangeButton>{" "}
+                  </>
+                ) : (
+                  <>
+                    <OrangeButton onClick={handleFollow}>
+                      <FontAwesomeIcon icon={faPlus} /> Obserwuj
+                    </OrangeButton>{" "}
+                  </>
+                )}
                 <OrangeButton>Napisz wiadomość</OrangeButton>
               </div>
             </FlexContainer>
@@ -145,7 +197,7 @@ export const UserRecipes = () => {
             <RecipesGroup array={filteredUserRecipes} />
           ) : (
             <Container>
-              <h5 style={{textAlign: "center"}}>
+              <h5 style={{ textAlign: "center" }}>
                 Użytkownik {userData.username} nie posiada przepisu w kategorii{" "}
                 {mealSelected}
               </h5>
