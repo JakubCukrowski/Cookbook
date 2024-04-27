@@ -69,6 +69,7 @@ export const AuthContextProvider = ({ children }) => {
             .toLowerCase(),
           email: email,
           liked: [],
+          followers: []
         });
         const updatedUser = {
           ...userCredentials.user,
