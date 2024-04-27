@@ -7,7 +7,9 @@ import {
   LoggedUserImage,
   NavbarLink,
   StyledNavbarToggle,
-  NotificationsButton
+  NotificationsButton,
+  NotificationsCenter,
+  NotificationsTracker,
 } from "./NavbarStyles";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
@@ -17,14 +19,30 @@ import { faBell, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { BootstrapModal } from "../BootstrapModal";
 import { useEffect, useState } from "react";
 import { Notifications } from "./Notifications";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 export const CustomNavbar = () => {
   const { user, signout } = UserAuth();
   const navigate = useNavigate();
   const [loggedOut, setLoggedOut] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   const pathname = window.location.pathname;
+
+//get logged user notifications
+  useEffect(() => {
+    const getNotifications = async () => {
+      //get user data
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      setNotifications(docSnap.data().notifications);
+    };
+
+    getNotifications();
+  }, [user]);
 
   const handleSignOut = async () => {
     try {
@@ -54,6 +72,13 @@ export const CustomNavbar = () => {
     }
   }, [loggedOut]);
 
+
+
+  //close notifications
+  const updateNotificationsOpen = () => {
+    setNotificationsOpen(false);
+  };
+
   return (
     <>
       <StyledNavbar
@@ -63,6 +88,23 @@ export const CustomNavbar = () => {
       >
         <Container fluid>
           <StyledLink to={"/"}>Przepisowa pasja</StyledLink>
+          {user && (
+            <>
+              <NotificationsButton
+                onClick={() => setNotificationsOpen((prev) => !prev)}
+              >
+                <FontAwesomeIcon icon={faBell} />
+                <NotificationsTracker>{notifications.filter(notification => !notification.read).length}</NotificationsTracker>
+              </NotificationsButton>
+              <NotificationsCenter
+                className={notificationsOpen ? "" : "hidden"}
+              >
+                {user && (
+                  <Notifications notifications={notifications} hideNotifications={updateNotificationsOpen} />
+                )}
+              </NotificationsCenter>
+            </>
+          )}
           <StyledNavbarToggle />
           <StyledNavbarColapse id="navbar-dark-example">
             <Nav>
@@ -77,12 +119,18 @@ export const CustomNavbar = () => {
                       />
                     </NavbarLink>
                   </Nav.Item>
-                  <Nav.Item>
-                    <NotificationsButton>
-                      <FontAwesomeIcon icon={faBell}/>
+                  {/* <Nav.Item>
+                    <NotificationsButton
+                      onClick={() => setNotificationsOpen((prev) => !prev)}
+                    >
+                      <FontAwesomeIcon icon={faBell} />
                     </NotificationsButton>
-                  </Nav.Item>
-                  {user && <Notifications />}
+                    <NotificationsCenter
+                      className={notificationsOpen ? "" : "hidden"}
+                    >
+                      {user && <Notifications hideNotifications={updateNotificationsOpen}/>}
+                    </NotificationsCenter>
+                  </Nav.Item> */}
                   <Nav.Item>
                     <Button onClick={handleSignOut} variant="danger">
                       <FontAwesomeIcon icon={faPowerOff} /> Wyloguj
