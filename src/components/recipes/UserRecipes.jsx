@@ -123,12 +123,13 @@ export const UserRecipes = () => {
   //handle follow/unfollow
   const handleFollow = async () => {
     const tempUserData = {...userData};
-    const docToUpdate = doc(db, "users", userData.id);
+    const docOfRecipeCreator = doc(db, "users", userData.id);
+    const loggedUserRef = doc(db, 'users', user.uid)
     if (
       tempUserData.followers &&
       tempUserData.followers.includes(user.displayName)
     ) {
-      await updateDoc(docToUpdate, {
+      await updateDoc(docOfRecipeCreator, {
         followers: arrayRemove(user.displayName),
       });
       tempUserData.followers = tempUserData.followers.filter(
@@ -136,13 +137,21 @@ export const UserRecipes = () => {
       );
       setUserData(tempUserData)
       setIsFollowed(false)
+
+      await updateDoc(loggedUserRef, {
+        following: arrayRemove(userData.username)
+      })
     } else {
-      await updateDoc(docToUpdate, {
+      await updateDoc(docOfRecipeCreator, {
         followers: arrayUnion(user.displayName),
       });
       tempUserData.followers.push(user.displayName);
       setUserData(tempUserData);
       setIsFollowed(true)
+
+      await updateDoc(loggedUserRef, {
+        following: arrayUnion(userData.username)
+      })
     }
   };
 

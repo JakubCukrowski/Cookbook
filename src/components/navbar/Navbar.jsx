@@ -6,15 +6,17 @@ import {
   StyledNavbarColapse,
   LoggedUserImage,
   NavbarLink,
-  StyledNavbarToggle
+  StyledNavbarToggle,
+  NotificationsButton
 } from "./NavbarStyles";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { BootstrapModal } from "../BootstrapModal";
 import { useEffect, useState } from "react";
+import { Notifications } from "./Notifications";
 
 export const CustomNavbar = () => {
   const { user, signout } = UserAuth();
@@ -75,6 +77,12 @@ export const CustomNavbar = () => {
                       />
                     </NavbarLink>
                   </Nav.Item>
+                  <Nav.Item>
+                    <NotificationsButton>
+                      <FontAwesomeIcon icon={faBell}/>
+                    </NotificationsButton>
+                  </Nav.Item>
+                  {user && <Notifications />}
                   <Nav.Item>
                     <Button onClick={handleSignOut} variant="danger">
                       <FontAwesomeIcon icon={faPowerOff} /> Wyloguj
