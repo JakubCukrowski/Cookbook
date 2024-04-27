@@ -43,3 +43,16 @@ export const StyledNavbarToggle = styled(Navbar.Toggle)`
         color: white;
     }
 `
+
+export const NotificationsButton = styled.button`
+    border: none;
+    background-color: transparent;
+    font-size: 24px;
+    color: white;
+    transition: 0.3s;
+    margin-right: 4px;
+
+    &:hover {
+        color: black;
+    }
+`

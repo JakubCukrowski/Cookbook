@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../../../context/AuthContext";
 import { HandleRecipe } from "./HandleRecipe";
-import { collection, updateDoc, addDoc, doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  updateDoc,
+  addDoc,
+  doc,
+  setDoc,
+  query,
+  where,
+  getDoc,
+  getDocs,
+  arrayUnion,
+} from "firebase/firestore";
 import { db } from "../../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../firebase";
@@ -38,12 +49,14 @@ export const AddRecipe = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   //preview image on add
-  const [imagePreview, setImagePreview] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null);
 
-  //update image preview 
+  const [usersToNotify, setUsersToNotify] = useState([])
+
+  //update image preview
   const updateImagePreview = (value) => {
-    setImagePreview(value)
-  }
+    setImagePreview(value);
+  };
 
   const updateNewRecipeDetails = (value) => {
     setNewRecipeDetails(value);
@@ -90,7 +103,6 @@ export const AddRecipe = () => {
       tags: newRecipeDetails.tags,
     });
 
-
     //create a storage for the image
     const recipesRef = ref(
       storage,
@@ -120,7 +132,31 @@ export const AddRecipe = () => {
         return [...prev, { ...newRecipeDetails, image: url, id: docRef.id }];
       });
     });
-    
+
+    // download all users which are following the recipe creator
+    const userRef = doc(db, "users", user.uid);
+    const loggedUserDoc = await getDoc(userRef);
+    const usersRef = collection(db, "users");
+
+    //notify followers of adding new recipe
+    if (loggedUserDoc.data().followers) {
+      const q = query(
+        usersRef,
+        where('following', "array-contains", user.displayName)
+      );
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach(async follower => {
+        const docRef = doc(db, 'users', follower.id)
+        await updateDoc(docRef, {
+          notifications: arrayUnion({
+            recipeName: newRecipeDetails.name,
+            addedBy: newRecipeDetails.addedBy.user,
+            read: false
+          })
+        })
+      })
+    }
+
     navigate("/dashboard");
   };
 
