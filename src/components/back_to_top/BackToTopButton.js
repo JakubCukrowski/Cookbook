@@ -9,7 +9,7 @@ export const BackToTopButton = styled.button`
   position: fixed;
   bottom: 40px;
   right: 40px;
-  z-index: 2000;
+  z-index: 200;
   color: white;
   animation-name: jump;
   animation-duration: 1s;
