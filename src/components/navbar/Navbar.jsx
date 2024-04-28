@@ -29,20 +29,26 @@ export const CustomNavbar = () => {
   const [progress, setProgress] = useState(0);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [userData, setUserData] = useState(null);
 
   const pathname = window.location.pathname;
 
-//get logged user notifications
+  //get logged user notifications and logged user data
   useEffect(() => {
     const getNotifications = async () => {
       //get user data
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-      setNotifications(docSnap.data().notifications);
+      if (user) {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        setUserData(docSnap.data());
+        if (userData) {
+          setNotifications(docSnap.data().notifications);
+        }
+      }
     };
 
     getNotifications();
-  }, [user]);
+  }, [user, userData]);
 
   const handleSignOut = async () => {
     try {
@@ -72,8 +78,6 @@ export const CustomNavbar = () => {
     }
   }, [loggedOut]);
 
-
-
   //close notifications
   const updateNotificationsOpen = () => {
     setNotificationsOpen(false);
@@ -94,13 +98,27 @@ export const CustomNavbar = () => {
                 onClick={() => setNotificationsOpen((prev) => !prev)}
               >
                 <FontAwesomeIcon icon={faBell} />
-                <NotificationsTracker>{notifications.filter(notification => !notification.read).length}</NotificationsTracker>
+                {notifications &&
+                  notifications.filter((notification) => !notification.read)
+                    .length > 0 && (
+                    <NotificationsTracker>
+                      {
+                        notifications.filter(
+                          (notification) => !notification.read
+                        ).length
+                      }
+                    </NotificationsTracker>
+                  )}
               </NotificationsButton>
               <NotificationsCenter
                 className={notificationsOpen ? "" : "hidden"}
               >
-                {user && (
-                  <Notifications notifications={notifications} hideNotifications={updateNotificationsOpen} />
+                {user && notifications && (
+                  <Notifications
+                    userData={userData}
+                    notifications={notifications}
+                    hideNotifications={updateNotificationsOpen}
+                  />
                 )}
               </NotificationsCenter>
             </>
@@ -119,18 +137,6 @@ export const CustomNavbar = () => {
                       />
                     </NavbarLink>
                   </Nav.Item>
-                  {/* <Nav.Item>
-                    <NotificationsButton
-                      onClick={() => setNotificationsOpen((prev) => !prev)}
-                    >
-                      <FontAwesomeIcon icon={faBell} />
-                    </NotificationsButton>
-                    <NotificationsCenter
-                      className={notificationsOpen ? "" : "hidden"}
-                    >
-                      {user && <Notifications hideNotifications={updateNotificationsOpen}/>}
-                    </NotificationsCenter>
-                  </Nav.Item> */}
                   <Nav.Item>
                     <Button onClick={handleSignOut} variant="danger">
                       <FontAwesomeIcon icon={faPowerOff} /> Wyloguj

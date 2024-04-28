@@ -6,7 +6,6 @@ import {
   updateDoc,
   addDoc,
   doc,
-  setDoc,
   query,
   where,
   getDoc,
@@ -51,7 +50,7 @@ export const AddRecipe = () => {
   //preview image on add
   const [imagePreview, setImagePreview] = useState(null);
 
-  const [usersToNotify, setUsersToNotify] = useState([])
+  const currentDate = Date.now();
 
   //update image preview
   const updateImagePreview = (value) => {
@@ -86,7 +85,6 @@ export const AddRecipe = () => {
     e.preventDefault();
 
     setIsSubmitted(true);
-    const currentDate = Date.now();
 
     //set document in firestore
     const docRef = await addDoc(collection(db, "recipes"), {
@@ -146,12 +144,14 @@ export const AddRecipe = () => {
       );
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach(async follower => {
-        const docRef = doc(db, 'users', follower.id)
-        await updateDoc(docRef, {
+        const followerRef = doc(db, 'users', follower.id)
+        await updateDoc(followerRef, {
           notifications: arrayUnion({
             recipeName: newRecipeDetails.name,
             addedBy: newRecipeDetails.addedBy.user,
-            read: false
+            read: false,
+            recipeId: docRef.id,
+            addDate: currentDate
           })
         })
       })

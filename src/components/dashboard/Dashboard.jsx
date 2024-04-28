@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../../context/AuthContext";
 import { Container, Spinner } from "react-bootstrap";
-import { DataWrapper } from "../../styles/DataWrapper";
+import { DataWrapper, FollowedUsersDataWrapper } from "../../styles/DataWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../../styles/StyledLink";
@@ -21,9 +21,20 @@ import {
   DashboardDesktopWrapper,
   DataDesktopWrapper,
   DashboardDesktopRecipes,
+  FollowedUserDiv,
+  FollowedUsersDiv,
 } from "./DashboardStyles";
 import { auth } from "../../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 export const Dashboard = () => {
   const {
@@ -43,6 +54,12 @@ export const Dashboard = () => {
 
   //error state of user photo
   const [userPhotoError, setUserPhotoError] = useState(false);
+
+  //user data in users collection
+  const [userData, setUserData] = useState([]);
+
+  //get following of the logged user
+  const [userFollowing, setUserFollowing] = useState([]);
 
   //interval for progress bar
   useEffect(() => {
@@ -106,7 +123,37 @@ export const Dashboard = () => {
       );
       updateUserLikedRecipes(filterRecipesByLikes);
     }
+
+    //get data of the logged user
+    const updateUserData = async () => {
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
+      setUserData(userDoc.data());
+    };
+
+    updateUserData();
   }, [recipes, user]);
+
+  //get data of the followers
+  useEffect(() => {
+    const getFollowersData = async () => {
+      if (userData) {
+        const tempFollowing = [];
+        const q = query(
+          collection(db, "users"),
+          where("followers", "array-contains", user.displayName)
+        );
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((followed) => {
+          tempFollowing.push(followed.data());
+        });
+
+        setUserFollowing(tempFollowing);
+      }
+    };
+
+    getFollowersData();
+  }, [userData]);
 
   return (
     <>
@@ -194,6 +241,41 @@ export const Dashboard = () => {
                     <p>Nie polubiłeś żadnego przepisu</p>
                   )}
                 </DataWrapper>
+                <FollowedUsersDataWrapper>
+                  <h2>Obserwowani</h2>
+                  <Container>
+                    <FollowedUsersDiv>
+                      {userData &&
+                        userFollowing.map((followed, index) => {
+                          return (
+                            <StyledLink
+                              color="black"
+                              to={`/${followed.normalizedName}`}
+                              key={index}
+                              width="100%"
+                            >
+                              <FollowedUserDiv>
+                                <img
+                                  style={{
+                                    width: 80,
+                                    height: 80,
+                                    borderRadius: "50%",
+                                    objectFit: "cover",
+                                  }}
+                                  src={followed.profilePhoto}
+                                  alt="profile_photo"
+                                />
+                                <div>
+                                  <span>{followed.username}</span>
+                                  <p>Polubione przepisy: {followed.liked.length}</p>
+                                </div>
+                              </FollowedUserDiv>
+                            </StyledLink>
+                          );
+                        })}
+                    </FollowedUsersDiv>
+                  </Container>
+                </FollowedUsersDataWrapper>
               </DashboardDesktopRecipes>
             </DashboardDesktopWrapper>
           </DashboardSection>

@@ -5,6 +5,7 @@ export const StyledLink = styled(Link)`
     text-decoration: none;
     color: ${props => props.color};
     font-size: ${props => props.fontsize};
+    width: ${props => props.width};
 
     &:hover {
         opacity: 0.7;
