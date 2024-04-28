@@ -26,10 +26,11 @@ or create a new account
 - Updating recipes <br></br>
 - Deleting recipes <br></br>
 - Handling <hero /> component buttons for the most popular categories <br></br>
-### Recently added 
 - Commenting on recipes with nested comments and rating <br></br>
 - Editing and deleting comments <br></br>
 - A possibility to view all recipes added by the user once on the single recipe page by pressing a user name on a recipe card <br></br>
+### Recently added 
+- Follow user/s and notifications once one of the followed users adds a recipe
 
 
 ### To be added: 
