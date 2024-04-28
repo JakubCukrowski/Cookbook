@@ -32,7 +32,7 @@ export const UserRecipes = () => {
   //username from url to match the recipes
   const { username } = useParams();
   const { recipes, user } = UserAuth();
-  //stota to download user data
+  //state to download user data
   const [userData, setUserData] = useState(null);
   //recipes added by user
   const [userRecipes, setUserRecipes] = useState([]);
@@ -54,10 +54,16 @@ export const UserRecipes = () => {
         where("normalizedName", "==", username)
       );
 
+      //check if logged user is following the recipe creator
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        setUserData({ ...doc.data(), id: doc.id, followers: [] });
-        if (doc.data().followers) {
+        if (user && doc.data().followers) {
+          setUserData({ ...doc.data(), id: doc.id });
+        } else {
+          setUserData({ ...doc.data(), id: doc.id, followers: []});
+        }
+
+        if (user && doc.data().followers) {
           setIsFollowed(doc.data()?.followers.includes(user.displayName))
         } else {
           setIsFollowed(false)
@@ -93,6 +99,8 @@ export const UserRecipes = () => {
     getUserRecipes();
   }, [userData, username]);
 
+
+  //filter out meals
   useEffect(() => {
     if (userRecipes) {
       if (mealSelected === "Wszystko") {
@@ -154,7 +162,7 @@ export const UserRecipes = () => {
       })
     }
   };
-
+  
   return (
     <>
       {userData ? (
@@ -169,12 +177,13 @@ export const UserRecipes = () => {
               />
               <div style={{ textAlign: "start", marginLeft: 20 }}>
                 <h2>{userData.username}</h2>
-                <span>Dodane przepisy: {userRecipes.length}</span>
+                <p>Dodane przepisy: {userRecipes.length}</p>
+                <p>Obserwujący: {userData.followers.length}</p>
               </div>
               <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-                {isFollowed ? (
+                {user && (isFollowed  ? (
                   <>
-                    <OrangeButton onClick={handleFollow}>
+                    <OrangeButton onClick={(handleFollow)}>
                       <FontAwesomeIcon icon={faCheck} /> Obserwujesz
                     </OrangeButton>{" "}
                   </>
@@ -184,8 +193,8 @@ export const UserRecipes = () => {
                       <FontAwesomeIcon icon={faPlus} /> Obserwuj
                     </OrangeButton>{" "}
                   </>
-                )}
-                <OrangeButton>Napisz wiadomość</OrangeButton>
+                ))}
+                {user && <OrangeButton>Napisz wiadomość</OrangeButton>}
               </div>
             </FlexContainer>
             <StyledH2>Przepisy użytkownika</StyledH2>

@@ -109,3 +109,21 @@ export const UpdatePhotoWrapper = styled.div`
   transform: translateX(-50%);
   margin-bottom: -20px;
 `;
+
+export const FollowedUsersDiv = styled.div`
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 0 auto;
+  gap: 20px;
+  
+`
+
+export const FollowedUserDiv = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`

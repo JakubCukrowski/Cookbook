@@ -12,3 +12,9 @@ export const DataWrapper = styled.div`
     border-radius: 10px;
     margin-bottom: 50px;
 `
+
+export const FollowedUsersDataWrapper = styled(DataWrapper)`
+    height: 60vh;
+    overflow-y: auto;
+    position: relative;
+`
