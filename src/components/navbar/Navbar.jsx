@@ -113,7 +113,7 @@ export const CustomNavbar = () => {
               <NotificationsCenter
                 className={notificationsOpen ? "" : "hidden"}
               >
-                {user && notifications && (
+                {user && (
                   <Notifications
                     userData={userData}
                     notifications={notifications}

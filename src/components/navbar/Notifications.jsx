@@ -34,6 +34,7 @@ export const Notifications = ({
         </OrangeButton>
       </FlexContainer>
       <Container>
+        {!notifications && <p>Brak powiadomień</p>}
         {notifications &&
           notifications.map((notification, index) => {
             return (
