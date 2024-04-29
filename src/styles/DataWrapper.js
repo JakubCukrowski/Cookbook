@@ -14,7 +14,7 @@ export const DataWrapper = styled.div`
 `
 
 export const FollowedUsersDataWrapper = styled(DataWrapper)`
-    height: 60vh;
+    max-height: 60vh;
     overflow-y: auto;
     position: relative;
 `
