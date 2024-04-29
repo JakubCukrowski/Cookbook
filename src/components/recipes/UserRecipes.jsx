@@ -181,7 +181,7 @@ export const UserRecipes = () => {
                 <p>Obserwujący: {userData.followers.length}</p>
               </div>
               <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-                {user && (isFollowed  ? (
+                {user && user.displayName !== userData.username &&(isFollowed ? (
                   <>
                     <OrangeButton onClick={(handleFollow)}>
                       <FontAwesomeIcon icon={faCheck} /> Obserwujesz
@@ -194,7 +194,7 @@ export const UserRecipes = () => {
                     </OrangeButton>{" "}
                   </>
                 ))}
-                {user && <OrangeButton>Napisz wiadomość</OrangeButton>}
+                {user && user.displayName !== userData.username && <OrangeButton>Napisz wiadomość</OrangeButton>}
               </div>
             </FlexContainer>
             <StyledH2>Przepisy użytkownika</StyledH2>
