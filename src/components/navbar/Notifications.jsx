@@ -18,7 +18,12 @@ export const Notifications = ({
 
   const readNotification = async (index) => {
     const newUserData = userData;
-    newUserData.notifications[index].read = true;
+    //new notifications which have to be sorted
+    const sortedNotifications = newUserData.notifications.sort((a, b) => b.addDate - a.addDate)
+    //read the notification
+    sortedNotifications[index].read = true
+    newUserData.notifications = sortedNotifications
+    //update the document in firebase
     await updateDoc(doc(db, "users", user.uid), {
       notifications: newUserData.notifications,
     });
