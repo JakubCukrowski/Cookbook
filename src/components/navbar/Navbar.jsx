@@ -42,7 +42,7 @@ export const CustomNavbar = () => {
         const docSnap = await getDoc(docRef);
         setUserData(docSnap.data());
         if (userData) {
-          setNotifications(docSnap.data().notifications);
+          setNotifications(docSnap.data().notifications.sort((a, b) => b.addDate - a.addDate));
         }
       }
     };
