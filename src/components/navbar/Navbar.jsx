@@ -41,14 +41,12 @@ export const CustomNavbar = () => {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         setUserData(docSnap.data());
-        if (userData) {
-          setNotifications(docSnap.data().notifications.sort((a, b) => b.addDate - a.addDate));
-        }
+        setNotifications(docSnap.data().notifications.sort((a, b) => b.addDate - a.addDate));
       }
     };
 
     getNotifications();
-  }, [user, userData]);
+  }, [user]);
 
   const handleSignOut = async () => {
     try {

@@ -47,14 +47,17 @@ export const SingleRecipe = () => {
 
   //donwload the recipe, get author name, check if liked by current user
   useEffect(() => {
-    if (recipes.length > 0) {
-      const filterSearchedRecipe = recipes.find(
-        (recipe) => recipe.id === recipeId
-      );
-      setSearchedRecipe(filterSearchedRecipe);
-      setIsFound(true);
-    }
-  }, [recipes]);
+    const findRecipe = () => {
+      if (recipes.length > 0) {
+        const filterSearchedRecipe = recipes.find(
+          (recipe) => recipe.id === recipeId
+        );
+        setSearchedRecipe(filterSearchedRecipe);
+        setIsFound(true);
+      }
+    };
+    findRecipe();
+  }, [recipes, recipeId]);
 
   //checks if recipe has been already liked
   useEffect(() => {
@@ -63,7 +66,7 @@ export const SingleRecipe = () => {
         updateIsRecipeLiked(doc.data().liked.includes(recipeId));
       });
     }
-  }, [userLikedRecipes]);
+  }, [userLikedRecipes, recipeId]);
 
   //on like button click
   const handleLikeRecipe = async () => {
@@ -110,19 +113,30 @@ export const SingleRecipe = () => {
 
   //download comments
   useEffect(() => {
-    if (searchedRecipe.id) {
-      const getRecipeComments = async () => {
-        onSnapshot(doc(db, "comments", searchedRecipe.id), (comments) => {
-          //check if there's any comment/s
-          if (comments.data() !== undefined) {
-            setComments(comments.data().comments);
-          }
-        });
-      };
+    const getRecipeComments = async () => {
+      onSnapshot(doc(db, "comments", searchedRecipe.id), (comments) => {
+        //check if there's any comment/s
+        if (comments.data() !== undefined) {
+          setComments(comments.data().comments);
+        } else {
+          setComments([])
+        }
+      });
+    };
 
-      getRecipeComments();
-    }
-  }, [searchedRecipe]);
+    getRecipeComments();
+  }, [searchedRecipe, recipeId]);
+
+  //use effect for url of recipe change
+  useEffect(() => {
+    setIsFound(false)
+
+    const timeOut = setTimeout(() => {
+      setIsFound(true)
+    }, 500)
+
+    return () => clearTimeout(timeOut)
+  }, [recipeId])
 
   return (
     <section>
@@ -143,7 +157,12 @@ export const SingleRecipe = () => {
                 </Wrapper>
               </div>
               <div style={{ display: "flex" }}>
-                <StyledLink to={`/${searchedRecipe.addedBy.user.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()}`}>
+                <StyledLink
+                  to={`/${searchedRecipe.addedBy.user
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .toLowerCase()}`}
+                >
                   <RecipeAuthorWrapper>
                     <AuthorImageWrapper>
                       <img
