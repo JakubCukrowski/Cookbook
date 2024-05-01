@@ -12,6 +12,7 @@ import { UserAuth } from "../../context/AuthContext";
 export const Notifications = ({
   hideNotifications,
   notifications,
+  updateNotifications,
   userData,
 }) => {
   const { user } = UserAuth();
@@ -19,15 +20,18 @@ export const Notifications = ({
   const readNotification = async (index) => {
     const newUserData = userData;
     //new notifications which have to be sorted
-    const sortedNotifications = newUserData.notifications.sort((a, b) => b.addDate - a.addDate)
+    const sortedNotifications = newUserData.notifications.sort(
+      (a, b) => b.addDate - a.addDate
+    );
     //read the notification
-    sortedNotifications[index].read = true
-    newUserData.notifications = sortedNotifications
+    sortedNotifications[index].read = true;
+    newUserData.notifications = sortedNotifications;
     //update the document in firebase
     await updateDoc(doc(db, "users", user.uid), {
       notifications: newUserData.notifications,
     });
-    return hideNotifications()
+    updateNotifications(newUserData.notifications)
+    hideNotifications();
   };
 
   return (
@@ -39,24 +43,40 @@ export const Notifications = ({
         </OrangeButton>
       </FlexContainer>
       <Container>
-        {!notifications && <p>Brak powiadomień</p>}
+        {notifications.length === 0 && <p>Brak powiadomień</p>}
         {notifications &&
           notifications.map((notification, index) => {
             return (
-              <NotificationLink
-                onClick={() => readNotification(index)}
+              <NotificationDiv
                 key={index}
                 className={notification.read ? "" : "unread"}
-                to={`/recipes/${notification.recipeId}`}
               >
-                <NotificationDiv
-                  style={{ marginTop: 20 }}
-                  className={notification.read ? "" : "unread"}
+                <NotificationLink
+                  onClick={() => readNotification(index)}
+                  to={
+                    notification.type === "newRecipe"
+                      ? `/recipes/${notification.recipeId}`
+                      : `/${notification.likedBy
+                          .normalize("NFD")
+                          .replace(/[\u0300-\u036f]/g, "")
+                          .toLowerCase()
+                        }`
+                  }
                 >
-                  Użytkownik <strong>{notification.addedBy}</strong> dodał
-                  przepis {notification.recipeName}
-                </NotificationDiv>
-              </NotificationLink>
+                  {notification.type === "newRecipe" ? (
+                    <>
+                      Użytkownik <strong>{notification.addedBy}</strong> dodał
+                      przepis {notification.recipeName}
+                    </>
+                  ) : (
+                    <>
+                      Użytkownik <strong>{notification.likedBy}</strong> polubił
+                      Twój przepis{" "}
+                      <strong>{notification.likedRecipeName}</strong>
+                    </>
+                  )}
+                </NotificationLink>
+              </NotificationDiv>
             );
           })}
       </Container>

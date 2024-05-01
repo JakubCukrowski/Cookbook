@@ -41,7 +41,11 @@ export const CustomNavbar = () => {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         setUserData(docSnap.data());
-        setNotifications(docSnap.data().notifications.sort((a, b) => b.addDate - a.addDate));
+        if (docSnap.data().notifications !== undefined) {
+          setNotifications(
+            docSnap.data().notifications.sort((a, b) => b.addDate - a.addDate)
+          );
+        }
       }
     };
 
@@ -81,6 +85,11 @@ export const CustomNavbar = () => {
     setNotificationsOpen(false);
   };
 
+  //update notifications after read
+  const updateNotifications = (value) => {
+    setNotifications(value)
+  }
+
   return (
     <>
       <StyledNavbar
@@ -115,6 +124,7 @@ export const CustomNavbar = () => {
                   <Notifications
                     userData={userData}
                     notifications={notifications}
+                    updateNotifications={updateNotifications}
                     hideNotifications={updateNotificationsOpen}
                   />
                 )}
