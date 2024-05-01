@@ -127,23 +127,15 @@ export const NotificationsCenter = styled.div`
 `;
 
 export const NotificationDiv = styled.div`
-  margin-top: 20px;
-  padding: 10px;
   background-color: #f4f4f4;
-
-  &.unread {
-    background-color: #e8e8e8;
-    border: 1px solid gray;
-    position: relative;
-  }
-`;
-
-export const NotificationLink = styled(Link)`
-  text-decoration: none;
-  color: black;
   position: relative;
+  margin-top: 20px;
+  width: 100%;
 
   &.unread {
+    background-color: #c4c4c4;
+    border: 1px solid black;
+
     &::after {
       content: "";
       position: absolute;
@@ -157,4 +149,13 @@ export const NotificationLink = styled(Link)`
       border-radius: 50%;
     }
   }
+`;
+
+export const NotificationLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  position: relative;
+  display: block;
+  padding: 10px;
+  padding-right: 40px;
 `;

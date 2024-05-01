@@ -151,7 +151,8 @@ export const AddRecipe = () => {
             addedBy: newRecipeDetails.addedBy.user,
             read: false,
             recipeId: docRef.id,
-            addDate: currentDate
+            addDate: currentDate,
+            type: 'newRecipe'
           })
         })
       })

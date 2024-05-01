@@ -10,9 +10,13 @@ import { LikeButton } from "../../LikeButton";
 import {
   arrayRemove,
   arrayUnion,
+  collection,
   doc,
+  getDoc,
   onSnapshot,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useEffect, useState } from "react";
@@ -42,12 +46,14 @@ export const SingleRecipe = () => {
     updateIsRecipeLiked,
   } = UserAuth();
   const [searchedRecipe, setSearchedRecipe] = useState({});
+  const [recipeCreatorData, setRecipeCreatorData] = useState({});
   const [isFound, setIsFound] = useState(false);
   const [comments, setComments] = useState([]);
+  const [currentDate, setCurrentDate] = useState(Date.now());
 
   //donwload the recipe, get author name, check if liked by current user
   useEffect(() => {
-    const findRecipe = () => {
+    const findRecipe = async () => {
       if (recipes.length > 0) {
         const filterSearchedRecipe = recipes.find(
           (recipe) => recipe.id === recipeId
@@ -55,6 +61,21 @@ export const SingleRecipe = () => {
         setSearchedRecipe(filterSearchedRecipe);
         setIsFound(true);
       }
+
+      //current recipe
+      const recipeRef = doc(db, "recipes", recipeId);
+      //recipe data for notifying when recipe is liked
+      const recipeDoc = await getDoc(recipeRef);
+      //we get the data of the recipe creator
+      const q = query(
+        collection(db, "users"),
+        where("username", "==", recipeDoc.data().addedBy.user)
+      );
+      onSnapshot(q, (recipeCreator) => {
+        recipeCreator.forEach((creator) => {
+          setRecipeCreatorData({ ...creator.data(), id: creator.id });
+        });
+      });
     };
     findRecipe();
   }, [recipes, recipeId]);
@@ -70,8 +91,11 @@ export const SingleRecipe = () => {
 
   //on like button click
   const handleLikeRecipe = async () => {
+    //logged user data
     const userRef = doc(db, "users", user.uid);
+    //current recipe
     const recipeRef = doc(db, "recipes", recipeId);
+
     if (!isRecipeLiked) {
       await updateDoc(userRef, {
         liked: arrayUnion(recipeId),
@@ -80,6 +104,21 @@ export const SingleRecipe = () => {
       await updateDoc(recipeRef, {
         likedBy: arrayUnion(user.uid),
       });
+
+      if (recipeCreatorData) {
+        const recipeCreatorRef = doc(db, "users", recipeCreatorData.id);
+
+        await updateDoc(recipeCreatorRef, {
+          notifications: arrayUnion({
+            addDate: currentDate,
+            likedBy: user.displayName,
+            read: false,
+            userId: user.uid,
+            type: "likedRecipe",
+            likedRecipeName: searchedRecipe.name,
+          }),
+        });
+      }
 
       updateIsRecipeLiked((prev) => !prev);
       updateUserLikedRecipes((prev) => [...prev, searchedRecipe]);
@@ -102,7 +141,6 @@ export const SingleRecipe = () => {
   };
 
   //calculate elapsed time based on date when comment was added
-  const [currentDate, setCurrentDate] = useState(Date.now());
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentDate(Date.now());
@@ -118,25 +156,25 @@ export const SingleRecipe = () => {
         //check if there's any comment/s
         if (comments.data() !== undefined) {
           setComments(comments.data().comments);
-        } else {
-          setComments([])
         }
       });
     };
 
-    getRecipeComments();
+    if (searchedRecipe.id) {
+      getRecipeComments();
+    }
   }, [searchedRecipe, recipeId]);
 
   //use effect for url of recipe change
   useEffect(() => {
-    setIsFound(false)
+    setIsFound(false);
 
     const timeOut = setTimeout(() => {
-      setIsFound(true)
-    }, 500)
+      setIsFound(true);
+    }, 500);
 
-    return () => clearTimeout(timeOut)
-  }, [recipeId])
+    return () => clearTimeout(timeOut);
+  }, [recipeId]);
 
   return (
     <section>
