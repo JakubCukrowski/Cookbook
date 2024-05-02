@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { BackToTopButton } from "./BackToTopButton";
 
-export const BackToTop = ({visible}) => {
+export const BackToTop = () => {
     const scrollToTop = () => {
         return window.scrollTo(0, 0)
     }

@@ -12,17 +12,24 @@ export const BackToTopButton = styled.button`
   z-index: 200;
   color: white;
   animation-name: jump;
-  animation-duration: 1s;
+  animation-duration: 2s;
+  animation-direction: alternate;
   font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   @keyframes jump {
     0% {
-      bottom: 40px;
-      rotate: 180deg;
+      bottom: 80px;
     }
 
     50% {
-        bottom: 20px;
+      bottom: 40px;
+    }
+
+    75% {
+      bottom: 80px;
     }
 
     100% {
