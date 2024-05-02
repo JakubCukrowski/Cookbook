@@ -1,14 +1,16 @@
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
+
+    body {
+        font-family: 'Noto Sans', sans-serif;
+    }
+
     #root {
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-    }
-
-    body {
-        font-family: 'Noto Sans', sans-serif;
+        position: relative;
     }
 
     .no-radius-left-bottom {
@@ -93,5 +95,9 @@ export const GlobalStyle = createGlobalStyle`
 
     .nav-link {
         color: white;
+    }
+
+    .no-scroll {
+        overflow: hidden;
     }
 `;
