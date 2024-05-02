@@ -27,6 +27,7 @@ import { StyledH2 } from "../../styles/StyledH2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FormCategory } from "./form_elements/FormCategory";
+import { FilterUserRecipesDiv } from "./RecipesStyles";
 
 export const UserRecipes = () => {
   //username from url to match the recipes
@@ -168,7 +169,7 @@ export const UserRecipes = () => {
       {userData ? (
         <>
           <Container>
-            <FlexContainer align="center" padding="50px 0 0 0">
+            <FlexContainer className="mobile_view" align="center" padding="50px 0 0 0">
               <Image
                 roundedCircle
                 src={userData.profilePhoto}
@@ -178,7 +179,7 @@ export const UserRecipes = () => {
               <div style={{ textAlign: "start", marginLeft: 20 }}>
                 <h2>{userData.username}</h2>
                 <p>Dodane przepisy: {userRecipes.length}</p>
-                <p>Obserwujący: {userData.followers.length}</p>
+                <p>Obserwujących: {userData.followers.length}</p>
               </div>
               <div style={{ marginLeft: "auto", marginRight: "auto" }}>
                 {user && user.displayName !== userData.username &&(isFollowed ? (
@@ -198,7 +199,7 @@ export const UserRecipes = () => {
               </div>
             </FlexContainer>
             <StyledH2>Przepisy użytkownika</StyledH2>
-            <div style={{ width: "20%", margin: "auto" }}>
+            <FilterUserRecipesDiv>
               <Form style={{ marginBottom: 50 }}>
                 <FormLabel htmlFor="filter_select">
                   Filtruj po posiłku
@@ -209,7 +210,7 @@ export const UserRecipes = () => {
                   onChange={onCategoryChange}
                 />
               </Form>
-            </div>
+            </FilterUserRecipesDiv>
           </Container>
           {filteredUserRecipes.length > 0 ? (
             <RecipesGroup array={filteredUserRecipes} />
