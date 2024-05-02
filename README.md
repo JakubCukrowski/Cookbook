@@ -13,6 +13,7 @@ or create a new account
 3. User can search for the desired recipe on the homepage by recipe's name, or tag
 4. User can check the recipes from the most popular tags counted by likes count of the recipe and tags received from all recipes
 5. User can filter recipes by category, preparation time and difficulty by pressing 'see more' below recipes on the homepage
+6. User in recipe card is a link which redirects to the user's recipes
 
 ### Current features include:
 
@@ -29,9 +30,10 @@ or create a new account
 - Commenting on recipes with nested comments and rating <br></br>
 - Editing and deleting comments <br></br>
 - A possibility to view all recipes added by the user once on the single recipe page by pressing a user name on a recipe card <br></br>
+
 ### Recently added 
 - Follow user/s and notifications once one of the followed users adds a recipe
-
+- Notification to the recipe owner when recipe was liked. 
 
 ### To be added: 
 
