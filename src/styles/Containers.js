@@ -7,6 +7,13 @@ export const FlexContainer = styled(Container)`
   justify-content: ${(props) => props.justify};
   align-items: ${(props) => props.align};
   padding: ${(props) => props.padding};
+
+  &.mobile_view {
+    @media (max-width: 992px) {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
 `;
 
 export const HeroFlexContainer = styled(FlexContainer)`
@@ -76,4 +83,4 @@ export const CustomContainer = styled(Container)`
   @media (max-width: 576px) {
     padding: 0 40px;
   }
-`
+`;

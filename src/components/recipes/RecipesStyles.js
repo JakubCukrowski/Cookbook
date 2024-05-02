@@ -171,3 +171,12 @@ export const StyledCommentsDiv = styled.div`
     margin: 0 auto;
   }
 `
+
+export const FilterUserRecipesDiv = styled.div`
+  width: 80%;
+  margin: auto;
+
+  @media (min-width: 992px) {
+    width: 30%;
+  }
+`
