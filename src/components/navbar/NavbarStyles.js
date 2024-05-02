@@ -50,9 +50,14 @@ export const NotificationsButton = styled.button`
   font-size: 24px;
   color: white;
   transition: 0.3s;
-  margin-right: 4px;
+  margin-right: 20px;
   margin-left: auto;
   position: relative;
+  padding: 0;
+
+  @media (min-width: 992px) {
+    margin-right: 6px;
+  }
 
   &:hover {
     color: black;
@@ -63,7 +68,7 @@ export const NotificationsButton = styled.button`
 export const NotificationsTracker = styled.div`
   position: absolute;
   top: 0;
-  right: 0;
+  left: 10px;
   background-color: red;
   width: 18px;
   height: 18px;
@@ -76,27 +81,31 @@ export const NotificationsTracker = styled.div`
 `;
 
 export const NotificationsCenter = styled.div`
-  position: fixed;
+  position: absolute;
   width: 100%;
   height: 100vh;
   background-color: white;
   right: 0;
-  bottom: 0;
+  top: 0;
   transition: all 0.5s ease-in-out;
   padding: 10px 0;
 
   & * {
-    animation-duration: 0.4s;
+    animation-duration: 1.2s;
     animation-name: show;
   }
 
   @keyframes show {
     from {
-      opacity: 1;
+      display: none;
     }
 
-    75% {
+    0% {
       opacity: 0;
+    }
+
+    90% {
+      opacity: 1;
     }
   }
 

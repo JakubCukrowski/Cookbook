@@ -19,7 +19,7 @@ import { faBell, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { BootstrapModal } from "../BootstrapModal";
 import { useEffect, useState } from "react";
 import { Notifications } from "./Notifications";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 
 export const CustomNavbar = () => {
