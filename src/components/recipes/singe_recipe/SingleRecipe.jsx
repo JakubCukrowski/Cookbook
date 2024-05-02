@@ -45,10 +45,15 @@ export const SingleRecipe = () => {
     isRecipeLiked,
     updateIsRecipeLiked,
   } = UserAuth();
+  //recipe which the user is on
   const [searchedRecipe, setSearchedRecipe] = useState({});
+  //data of the user which has added the recipe
   const [recipeCreatorData, setRecipeCreatorData] = useState({});
+  //state for managing if showing the spinner or the recipe
   const [isFound, setIsFound] = useState(false);
+  //recipe comments
   const [comments, setComments] = useState([]);
+  //date
   const [currentDate, setCurrentDate] = useState(Date.now());
 
   //donwload the recipe, get author name, check if liked by current user
@@ -95,6 +100,8 @@ export const SingleRecipe = () => {
     const userRef = doc(db, "users", user.uid);
     //current recipe
     const recipeRef = doc(db, "recipes", recipeId);
+    //reference of recipe creator
+    const recipeCreatorRef = doc(db, "users", recipeCreatorData.id);
 
     if (!isRecipeLiked) {
       await updateDoc(userRef, {
@@ -105,20 +112,17 @@ export const SingleRecipe = () => {
         likedBy: arrayUnion(user.uid),
       });
 
-      if (recipeCreatorData) {
-        const recipeCreatorRef = doc(db, "users", recipeCreatorData.id);
 
-        await updateDoc(recipeCreatorRef, {
-          notifications: arrayUnion({
-            addDate: currentDate,
-            likedBy: user.displayName,
-            read: false,
-            userId: user.uid,
-            type: "likedRecipe",
-            likedRecipeName: searchedRecipe.name,
-          }),
-        });
-      }
+      await updateDoc(recipeCreatorRef, {
+        notifications: arrayUnion({
+          addDate: currentDate,
+          likedBy: user.displayName,
+          read: false,
+          userId: user.uid,
+          type: "likedRecipe",
+          likedRecipeName: searchedRecipe.name,
+        }),
+      });
 
       updateIsRecipeLiked((prev) => !prev);
       updateUserLikedRecipes((prev) => [...prev, searchedRecipe]);
@@ -137,6 +141,23 @@ export const SingleRecipe = () => {
         (recipe) => recipe.id !== recipeId
       );
       updateUserLikedRecipes(filterLikedRecipes);
+
+      //get curent notifications of the recipe creator
+      const newCreatorNotifications = recipeCreatorData.notifications;
+      //find index of notification which has to be deleted
+      const notificationToDelete = newCreatorNotifications.findIndex(
+        (notification) =>
+          searchedRecipe.name === notification.likedRecipeName &&
+          notification.userId === user.uid
+      );
+      //filter out the deleted notification
+      const filterNotifications = newCreatorNotifications.filter(
+        (_, index) => index !== notificationToDelete
+      );
+
+      await updateDoc(recipeCreatorRef, {
+        notifications: filterNotifications,
+      });
     }
   };
 

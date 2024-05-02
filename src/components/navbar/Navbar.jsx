@@ -19,7 +19,7 @@ import { faBell, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { BootstrapModal } from "../BootstrapModal";
 import { useEffect, useState } from "react";
 import { Notifications } from "./Notifications";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 
 export const CustomNavbar = () => {
@@ -38,14 +38,16 @@ export const CustomNavbar = () => {
     const getNotifications = async () => {
       //get user data
       if (user) {
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        setUserData(docSnap.data());
-        if (docSnap.data().notifications !== undefined) {
-          setNotifications(
-            docSnap.data().notifications.sort((a, b) => b.addDate - a.addDate)
-          );
-        }
+        const userRef = doc(db, "users", user.uid);
+        //live notifications show/delete
+        const unsub = onSnapshot(userRef, (doc) => {
+          setUserData(doc.data());
+          if (doc.data().notifications !== undefined) {
+            setNotifications(
+              doc.data().notifications.sort((a, b) => b.addDate - a.addDate)
+            );
+          }
+        });
       }
     };
 
@@ -87,8 +89,8 @@ export const CustomNavbar = () => {
 
   //update notifications after read
   const updateNotifications = (value) => {
-    setNotifications(value)
-  }
+    setNotifications(value);
+  };
 
   return (
     <>
