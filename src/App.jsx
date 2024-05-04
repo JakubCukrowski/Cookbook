@@ -1,30 +1,30 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Layout } from "./components/Layout";
-import { Hero } from "./components/hero/Hero";
+import { Layout } from "./pages/Layout";
+import { Hero } from "./components/Hero";
 import { NewestRecipes } from "./components/recipes/main_page_recipes/NewestRecipes";
 import { PopularRecipes } from "./components/recipes/main_page_recipes/PopularRecipes";
-import { SingleRecipe } from "./components/recipes/singe_recipe/SingleRecipe";
+import { SingleRecipe } from "./pages/SingleRecipe";
 import { AuthContextProvider } from "./context/AuthContext";
-import { SignUp } from "./components/user_credenitals/SignUp";
-import { SignIn } from "./components/user_credenitals/SignIn";
-import { Dashboard } from "./components/dashboard/Dashboard";
-import { NotFound } from "./components/not_found/NotFound";
-import { RecipesPage } from "./components/recipes/RecipesPage";
-import { GlobalStyle } from "./styles/GlobalStyles";
+import { SignUp } from "./pages/SignUp";
+import { SignIn } from "./pages/SignIn";
+import { Dashboard } from "./pages/Dashboard";
+import { NotFound } from "./pages/NotFound";
+import { RecipesPage } from "./pages/RecipesPage";
+import { GlobalStyle } from "./assets/styles/GlobalStyles";
 import { AddRecipe } from "./components/recipes/add_delete_edit_recipe/AddRecipe";
-import { PrivateRoute } from "./components/private_route/PrivateRoute";
-import { ProfanityViolation } from "./components/profanity/ProfanityViolation";
+import { PrivateRoute } from "./components/PrivateRoute";
+import { ProfanityViolation } from "./pages/ProfanityViolation";
 import { Soups } from "./components/recipes/main_page_recipes/Soups";
 import { Desserts } from "./components/recipes/main_page_recipes/Desserts";
-import { FilterRecipes } from "./components/recipes/filter_recipes/FilterRecipes";
+import { FilterRecipes } from "./pages/FilterRecipes";
 import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditRecipe";
 import { ScrollToTop } from "./components/ScrollToTop";
-import { SearchedTag } from "./components/recipes/Tags/SearchedTag";
+import { SearchedTag } from "./pages/SearchedTag";
 import { MainDishes } from "./components/recipes/main_page_recipes/MainDishes";
-import { BlockedRoute } from "./components/blocked_route/BlockedRoute";
-import { PopularTags } from "./components/recipes/Tags/PopularTags";
-import { UserRecipes } from "./components/recipes/UserRecipes";
+import { BlockedRoute } from "./components/BlockedRoute";
+import { PopularTags } from "./pages/PopularTags";
+import { UserRecipes } from "./pages/UserRecipes";
 
 function App() {
   return (

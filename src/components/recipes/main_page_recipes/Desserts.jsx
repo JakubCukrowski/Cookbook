@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../../../context/AuthContext";
-import { RecipesGroup } from "./RecipesGroup";
+import { RecipesGroup } from "../../../components/RecipesGroup";
 import { useNavigate } from "react-router-dom";
-import { StyledH2 } from "../../../styles/StyledH2";
+import { StyledH2 } from "../../../assets/styles/StyledH2";
 
 export const Desserts = () => {
   const { recipes, isRecipeAdded } = UserAuth();

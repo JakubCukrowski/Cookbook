@@ -1,9 +1,9 @@
 import React from "react";
 import { Form, FormGroup } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
-import { FormCategory } from "../form_elements/FormCategory";
-import { FormDifficulty } from "../form_elements/FormDifficulty";
-import { FormPrepTime } from "../form_elements/FormPrepTime";
+import { FormCategory } from "../../FormCategory";
+import { FormDifficulty } from "../../FormDifficulty";
+import { FormPrepTime } from "../../FormPrepTime";
 import { HandleImage } from "./HandleImage";
 
 export const RecipeDetails = ({
