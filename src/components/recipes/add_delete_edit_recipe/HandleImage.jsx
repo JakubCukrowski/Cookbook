@@ -6,7 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Alert, FormGroup, Form, Spinner, Button } from "react-bootstrap";
-import { FakeSpinnerContainer } from "../../../styles/Containers";
+import { FakeSpinnerContainer } from "../../../assets/styles/Containers";
 
 export const HandleImage = ({
   updateImage,

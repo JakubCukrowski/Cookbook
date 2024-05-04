@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { StyledLink } from "../../styles/StyledLink";
+import { StyledLink } from "../../assets/styles/StyledLink";
 import { Button, Container } from "react-bootstrap";
-import { DashboardRecipeImage, EditUserRecipeWrapper } from "./DashboardStyles";
+import { DashboardRecipeImage, EditUserRecipeWrapper } from "../../assets/styles/DashboardStyles";
 import { UserAuth } from "../../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,8 +20,8 @@ import {
   doc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
-import { BootstrapModal } from "../BootstrapModal";
-import { OrangeButton } from "../../styles/OrangeButton";
+import { BootstrapModal } from "../../components/BootstrapModal";
+import { OrangeButton } from "../../assets/styles/OrangeButton";
 
 export const DashboardRecipes = ({
   linkTo,
