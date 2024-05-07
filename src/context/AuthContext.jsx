@@ -62,7 +62,7 @@ export const AuthContextProvider = ({ children }) => {
         const docRef = await setDoc(userRef, {
           username: displayName,
           profilePhoto:
-            "https://firebasestorage.googleapis.com/v0/b/cookbook-a4b98.appspot.com/o/profile%2Fanon-chef1.png?alt=media&token=76a571b2-6999-4a5e-a553-5d5ae628b522",
+            "https://firebasestorage.googleapis.com/v0/b/przepisowa-pasja.appspot.com/o/profile%2Fanon-chef1.png?alt=media&token=f87cea4b-5659-4d0c-a951-7224c513e217",
           normalizedName: displayName
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
@@ -107,7 +107,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const getRecipes = () => {
       const q = query(collection(db, "recipes"));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      onSnapshot(q, (querySnapshot) => {
         const tempRecipes = [];
         querySnapshot.forEach((recipe) => {
           tempRecipes.push({ ...recipe.data(), id: recipe.id });

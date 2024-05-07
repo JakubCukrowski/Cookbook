@@ -46,6 +46,8 @@ export const CustomNavbar = () => {
             setNotifications(
               doc.data().notifications.sort((a, b) => b.addDate - a.addDate)
             );
+          } else {
+            setNotifications((prev) => prev);
           }
         });
       }

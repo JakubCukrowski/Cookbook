@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { Container, Spinner } from "react-bootstrap";
-import { DataWrapper, FollowedUsersDataWrapper } from "../assets/styles/DataWrapper";
+import {
+  DataWrapper,
+  FollowedUsersDataWrapper,
+} from "../assets/styles/DataWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../assets/styles/StyledLink";
@@ -80,15 +83,15 @@ export const Dashboard = () => {
     const profileImageRef = ref(storage, `profile/${user.uid}/profile_photo`);
     const userRef = doc(db, "users", user.uid);
     try {
-      await uploadBytes(profileImageRef, e.target.files[0])
-        .then(async () => {
-          await getDownloadURL(profileImageRef).then(async (url) => {
+      uploadBytes(profileImageRef, e.target.files[0])
+        .then(() => {
+          getDownloadURL(profileImageRef).then(async (url) => {
             //update url in logged user object
-            await updateProfile(auth.currentUser, {
+            updateProfile(auth.currentUser, {
               photoURL: url,
             });
             //update url in user docs
-            await updateDoc(userRef, {
+            updateDoc(userRef, {
               profilePhoto: url,
             });
             setIsUserImageUploaded(true);
@@ -267,7 +270,9 @@ export const Dashboard = () => {
                                 />
                                 <div>
                                   <span>{followed.username}</span>
-                                  <p>Polubione przepisy: {followed.liked.length}</p>
+                                  <p>
+                                    Polubione przepisy: {followed.liked.length}
+                                  </p>
                                 </div>
                               </FollowedUserDiv>
                             </StyledLink>
