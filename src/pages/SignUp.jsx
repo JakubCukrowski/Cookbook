@@ -6,133 +6,90 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../assets/styles/StyledLink";
 import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { StyledSignSection, StyledForm } from "../assets/styles/CredentialsStyles";
+import {
+  StyledSignSection,
+  StyledForm,
+} from "../assets/styles/CredentialsStyles";
+import { useFormik } from "formik";
 
 export const SignUp = () => {
   const { createUser } = UserAuth();
   const navigate = useNavigate();
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const [userCredentials, setUserCredentials] = useState({
-    displayName: "",
-    email: "",
-    password: "",
-    repeatedPassword: "",
-  });
-
-  const [inputErrors, setInputErrors] = useState({
-    displayName: false,
-    email: false,
-    password: false,
-    repeatedPassword: false,
-  });
-
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
 
-  //handle inputs, and reset errors
-  const handleInputs = (e) => {
-    const { name, value } = e.target;
+  const validate = (values) => {
+    const errors = {};
 
-    setUserCredentials((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+    if (!values.displayName) {
+      errors.displayName = "Musisz podać nazwę użytkownika";
+    } else if (values.displayName.length < 4) {
+      errors.displayName =
+        "Nazwa użytkownika powinna posiadać przynajmniej 4 znaki";
+    }
 
-    setInputErrors((prev) => {
-      return {
-        ...prev,
-        displayName: name === "displayName" ? false : prev.displayName,
-        email: name === "email" ? false : prev.email,
-        password:
-          name === "password" || name === "repeatedPassword"
-            ? false
-            : prev.password,
-        repeatedPassword:
-          name === "password" || name === "repeatedPassword"
-            ? false
-            : prev.repeatedPassword,
-      };
-    });
+    if (!values.email) {
+      errors.email = "Musisz podać email";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+    ) {
+      errors.email = "Email nie jest poprawny";
+    }
+
+    if (!values.password) {
+      errors.password = "Musisz podać hasło";
+    }
+
+    if (values.password.length < 8) {
+      errors.password = "Hasło musi mieć przynajmniej 8 znaków";
+    }
+
+    if (
+      values.password.length >= 8 &&
+      !values.password.match(
+        /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+,\-.={}[\]:;'"<>?|])/
+      )
+    ) {
+      errors.password = "Hasło musi zawierać wielką literę i znak specjalny";
+    }
+
+    if (values.password !== values.repeatedPassword) {
+      errors.paassword = "Hasła nie zgadzają się";
+      errors.repeatedPassword = "Hasła nie zgadzają się";
+    }
+
+    return errors;
   };
 
-  //handle sumbit button + validation
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (
-      userCredentials.displayName.length < 6 ||
-      userCredentials.displayName.length > 10
-    ) {
-      setInputErrors((prev) => {
-        return {
-          ...prev,
-          displayName: true,
-        };
-      });
-    }
-
-    if (!userCredentials.email.match(emailRegex)) {
-      setInputErrors((prev) => {
-        return {
-          ...prev,
-          email: true,
-        };
-      });
-    }
-
-    if (
-      userCredentials.password !== userCredentials.repeatedPassword ||
-      userCredentials.password.length < 6
-    ) {
-      setInputErrors((prev) => {
-        return {
-          ...prev,
-          password: true,
-        };
-      });
-    }
-
-    if (userCredentials.repeatedPassword !== userCredentials.password) {
-      setInputErrors((prev) => {
-        return {
-          ...prev,
-          repeatedPassword: true,
-        };
-      });
-    }
-
-    if (
-      userCredentials.displayName.length >= 6 &&
-      userCredentials.email.match(emailRegex) &&
-      userCredentials.password === userCredentials.repeatedPassword &&
-      userCredentials.password.length >= 6
-    ) {
-      setIsSpinnerVisible(true);
-
+  const formik = useFormik({
+    initialValues: {
+      displayName: "",
+      email: "",
+      password: "",
+      repeatedPassword: "",
+    },
+    validate,
+    onSubmit: async (values) => {
       try {
-        await createUser(
-          userCredentials.displayName,
-          userCredentials.email,
-          userCredentials.password
-        );
-
-        const timeoutId = setTimeout(() => {
-          navigate("/dashboard");
-        }, 1000);
-
-        return () => clearTimeout(timeoutId);
+        setIsSpinnerVisible(true);
+        await createUser(values.displayName, values.email, values.password);
+        navigate("/dashboard");
       } catch (error) {
-        alert(error);
+        if (error.code === "auth/email-already-in-use") {
+          setIsSpinnerVisible(false);
+          formik.errors.email = "Ten email jest już zajęty";
+        }
       }
-    }
-  };
+    },
+  });
 
   return (
     <StyledSignSection>
-      {!isSpinnerVisible ? (
+      {isSpinnerVisible ? (
+        <SpinnerContainer>
+          <Spinner />
+        </SpinnerContainer>
+      ) : (
         <>
-          {" "}
           <StyledLink
             color="white"
             style={{ padding: 20, alignSelf: "flex-start" }}
@@ -145,92 +102,81 @@ export const SignUp = () => {
             <span style={{ margin: 10 }}>
               Masz już konto? <StyledLink to="/signin">Zaloguj się</StyledLink>
             </span>
-            <StyledForm noValidate onSubmit={handleSubmit}>
+            <StyledForm noValidate onSubmit={formik.handleSubmit}>
               <Form.Group className="mb-3">
-                <Form.Label htmlFor="user_name">Nazwa użytkownika</Form.Label>
-                <Alert show={inputErrors.displayName && userCredentials.displayName.length < 6} variant="danger">
-                  Nazwa użytkownika jest za krótka. Nazwa musi posiadać
-                  minimalnie 6 znaków.
-                </Alert>
-                <Alert show={inputErrors.displayName && userCredentials.displayName.length > 10} variant="danger">
-                  Nazwa użytkownika jest za krótka. Nazwa może mieć maksymalnie
-                  10 znaków.
-                </Alert>
+                <Form.Label htmlFor="displayName">Nazwa użytkownika</Form.Label>
+                {formik.touched.displayName && formik.errors.displayName && (
+                  <Alert variant="danger">{formik.errors.displayName}</Alert>
+                )}
                 <Form.Control
                   autoComplete="off"
-                  isInvalid={inputErrors.displayName}
-                  isValid={userCredentials.displayName.length >= 6}
-                  onChange={handleInputs}
+                  isInvalid={
+                    formik.touched.displayName && formik.errors.displayName
+                  }
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   name="displayName"
-                  value={userCredentials.id}
+                  value={formik.values.displayName}
                   type="text"
                   placeholder="Nazwa użytkownika"
-                  id="user_name"
+                  id="displayName"
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label htmlFor="user_email">Email</Form.Label>
-                <Alert show={inputErrors.email} variant="danger">
-                  Email jest niepoprawny
-                </Alert>
+                <Form.Label htmlFor="email">Email</Form.Label>
+                {formik.touched.email && formik.errors.email && (
+                  <Alert variant="danger">{formik.errors.email}</Alert>
+                )}
                 <Form.Control
                   autoComplete="off"
-                  isInvalid={inputErrors.email}
-                  isValid={
-                    !inputErrors.email &&
-                    userCredentials.email.match(emailRegex)
-                  }
-                  onChange={handleInputs}
+                  isInvalid={formik.touched.email && formik.errors.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   name="email"
-                  value={userCredentials.email}
+                  value={formik.values.email}
                   type="email"
                   placeholder="Email"
-                  id="user_email"
+                  id="email"
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label htmlFor="user_password">Hasło</Form.Label>
-                <Alert
-                  show={
-                    inputErrors.password && userCredentials.password.length < 6
-                  }
-                  variant="danger"
-                >
-                  Hasło musi posiadać przynajmniej 6 znaków
-                </Alert>
-                <Alert
-                  show={
-                    inputErrors.password &&
-                    userCredentials.password !==
-                      userCredentials.repeatedPassword
-                  }
-                  variant="danger"
-                >
-                  Hasła nie zgadzają się
-                </Alert>
+                <Form.Label htmlFor="password">Hasło</Form.Label>
+                {formik.touched.password && formik.errors.password && (
+                  <Alert variant="danger">{formik.errors.password}</Alert>
+                )}
                 <Form.Control
-                  isInvalid={inputErrors.password}
-                  onChange={handleInputs}
+                  isInvalid={formik.touched.password && formik.errors.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   name="password"
-                  value={userCredentials.password}
+                  value={formik.values.password}
                   type="password"
                   placeholder="Hasło"
-                  id="user_password"
+                  id="password"
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label htmlFor="second_password">Powtórz hasło</Form.Label>
-                <Alert show={inputErrors.repeatedPassword} variant="danger">
-                  Hasła nie zgadzają się
-                </Alert>
+                <Form.Label htmlFor="repeatedPassword">
+                  Powtórz hasło
+                </Form.Label>
+                {formik.touched.repeatedPassword &&
+                  formik.errors.repeatedPassword && (
+                    <Alert variant="danger">
+                      {formik.errors.repeatedPassword}
+                    </Alert>
+                  )}
                 <Form.Control
-                  isInvalid={inputErrors.repeatedPassword}
-                  onChange={handleInputs}
+                  isInvalid={
+                    formik.touched.repeatedPassword &&
+                    formik.errors.repeatedPassword
+                  }
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   name="repeatedPassword"
-                  value={userCredentials.repeatedPassword}
+                  value={formik.values.repeatedPassword}
                   type="password"
                   placeholder="Powtórz hasło"
-                  id="second_password"
+                  id="repeatedPassword"
                 />
               </Form.Group>
               <Button variant="light" type="submit">
@@ -239,10 +185,6 @@ export const SignUp = () => {
             </StyledForm>
           </FlexContainer>
         </>
-      ) : (
-        <SpinnerContainer>
-          <Spinner />
-        </SpinnerContainer>
       )}
     </StyledSignSection>
   );

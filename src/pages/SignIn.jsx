@@ -41,26 +41,23 @@ export const SignIn = () => {
     },
     validate,
     onSubmit: async (values, { setErrors }) => {
-      if (!formik.errors.email && !formik.errors.password) {
-        try {
-          setLoggingIn(true);
-          await login(values.email, values.password);
-          navigate(-1);
-        } catch (error) {
-          setLoggingIn(false);
-          if (error.code === "auth/invalid-credential") {
-            setErrors({ loginStatus: "Niepoprawny email lub hasło" });
-          }
-          if (error.code === "auth/too-many-requests") {
-            setErrors({ loginStatus: "Spróbuj ponownie później" });
-          }
+      try {
+        setLoggingIn(true);
+        await login(values.email, values.password);
+        navigate(-1);
+      } catch (error) {
+        setLoggingIn(false);
+        if (error.code === "auth/invalid-credential") {
+          setErrors({ loginStatus: "Niepoprawny email lub hasło" });
+        }
+        if (error.code === "auth/too-many-requests") {
+          setErrors({ loginStatus: "Spróbuj ponownie później" });
         }
       }
     },
   });
 
   return (
-    // <>
     <StyledSignSection>
       {loggingIn ? (
         <SpinnerContainer>
