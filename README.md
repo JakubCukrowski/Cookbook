@@ -4,7 +4,7 @@
 It's a page dedicated to recipes with photos, inspired a bit by smaker.pl and kwestiasmaku.com in terms of its logic. My project uses Firebase, Firestore, and Storage to create accounts, store user and recipes data, and enable the addition of photos.
 
 ## How it works
-1. Login using credetials below
+1. Login using credetials
 Test account <strong>email:</strong> test@test.com <strong>password:</strong> 123456 or create a new account
 2. Pressing user's photo in the top-right corner redirects to the dashboard. Here a user can update a photo, add new recipe, edit added recipes, delete a recipe and view liked recipes
 3. User can search for the desired recipe on the homepage by recipe's name, or tag
