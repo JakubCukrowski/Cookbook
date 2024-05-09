@@ -38,6 +38,6 @@ or create a new account
 
 ### To be added: 
 
-- A possibility to change email address <br></br>
-- Including special characters check when creating a password <br></br>
-- Create a planner <br></br>
+- A possibility to change email address
+- Including special characters check when creating a password
+- Create a planner
