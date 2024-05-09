@@ -17,19 +17,19 @@ or create a new account
 
 ### Current features include:
 
-- Creating an account <br></br>
-- Uploading user photos <br></br>
-- Adding recipes <br></br>
-- Liking recipes <br></br>
-- Storing recipes in a user's dashboard under 'liked' and 'created' <br></br>
-- Searching for a recipe <br></br>
-- Advanced search filters <br></br>
-- Updating recipes <br></br>
-- Deleting recipes <br></br>
-- Handling <hero /> component buttons for the most popular categories <br></br>
-- Commenting on recipes with nested comments and rating <br></br>
-- Editing and deleting comments <br></br>
-- A possibility to view all recipes added by the user once on the single recipe page by pressing a user name on a recipe card <br></br>
+- Creating an account
+- Uploading user photos
+- Adding recipes 
+- Liking recipes
+- Storing recipes in a user's dashboard under 'liked' and 'created'
+- Searching for a recipe 
+- Advanced search filters 
+- Updating recipes 
+- Deleting recipes
+- Handling <hero /> component buttons for the most popular categories
+- Commenting on recipes with nested comments and rating
+- Editing and deleting comments
+- A possibility to view all recipes added by the user once on the single recipe page by pressing a user name on a recipe card
 
 ### Recently added 
 - Follow user/s and notifications once one of the followed users adds a recipe
