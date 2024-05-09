@@ -5,10 +5,7 @@ It's a page dedicated to recipes with photos, inspired a bit by smaker.pl and kw
 
 ## How it works
 1. Login using credetials below <br></br>
-Test account <br></br>
-<strong>email:</strong> test@test.com <br></br>
-<strong>password:</strong> 123456 <br></br>
-or create a new account
+Test account <strong>email:</strong> test@test.com <strong>password:</strong> 123456 or create a new account
 2. Pressing user's photo in the top-right corner redirects to the dashboard. Here a user can update a photo, add new recipe, edit added recipes, delete a recipe and view liked recipes
 3. User can search for the desired recipe on the homepage by recipe's name, or tag
 4. User can check the recipes from the most popular tags counted by likes count of the recipe and tags received from all recipes
