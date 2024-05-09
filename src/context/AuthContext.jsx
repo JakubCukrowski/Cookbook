@@ -21,7 +21,7 @@ const userContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const anonImage =
-    "https://firebasestorage.googleapis.com/v0/b/cookbook-a4b98.appspot.com/o/profile%2Fanon-chef1.png?alt=media&token=76a571b2-6999-4a5e-a553-5d5ae628b522";
+    "https://firebasestorage.googleapis.com/v0/b/przepisowa-pasja.appspot.com/o/profile%2Fanon-chef1.png?alt=media&token=f87cea4b-5659-4d0c-a951-7224c513e217";
 
   //checks if user is logged
   const [loading, setLoading] = useState(true);
@@ -77,7 +77,6 @@ export const AuthContextProvider = ({ children }) => {
         };
         setUser(updatedUser);
       })
-      .catch((error) => console.log(error));
   };
 
   const login = (email, password) => {
