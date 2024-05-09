@@ -33,7 +33,8 @@ or create a new account
 
 ### Recently added 
 - Follow user/s and notifications once one of the followed users adds a recipe
-- Notification to the recipe owner when recipe was liked. 
+- Notification to the recipe owner when recipe was liked.
+- Formik for sign in/up validation
 
 ### To be added: 
 
