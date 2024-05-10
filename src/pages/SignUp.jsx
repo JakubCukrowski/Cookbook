@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import { FlexContainer, SpinnerContainer } from "../assets/styles/Containers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -9,8 +8,11 @@ import { useNavigate } from "react-router-dom";
 import {
   StyledSignSection,
   StyledForm,
+  StyledTextField,
 } from "../assets/styles/CredentialsStyles";
 import { useFormik } from "formik";
+import { ConfirmButton } from "../assets/styles/ConfirmButton";
+import { Alert, CircularProgress } from "@mui/material";
 
 export const SignUp = () => {
   const { createUser } = UserAuth();
@@ -86,7 +88,7 @@ export const SignUp = () => {
     <StyledSignSection>
       {isSpinnerVisible ? (
         <SpinnerContainer>
-          <Spinner />
+          <CircularProgress color="inherit" />
         </SpinnerContainer>
       ) : (
         <>
@@ -103,85 +105,81 @@ export const SignUp = () => {
               Masz już konto? <StyledLink to="/signin">Zaloguj się</StyledLink>
             </span>
             <StyledForm noValidate onSubmit={formik.handleSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="displayName">Nazwa użytkownika</Form.Label>
-                {formik.touched.displayName && formik.errors.displayName && (
-                  <Alert variant="danger">{formik.errors.displayName}</Alert>
+
+              {formik.touched.displayName && formik.errors.displayName && (
+                <Alert variant="filled" severity="error">
+                  {formik.errors.displayName}
+                </Alert>
+              )}
+              <StyledTextField
+                id="displayName"
+                label="Nazwa użytkownika"
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.displayName}
+                name="displayName"
+                type="displayName"
+                error={formik.touched.displayName && formik.errors.displayName}
+              />
+
+              {formik.touched.email && formik.errors.email && (
+                <Alert variant="filled" severity="error">
+                  {formik.errors.email}
+                </Alert>
+              )}
+              <StyledTextField
+                id="email"
+                label="Email"
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+                name="email"
+                type="email"
+                error={formik.touched.email && formik.errors.email}
+              />
+
+              {formik.touched.password && formik.errors.password && (
+                <Alert variant="filled" severity="error">
+                  {formik.errors.password}
+                </Alert>
+              )}
+              <StyledTextField
+                id="password"
+                label="Hasło"
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+                name="password"
+                type="password"
+                error={formik.touched.password && formik.errors.password}
+              />
+
+              {formik.touched.repeatedPassword &&
+                formik.errors.repeatedPassword && (
+                  <Alert variant="filled" severity="error">
+                    {formik.errors.repeatedPassword}
+                  </Alert>
                 )}
-                <Form.Control
-                  autoComplete="off"
-                  isInvalid={
-                    formik.touched.displayName && formik.errors.displayName
-                  }
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="displayName"
-                  value={formik.values.displayName}
-                  type="text"
-                  placeholder="Nazwa użytkownika"
-                  id="displayName"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="email">Email</Form.Label>
-                {formik.touched.email && formik.errors.email && (
-                  <Alert variant="danger">{formik.errors.email}</Alert>
-                )}
-                <Form.Control
-                  autoComplete="off"
-                  isInvalid={formik.touched.email && formik.errors.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="email"
-                  value={formik.values.email}
-                  type="email"
-                  placeholder="Email"
-                  id="email"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="password">Hasło</Form.Label>
-                {formik.touched.password && formik.errors.password && (
-                  <Alert variant="danger">{formik.errors.password}</Alert>
-                )}
-                <Form.Control
-                  isInvalid={formik.touched.password && formik.errors.password}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="password"
-                  value={formik.values.password}
-                  type="password"
-                  placeholder="Hasło"
-                  id="password"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="repeatedPassword">
-                  Powtórz hasło
-                </Form.Label>
-                {formik.touched.repeatedPassword &&
-                  formik.errors.repeatedPassword && (
-                    <Alert variant="danger">
-                      {formik.errors.repeatedPassword}
-                    </Alert>
-                  )}
-                <Form.Control
-                  isInvalid={
-                    formik.touched.repeatedPassword &&
-                    formik.errors.repeatedPassword
-                  }
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="repeatedPassword"
-                  value={formik.values.repeatedPassword}
-                  type="password"
-                  placeholder="Powtórz hasło"
-                  id="repeatedPassword"
-                />
-              </Form.Group>
-              <Button variant="light" type="submit">
+              <StyledTextField
+                id="repeatedPassword"
+                label="Powtórz hasło"
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.repeatedPassword}
+                name="repeatedPassword"
+                type="password"
+                error={
+                  formik.touched.repeatedPassword &&
+                  formik.errors.repeatedPassword
+                }
+              />
+              <ConfirmButton variant="light" type="submit">
                 Utwórz
-              </Button>
+              </ConfirmButton>
             </StyledForm>
           </FlexContainer>
         </>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import { FlexContainer, SpinnerContainer } from "../assets/styles/Containers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -9,8 +8,11 @@ import { useNavigate } from "react-router-dom";
 import {
   StyledSignSection,
   StyledForm,
+  StyledTextField,
 } from "../assets/styles/CredentialsStyles";
 import { useFormik } from "formik";
+import { ConfirmButton } from "../assets/styles/ConfirmButton";
+import { Alert, CircularProgress } from "@mui/material";
 
 export const SignIn = () => {
   const { login } = UserAuth();
@@ -61,7 +63,7 @@ export const SignIn = () => {
     <StyledSignSection>
       {loggingIn ? (
         <SpinnerContainer>
-          <Spinner />
+          <CircularProgress color="inherit" />
         </SpinnerContainer>
       ) : (
         <>
@@ -80,50 +82,51 @@ export const SignIn = () => {
             </span>
             <StyledForm onSubmit={formik.handleSubmit} noValidate>
               {formik.errors.loginStatus && (
-                <Alert variant="danger">{formik.errors.loginStatus}</Alert>
+                <Alert variant="filled" severity="error">
+                  {formik.errors.loginStatus}
+                </Alert>
               )}
               {formik.touched.email && formik.errors.email && (
-                <Alert variant="danger">{formik.errors.email}</Alert>
+                <Alert variant="filled" severity="error">
+                  {formik.errors.email}
+                </Alert>
               )}
-              <Form.Group className="mb-3">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  isInvalid={
-                    (formik.touched.email && formik.errors.email) ||
-                    formik.errors.loginStatus
-                  }
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.email}
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Twój email"
-                />
-              </Form.Group>
+              <StyledTextField
+                id="email"
+                label="Email"
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+                name="email"
+                type="email"
+                error={
+                  (formik.touched.email && formik.errors.email) ||
+                  formik.errors.loginStatus
+                }
+              />
               {formik.touched.password && formik.errors.password && (
-                <Alert variant="danger">{formik.errors.password}</Alert>
+                <Alert variant="filled" severity="error">
+                  {formik.errors.password}
+                </Alert>
               )}
-              <Form.Group className="mb-3">
-                <Form.Label>Hasło</Form.Label>
-                <Form.Control
-                  isInvalid={
-                    (formik.touched.password && formik.errors.password) ||
-                    formik.errors.loginStatus
-                  }
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.password}
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Hasło"
-                  autoComplete="off"
-                />
-              </Form.Group>
-              <Button variant="light" type="submit">
+              <StyledTextField
+                id="password"
+                label="Hasło"
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+                name="password"
+                type="password"
+                error={
+                  (formik.touched.password && formik.errors.password) ||
+                  formik.errors.loginStatus
+                }
+              />
+              <ConfirmButton variant="outlined" type="submit">
                 Potwierdź
-              </Button>
+              </ConfirmButton>
             </StyledForm>
             <div
               style={{
