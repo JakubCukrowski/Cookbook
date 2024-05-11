@@ -3,15 +3,12 @@ import styled from "styled-components";
 
 export const ConfirmButton = styled(Button)`
     && {
-        color: white;
-        border: 1px solid rgba(255,255,255, 0.5);
+        border: 1px solid #e19f25;
+        background-color: #e19f25;
 
         &:hover {
-            border: 1px solid white;
-        }
-
-        &.MuiTouchRipple-root {
-            color: white;
+            border: 1px solid rgb(33, 37, 41);
+            background-color: #e19f25;
         }
     }
 `
