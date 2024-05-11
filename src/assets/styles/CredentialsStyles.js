@@ -1,11 +1,8 @@
-import { FormControl, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import styled from "styled-components";
 
 export const StyledSignSection = styled.section`
-  color: white;
-  background-color: rgb(33, 37, 41);
   max-width: 100%;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -13,7 +10,9 @@ export const StyledSignSection = styled.section`
 `;
 
 export const StyledForm = styled.form`
-  border: 1px solid white;
+  background-color: white;
+  /* border: 1px solid rgb(33, 37, 41); */
+  box-shadow: 0 0 8px 2px rgb(33, 37, 41);
   padding: 30px;
   border-radius: 10px;
   width: 100%;
@@ -30,29 +29,17 @@ export const StyledTextField = styled(TextField)`
     margin: 20px 0;
 
     fieldset {
-      border: 1px solid white;
+      border: 1px solid rgb(33, 37, 41);
     }
 
     label {
-      color: white !important;
-    }
-
-    input {
-      color: white;
-    }
-
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    input:-webkit-autofill:active {
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: rgb(33, 37, 41) !important;
     }
 
     .MuiInputBase-root {
-        &:hover > .MuiOutlinedInput-notchedOutline {
-          border-color: rgba(255, 255, 255, 0.7) !important;
-        }
+      &:hover > .MuiOutlinedInput-notchedOutline {
+        border-color: rgba(33, 37, 41, 0.7) !important;
+      }
     }
   }
 `;

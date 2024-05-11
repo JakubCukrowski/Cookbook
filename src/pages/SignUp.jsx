@@ -1,23 +1,13 @@
 import React, { useState } from "react";
-import { FlexContainer, SpinnerContainer } from "../assets/styles/Containers";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { StyledLink } from "../assets/styles/StyledLink";
 import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import {
-  StyledSignSection,
-  StyledForm,
-  StyledTextField,
-} from "../assets/styles/CredentialsStyles";
 import { useFormik } from "formik";
-import { ConfirmButton } from "../assets/styles/ConfirmButton";
-import { Alert, CircularProgress } from "@mui/material";
+import { AuthForm } from "../components/AuthForm";
 
 export const SignUp = () => {
   const { createUser } = UserAuth();
   const navigate = useNavigate();
-  const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
+  const [loggingIn, setLoggingIn] = useState(false);
 
   const validate = (values) => {
     const errors = {};
@@ -72,118 +62,82 @@ export const SignUp = () => {
     validate,
     onSubmit: async (values) => {
       try {
-        setIsSpinnerVisible(true);
+        setLoggingIn(true);
         await createUser(values.displayName, values.email, values.password);
         navigate("/dashboard");
       } catch (error) {
         if (error.code === "auth/email-already-in-use") {
-          setIsSpinnerVisible(false);
+          setLoggingIn(false);
           formik.errors.email = "Ten email jest już zajęty";
         }
       }
     },
   });
 
+  const inputs = [
+    {
+      inputErrors: formik.touched.displayName && formik.errors.displayName,
+      errorContent: formik.errors.displayName,
+      id: "displayName",
+      label: "Nazwa użytkownika",
+      value: formik.values.displayName,
+      name: "displayName",
+      type: "text",
+      inputFillError: formik.touched.displayName && formik.errors.displayName,
+      onChange: formik.handleChange,
+      onBlur: formik.handleBlur,
+    },
+    {
+      inputErrors: formik.touched.email && formik.errors.email,
+      errorContent: formik.errors.email,
+      id: "email",
+      label: "Email",
+      value: formik.values.email,
+      name: "email",
+      type: "email",
+      inputFillError:
+        (formik.touched.email && formik.errors.email) ||
+        formik.errors.loginStatus,
+      onChange: formik.handleChange,
+      onBlur: formik.handleBlur,
+    },
+    {
+      inputErrors: formik.touched.password && formik.errors.password,
+      errorContent: formik.errors.password,
+      id: "password",
+      label: "Hasło",
+      value: formik.values.password,
+      name: "password",
+      type: "password",
+      inputFillError: formik.touched.password && formik.errors.password,
+      onChange: formik.handleChange,
+      onBlur: formik.handleBlur,
+    },
+    {
+      inputErrors:
+        formik.touched.repeatedPassword && formik.errors.repeatedPassword,
+      errorContent: formik.errors.repeatedPassword,
+      id: "repeatedPassword",
+      label: "Hasło",
+      value: formik.values.repeatedPassword,
+      name: "repeatedPassword",
+      type: "password",
+      inputFillError:
+        formik.touched.repeatedPassword && formik.errors.repeatedPassword,
+      onChange: formik.handleChange,
+      onBlur: formik.handleBlur,
+    },
+  ];
+
   return (
-    <StyledSignSection>
-      {isSpinnerVisible ? (
-        <SpinnerContainer>
-          <CircularProgress color="inherit" />
-        </SpinnerContainer>
-      ) : (
-        <>
-          <StyledLink
-            color="white"
-            style={{ padding: 20, alignSelf: "flex-start" }}
-            to="/"
-          >
-            <FontAwesomeIcon icon={faArrowLeft} /> Strona główna
-          </StyledLink>
-          <FlexContainer direction="column" align="center">
-            <h2 style={{ color: "white", padding: 26 }}>Zarejestruj się</h2>
-            <span style={{ margin: 10 }}>
-              Masz już konto? <StyledLink to="/signin">Zaloguj się</StyledLink>
-            </span>
-            <StyledForm noValidate onSubmit={formik.handleSubmit}>
-
-              {formik.touched.displayName && formik.errors.displayName && (
-                <Alert variant="filled" severity="error">
-                  {formik.errors.displayName}
-                </Alert>
-              )}
-              <StyledTextField
-                id="displayName"
-                label="Nazwa użytkownika"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.displayName}
-                name="displayName"
-                type="displayName"
-                error={formik.touched.displayName && formik.errors.displayName}
-              />
-
-              {formik.touched.email && formik.errors.email && (
-                <Alert variant="filled" severity="error">
-                  {formik.errors.email}
-                </Alert>
-              )}
-              <StyledTextField
-                id="email"
-                label="Email"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.email}
-                name="email"
-                type="email"
-                error={formik.touched.email && formik.errors.email}
-              />
-
-              {formik.touched.password && formik.errors.password && (
-                <Alert variant="filled" severity="error">
-                  {formik.errors.password}
-                </Alert>
-              )}
-              <StyledTextField
-                id="password"
-                label="Hasło"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-                name="password"
-                type="password"
-                error={formik.touched.password && formik.errors.password}
-              />
-
-              {formik.touched.repeatedPassword &&
-                formik.errors.repeatedPassword && (
-                  <Alert variant="filled" severity="error">
-                    {formik.errors.repeatedPassword}
-                  </Alert>
-                )}
-              <StyledTextField
-                id="repeatedPassword"
-                label="Powtórz hasło"
-                variant="outlined"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.repeatedPassword}
-                name="repeatedPassword"
-                type="password"
-                error={
-                  formik.touched.repeatedPassword &&
-                  formik.errors.repeatedPassword
-                }
-              />
-              <ConfirmButton variant="light" type="submit">
-                Utwórz
-              </ConfirmButton>
-            </StyledForm>
-          </FlexContainer>
-        </>
-      )}
-    </StyledSignSection>
+    <AuthForm
+      title="Zarejestruj się"
+      accountExists="Masz już konto?"
+      linkTo="Zaloguj się"
+      href="/signin"
+      handleSubmit={formik.handleSubmit}
+      inputs={inputs}
+      loggingIn={loggingIn}
+    />
   );
 };
