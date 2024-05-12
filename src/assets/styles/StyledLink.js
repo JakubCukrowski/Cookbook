@@ -6,6 +6,8 @@ export const StyledLink = styled(Link)`
     color: ${props => props.color};
     font-size: ${props => props.fontsize};
     width: ${props => props.width};
+    position: static;
+    z-index: 2000;
 
     &:hover {
         opacity: 0.7;

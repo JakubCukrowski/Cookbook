@@ -1,6 +1,6 @@
 import React from "react";
 import { StyledTextField } from "../assets/styles/CredentialsStyles";
-import { Alert } from "@mui/material";
+import { StyledAlert } from "../assets/styles/StyledAlert";
 
 export const AuthInput = ({
   inputErrors,
@@ -17,9 +17,9 @@ export const AuthInput = ({
   return (
     <>
       {inputErrors && (
-        <Alert variant="filled" severity="error">
+        <StyledAlert variant="filled" severity="error">
           {errorContent}
-        </Alert>
+        </StyledAlert>
       )}
       <StyledTextField
         id={id}

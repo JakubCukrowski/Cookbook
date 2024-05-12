@@ -7,6 +7,8 @@ export const FlexContainer = styled(Container)`
   justify-content: ${(props) => props.justify};
   align-items: ${(props) => props.align};
   padding: ${(props) => props.padding};
+  position: static;
+  z-index: 200;
 
   &.mobile_view {
     @media (max-width: 992px) {
