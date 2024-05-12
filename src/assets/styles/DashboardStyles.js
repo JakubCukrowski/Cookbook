@@ -43,6 +43,7 @@ export const DashboardRecipeImage = styled.img`
     position: relative;
     z-index: -10;
     transition: 0.3s;
+    object-fit: cover;
 `
 
 export const DataDesktopWrapper = styled.div`
