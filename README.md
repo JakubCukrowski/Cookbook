@@ -1,7 +1,7 @@
 ## Live version available here: https://gleeful-conkies-1f4a7c.netlify.app/
 
 # Recipes page a.k.a. Cookbook
-It's a page dedicated to recipes with photos, inspired a bit by smaker.pl and kwestiasmaku.com in terms of its logic. My project uses Firebase, Firestore, and Storage to create accounts, store user and recipes data, and enable the addition of photos.
+It's a page dedicated to recipes with photos, inspired a bit by smaker.pl and kwestiasmaku.com in terms of its logic. My project uses Firebase, Firestore, and Storage to create accounts, store user and recipes data, and enable the addition of photos. The project currently uses bootstrap, but I'm chagning it to material UI.
 
 ## How it works
 1. Login using
@@ -33,6 +33,7 @@ Test account - <strong>email:</strong> test@test.com <strong>password:</strong> 
 - Follow user/s and notifications once one of the followed users adds a recipe
 - Notification to the recipe owner when recipe was liked.
 - Formik for sign in/up validation
+- Material UI
 
 ### To be added: 
 
