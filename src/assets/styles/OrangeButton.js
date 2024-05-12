@@ -1,13 +1,15 @@
-import { Button } from "react-bootstrap";
+import { Button } from "@mui/material";
 import styled from "styled-components";
 
 export const OrangeButton = styled(Button)`
+  && {
     background-color: #e19f25;
     transition: 0.4s ease;
     border: none;
+    color: white;
 
     &:hover {
-        opacity: 0.8;
-        background-color: #cd8500;
+      background-color: #cd8500;
     }
-`
+  }
+`;
