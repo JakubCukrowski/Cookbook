@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
@@ -15,6 +14,7 @@ import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { OrangeButton } from "../assets/styles/OrangeButton";
 import { Link } from "@mui/material";
 import { shortenTheName, startWithUpper } from "../helpers/helpers";
+import { StyledAvatar } from "../assets/styles/StyledAvatar";
 
 export const RecipesGroup = ({
   array,
@@ -39,8 +39,7 @@ export const RecipesGroup = ({
                           .replace(/[\u0300-\u036f]/g, "")
                           .toLowerCase()}
                       >
-                        <Avatar
-                          sx={{ height: 50, width: 50 }}
+                        <StyledAvatar
                           src={recipe.addedBy.photo}
                         />
                       </Link>
