@@ -52,7 +52,7 @@ function App() {
             <Route path="/search" element={<RecipesPage />} />
             <Route path="/show" element={<SearchedTag />} />
             <Route path="/violation" element={<ProfanityViolation />} />
-            <Route path="/popular/:tagName" element={<PopularTags />}/>
+            <Route path="/popular/:tagName" element={<PopularTags />} />
             <Route path="/:username" element={<UserRecipes />} />
             <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
@@ -62,8 +62,12 @@ function App() {
             </Route>
           </Route>
           <Route element={<BlockedRoute />}>
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<Layout />}>
+              <Route index element={<SignUp />} />
+            </Route>
+            <Route path="/signin" element={<Layout />}>
+              <Route index element={<SignIn />} />
+            </Route>
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

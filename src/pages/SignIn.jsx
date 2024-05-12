@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { AuthForm } from "../components/AuthForm";
 
 export const SignIn = () => {
-  const { login } = UserAuth();
+  const { login, user } = UserAuth();
   const navigate = useNavigate();
   const [loggingIn, setLoggingIn] = useState(false);
+  const [saveEmail, setSaveEmail] = useState(false)
 
   const validate = (values) => {
     const errors = {};
@@ -37,6 +38,7 @@ export const SignIn = () => {
         setLoggingIn(true);
         await login(values.email, values.password);
         navigate(-1);
+        if (saveEmail) localStorage.setItem('email', formik.values.email)
       } catch (error) {
         setLoggingIn(false);
         if (error.code === "auth/invalid-credential") {
@@ -76,6 +78,18 @@ export const SignIn = () => {
     },
   ];
 
+  const saveEmailInLocalStorage = () => {
+    setSaveEmail(prev => !prev)
+  }
+
+  useEffect(() => {
+    console.log(localStorage.getItem('email') !== null);
+    if (localStorage.getItem('email') !== null) {
+      formik.values.email = localStorage.getItem('email')
+      setSaveEmail(true)
+    }
+  }, [user])
+
   return (
     <>
       <AuthForm
@@ -88,6 +102,8 @@ export const SignIn = () => {
         inputs={inputs}
         loginStatus={formik.errors.loginStatus}
         loggingIn={loggingIn}
+        rememberEmail={saveEmailInLocalStorage}
+        saveEmail={saveEmail}
       />
     </>
   );

@@ -1,16 +1,16 @@
 import React from "react";
 import { FlexContainer, SpinnerContainer } from "../assets/styles/Containers";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { StyledLink } from "../assets/styles/StyledLink";
 import {
   StyledSignSection,
   StyledForm,
 } from "../assets/styles/CredentialsStyles";
 import { ConfirmButton } from "../assets/styles/ConfirmButton";
-import { Alert, CircularProgress } from "@mui/material";
+import { CircularProgress, FormControlLabel, Checkbox } from "@mui/material";
 import { AuthInput } from "./AuthInput";
-import { Footer } from "../components/Footer";
+import bckImg from "../assets/images/signForm2.jpg";
+import { StyledAlert } from "../assets/styles/StyledAlert";
+import { StyledTestAccount } from "../assets/styles/StyledTestAccount";
 
 export const AuthForm = ({
   title,
@@ -22,33 +22,31 @@ export const AuthForm = ({
   handleSubmit,
   loginStatus,
   loggingIn,
+  rememberEmail,
+  saveEmail,
 }) => {
   return (
     <>
-      <StyledSignSection>
+      <StyledSignSection backgroundimage={bckImg}>
         {loggingIn ? (
-          <SpinnerContainer>
+          <SpinnerContainer style={{ position: "static", zIndex: 200 }}>
             <CircularProgress color="inherit" />
           </SpinnerContainer>
         ) : (
           <>
-            <StyledLink
-              color="black"
-              style={{ padding: 20, alignSelf: "flex-start" }}
-              to="/"
-            >
-              <FontAwesomeIcon icon={faArrowLeft} /> Strona główna
-            </StyledLink>
             <FlexContainer direction="column" align="center">
-              <h2 style={{ padding: 26 }}>{title}</h2>
-              <span style={{ margin: 10 }}>
-                {accountExists} <StyledLink to={href}>{linkTo}</StyledLink>
-              </span>
               <StyledForm onSubmit={handleSubmit} noValidate>
+                <h2 style={{ padding: 20 }}>{title}</h2>
+                <span style={{ fontSize: 18, margin: 10 }}>
+                  {accountExists}{" "}
+                  <StyledLink to={href}>
+                    <strong>{linkTo}</strong>
+                  </StyledLink>
+                </span>
                 {signInComponent && loginStatus && (
-                  <Alert variant="filled" severity="error">
+                  <StyledAlert variant="filled" severity="error">
                     {loginStatus}
-                  </Alert>
+                  </StyledAlert>
                 )}
                 {inputs.map((input, index) => {
                   return (
@@ -67,19 +65,21 @@ export const AuthForm = ({
                     />
                   );
                 })}
+                {signInComponent && (
+                  <FormControlLabel
+                    style={{ marginTop: 20, width: "100%" }}
+                    label="Zapamiętaj mój email"
+                    control={
+                      <Checkbox onChange={rememberEmail} checked={saveEmail} />
+                    }
+                  />
+                )}
                 <ConfirmButton variant="contained" type="submit">
                   Potwierdź
                 </ConfirmButton>
               </StyledForm>
               {signInComponent && (
-                <div
-                  style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    padding: 20,
-                    borderRadius: 6,
-                  }}
-                >
+                <StyledTestAccount>
                   <h3>Test account</h3>
                   <p>
                     email: <strong>test@test.com</strong>
@@ -87,13 +87,12 @@ export const AuthForm = ({
                   <p>
                     password: <strong>123456</strong>
                   </p>
-                </div>
+                </StyledTestAccount>
               )}
             </FlexContainer>
           </>
         )}
       </StyledSignSection>
-      <Footer />
     </>
   );
 };
