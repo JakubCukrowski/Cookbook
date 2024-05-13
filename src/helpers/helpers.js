@@ -7,5 +7,11 @@ export const shortenTheName = (string) => {
     return string.split("").slice(0, 20).join("") + "...";
   }
 
-  return string
+  return string;
 };
+
+export const normalizedString = (string) =>
+  string
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();

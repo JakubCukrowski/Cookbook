@@ -8,7 +8,6 @@ import {
   NavbarLink,
   StyledNavbarToggle,
   NotificationsButton,
-  NotificationsCenter,
   NotificationsTracker,
 } from "../assets/styles/NavbarStyles";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,11 +15,12 @@ import { UserAuth } from "../context/AuthContext";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faPowerOff } from "@fortawesome/free-solid-svg-icons";
-import { BootstrapModal } from "../components/BootstrapModal";
+import { BootstrapModal } from "./BootstrapModal";
 import { useEffect, useState } from "react";
 import { Notifications } from "./Notifications";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
+import { Drawer } from "@mui/material";
 
 export const CustomNavbar = () => {
   const { user, signout } = UserAuth();
@@ -121,8 +121,10 @@ export const CustomNavbar = () => {
                     </NotificationsTracker>
                   )}
               </NotificationsButton>
-              <NotificationsCenter
-                className={notificationsOpen ? "" : "hidden"}
+              <Drawer
+                open={notificationsOpen}
+                onClose={() => setNotificationsOpen(false)}
+                anchor="right"
               >
                 {user && (
                   <Notifications
@@ -132,7 +134,7 @@ export const CustomNavbar = () => {
                     hideNotifications={updateNotificationsOpen}
                   />
                 )}
-              </NotificationsCenter>
+              </Drawer>
             </>
           )}
           <StyledNavbarToggle />
