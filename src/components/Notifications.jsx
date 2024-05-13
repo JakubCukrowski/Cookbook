@@ -12,6 +12,7 @@ import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { UserAuth } from "../context/AuthContext";
 import { normalizedString } from "../helpers/helpers";
+import CloseIcon from '@mui/icons-material/Close';
 
 export const Notifications = ({
   hideNotifications,
@@ -41,7 +42,7 @@ export const Notifications = ({
       <FlexContainer style={{marginTop: 20}} justify="space-between" align="center">
         <h3 style={{ margin: 0 }}>Powiadomienia</h3>
         <OrangeButton onClick={hideNotifications}>
-          <FontAwesomeIcon icon={faXmark} />
+          <CloseIcon />
         </OrangeButton>
       </FlexContainer>
       <Container>

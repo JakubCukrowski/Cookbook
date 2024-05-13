@@ -13,3 +13,10 @@ export const StyledLink = styled(Link)`
         opacity: 0.7;
     }
 `
+
+export const StyledHomeLink = styled(Link)`
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    font-family: "Gloria Hallelujah";
+`
