@@ -5,7 +5,7 @@ import {
   StyledSignSection,
   StyledForm,
 } from "../assets/styles/CredentialsStyles";
-import { ConfirmButton } from "../assets/styles/ConfirmButton";
+import { ConfirmButton } from "../assets/styles/Buttons";
 import { CircularProgress, FormControlLabel, Checkbox } from "@mui/material";
 import { AuthInput } from "./AuthInput";
 import bckImg from "../assets/images/signForm2.jpg";

@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { StyledLink } from "../../assets/styles/StyledLink";
-import { Button, Container } from "react-bootstrap";
-import { DashboardRecipeImage, EditUserRecipeWrapper } from "../../assets/styles/DashboardStyles";
-import { UserAuth } from "../../context/AuthContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Container } from "react-bootstrap";
 import {
-  faArrowRight,
-  faEdit,
-  faTrashCan,
-} from "@fortawesome/free-solid-svg-icons";
+  DashboardRecipeImage,
+  EditUserRecipeWrapper,
+} from "../../assets/styles/DashboardStyles";
+import { UserAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {
   collection,
@@ -21,7 +18,10 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { BootstrapModal } from "../../components/BootstrapModal";
-import { OrangeButton } from "../../assets/styles/OrangeButton";
+import EditIcon from "@mui/icons-material/Edit";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { DeleteRecipeButton, OrangeButton } from "../../assets/styles/Buttons";
 
 export const DashboardRecipes = ({
   linkTo,
@@ -55,12 +55,11 @@ export const DashboardRecipes = ({
   //on actual delete confirmation
   const handleDeleteRecipe = async () => {
     await deleteDoc(doc(db, "recipes", linkTo));
-    await deleteDoc(doc(db, 'comments', linkTo))
+    await deleteDoc(doc(db, "comments", linkTo));
     const q = query(
       collection(db, "users"),
       where("liked", "array-contains", linkTo)
     );
-
 
     const batch = writeBatch(db);
 
@@ -123,23 +122,25 @@ export const DashboardRecipes = ({
                 onMouseLeave={handleHoverOut}
                 onFocus={handleHoverOver}
               >
-                {isHovered ? (
+                {isHovered && (
                   <div className="util_buttons">
                     <OrangeButton
                       onClick={() => navigate(`/recipes/edit/${linkTo}`)}
                     >
-                      <FontAwesomeIcon icon={faEdit} />
+                      <EditIcon />
                     </OrangeButton>
                     <OrangeButton
                       onClick={() => navigate(`/recipes/${linkTo}`)}
                     >
-                      <FontAwesomeIcon icon={faArrowRight} />
+                      <ArrowForwardIosIcon />
                     </OrangeButton>
-                    <Button variant="danger" onClick={handleDeleteButton}>
-                      <FontAwesomeIcon icon={faTrashCan} />
-                    </Button>
+                    <DeleteRecipeButton
+                      onClick={handleDeleteButton}
+                    >
+                      <DeleteForeverIcon />
+                    </DeleteRecipeButton>
                   </div>
-                ) : null}
+                )}
                 <DashboardRecipeImage src={recipeImage} alt="recipe" />
               </EditUserRecipeWrapper>
             </Container>

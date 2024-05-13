@@ -25,7 +25,7 @@ import {
   faTrashCan,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { OrangeButton } from "../assets/styles/OrangeButton";
+import { OrangeButton } from "../assets/styles/Buttons";
 import { AddReply } from "../components/ui/AddReply";
 import { Form } from "react-bootstrap";
 import { BootstrapModal } from "./BootstrapModal";

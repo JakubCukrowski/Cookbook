@@ -17,7 +17,7 @@ import Fuse from "fuse.js";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import { PopularButtons } from "../components/ui/PopularButtons";
-import { OrangeButton } from "../assets/styles/OrangeButton";
+import { OrangeButton } from "../assets/styles/Buttons";
 import { BackToTopButton } from "../components/ui/BackToTopButton";
 
 export const Hero = () => {

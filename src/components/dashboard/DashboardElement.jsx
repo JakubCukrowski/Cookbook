@@ -1,8 +1,7 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { ElementContainer, ElementWrapper } from "../../assets/styles/DashboardStyles";
-import { OrangeButton } from "../../assets/styles/OrangeButton";
+import { IconButton } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
 
 export const DashboardElement = ({
   spanTitle,
@@ -17,9 +16,9 @@ export const DashboardElement = ({
         <ElementWrapper>
           <strong>{strongTitle}</strong>
           {isButton ? (
-            <OrangeButton onClick={onClick}>
-              <FontAwesomeIcon icon={faPenToSquare} />
-            </OrangeButton>
+            <IconButton onClick={onClick}>
+              <EditIcon />
+            </IconButton>
           ) : null}
         </ElementWrapper>
       </ElementContainer>

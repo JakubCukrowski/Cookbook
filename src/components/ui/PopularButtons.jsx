@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PopularButtonsContainer } from "../../assets/styles/Containers";
 import { UserAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { OrangeButton } from "../../assets/styles/OrangeButton";
+import { OrangeButton } from "../../assets/styles/Buttons";
 
 export const PopularButtons = () => {
   const { recipes } = UserAuth();
