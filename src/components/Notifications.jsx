@@ -4,10 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FlexContainer } from "../assets/styles/Containers";
 import { Container } from "react-bootstrap";
-import { NotificationDiv, NotificationLink } from "../assets/styles/NavbarStyles";
+import {
+  NotificationDiv,
+  NotificationLink,
+} from "../assets/styles/NavbarStyles";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { UserAuth } from "../context/AuthContext";
+import { normalizedString } from "../helpers/helpers";
 
 export const Notifications = ({
   hideNotifications,
@@ -23,20 +27,18 @@ export const Notifications = ({
     const sortedNotifications = newUserData.notifications.sort(
       (a, b) => b.addDate - a.addDate
     );
-    //read the notification
     sortedNotifications[index].read = true;
     newUserData.notifications = sortedNotifications;
-    //update the document in firebase
     await updateDoc(doc(db, "users", user.uid), {
       notifications: newUserData.notifications,
     });
-    updateNotifications(newUserData.notifications)
+    updateNotifications(newUserData.notifications);
     hideNotifications();
   };
 
   return (
     <>
-      <FlexContainer justify="space-between" align="center">
+      <FlexContainer style={{marginTop: 20}} justify="space-between" align="center">
         <h3 style={{ margin: 0 }}>Powiadomienia</h3>
         <OrangeButton onClick={hideNotifications}>
           <FontAwesomeIcon icon={faXmark} />
@@ -56,11 +58,7 @@ export const Notifications = ({
                   to={
                     notification.type === "newRecipe"
                       ? `/recipes/${notification.recipeId}`
-                      : `/${notification.likedBy
-                          .normalize("NFD")
-                          .replace(/[\u0300-\u036f]/g, "")
-                          .toLowerCase()
-                        }`
+                      : `/${normalizedString(notification.likedBy)}`
                   }
                 >
                   {notification.type === "newRecipe" ? (
