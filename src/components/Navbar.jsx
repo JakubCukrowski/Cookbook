@@ -1,26 +1,24 @@
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import {
-  StyledLink,
-  StyledNavbar,
-  StyledNavbarColapse,
-  LoggedUserImage,
-  NavbarLink,
-  StyledNavbarToggle,
-  NotificationsButton,
-  NotificationsTracker,
-} from "../assets/styles/NavbarStyles";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
-import { Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faPowerOff } from "@fortawesome/free-solid-svg-icons";
-import { BootstrapModal } from "./BootstrapModal";
 import { useEffect, useState } from "react";
 import { Notifications } from "./Notifications";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
-import { Drawer } from "@mui/material";
+import {
+  AppBar,
+  Container,
+  Drawer,
+  Tooltip,
+  Box,
+  Avatar,
+  Toolbar,
+  IconButton,
+  Menu,
+  MenuItem,
+  Badge,
+} from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { StyledHomeLink, StyledLink } from "../assets/styles/StyledLink";
 
 export const CustomNavbar = () => {
   const { user, signout } = UserAuth();
@@ -30,6 +28,7 @@ export const CustomNavbar = () => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [userData, setUserData] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const pathname = window.location.pathname;
 
@@ -56,21 +55,6 @@ export const CustomNavbar = () => {
     getNotifications();
   }, [user]);
 
-  const handleSignOut = async () => {
-    try {
-      await signout();
-      setLoggedOut(true);
-
-      const timeout = setTimeout(() => {
-        setLoggedOut(false);
-      }, 2000);
-
-      return () => clearTimeout(timeout);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   //show modal
   useEffect(() => {
     if (loggedOut) {
@@ -94,83 +78,113 @@ export const CustomNavbar = () => {
     setNotifications(value);
   };
 
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const redirectToDashboard = () => {
+    handleCloseUserMenu();
+    navigate("/dashboard");
+  };
+
+  const handleSignOut = async () => {
+    try {
+      handleCloseUserMenu();
+      await signout();
+      setLoggedOut(true);
+
+      const timeout = setTimeout(() => {
+        setLoggedOut(false);
+      }, 2000);
+
+      return () => clearTimeout(timeout);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      <StyledNavbar
-        fixed={pathname === "/" ? "top" : ""}
-        sticky={pathname !== "/" ? "top" : ""}
-        expand="lg"
-      >
-        <Container fluid>
-          <StyledLink to={"/"}>Przepisowa pasja</StyledLink>
-          {user && (
-            <>
-              <NotificationsButton
-                onClick={() => setNotificationsOpen((prev) => !prev)}
-              >
-                <FontAwesomeIcon icon={faBell} />
-                {notifications &&
-                  notifications.filter((notification) => !notification.read)
-                    .length > 0 && (
-                    <NotificationsTracker>
-                      {
+      <AppBar position="sticky" sx={{ backgroundColor: "#e19f25" }}>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
+            <StyledHomeLink to="/">Przepisowa pasja</StyledHomeLink>
+
+            <Box>
+              {user ? (
+                <>
+                  <IconButton
+                    size="large"
+                    aria-label="show 17 new notifications"
+                    color="inherit"
+                    sx={{ marginRight: "20px" }}
+                    onClick={() => setNotificationsOpen((prev) => !prev)}
+                  >
+                    <Badge
+                      badgeContent={
                         notifications.filter(
                           (notification) => !notification.read
                         ).length
                       }
-                    </NotificationsTracker>
-                  )}
-              </NotificationsButton>
-              <Drawer
-                open={notificationsOpen}
-                onClose={() => setNotificationsOpen(false)}
-                anchor="right"
-              >
-                {user && (
-                  <Notifications
-                    userData={userData}
-                    notifications={notifications}
-                    updateNotifications={updateNotifications}
-                    hideNotifications={updateNotificationsOpen}
-                  />
-                )}
-              </Drawer>
-            </>
-          )}
-          <StyledNavbarToggle />
-          <StyledNavbarColapse id="navbar-dark-example">
-            <Nav>
-              {user !== null ? (
-                <>
-                  <Nav.Item>
-                    <NavbarLink className="nav-link" to="/dashboard">
-                      Zalogowany: {user.displayName}{" "}
-                      <LoggedUserImage
-                        src={user.photoURL}
-                        alt="profile_image"
-                      />
-                    </NavbarLink>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Button onClick={handleSignOut} variant="danger">
-                      <FontAwesomeIcon icon={faPowerOff} /> Wyloguj
-                    </Button>
-                  </Nav.Item>
+                      color="error"
+                    >
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
+                  <Tooltip title="Menu">
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                      <Avatar alt="Remy Sharp" src={user.photoURL} />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    sx={{ mt: "45px" }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    <MenuItem onClick={redirectToDashboard}>
+                      Panel użytkownika
+                    </MenuItem>
+                    <MenuItem onClick={handleSignOut}>Wyloguj się</MenuItem>
+                  </Menu>
                 </>
               ) : (
-                <Nav.Item>
-                  <Link className="nav-link" to="/signin">
-                    Zaloguj się
-                  </Link>
-                </Nav.Item>
+                <StyledLink color="white" to="/signin">
+                  Zaloguj się
+                </StyledLink>
               )}
-            </Nav>
-          </StyledNavbarColapse>
+            </Box>
+            <Drawer
+              open={notificationsOpen}
+              onClose={() => setNotificationsOpen(false)}
+              anchor="right"
+            >
+              {user && (
+                <Notifications
+                  userData={userData}
+                  notifications={notifications}
+                  updateNotifications={updateNotifications}
+                  hideNotifications={updateNotificationsOpen}
+                />
+              )}
+            </Drawer>
+          </Toolbar>
         </Container>
-        {loggedOut ? (
-          <BootstrapModal title="Wylogowano pomyślnie" progress={progress} />
-        ) : null}
-      </StyledNavbar>
+      </AppBar>
     </>
   );
 };
