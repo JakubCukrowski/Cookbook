@@ -1,12 +1,11 @@
-import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UpdatePhotoWrapper } from "../../assets/styles/DashboardStyles";
+import EditIcon from "@mui/icons-material/Edit";
 
 export const UpdateUserPhoto = ({ onChange }) => {
   return (
     <UpdatePhotoWrapper>
       <label className="add_pointer" htmlFor="addFile">
-        <FontAwesomeIcon icon={faPen} color="white" />
+        <EditIcon sx={{color: "white"}}/>
       </label>
       <input
         type="file"

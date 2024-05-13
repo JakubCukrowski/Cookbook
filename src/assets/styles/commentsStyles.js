@@ -1,6 +1,6 @@
 import { InputGroup } from "react-bootstrap";
 import styled from "styled-components";
-import { OrangeButton } from "./OrangeButton";
+import { OrangeButton } from "./Buttons";
 
 export const StyledInputGroup = styled(InputGroup)`
   display: flex;

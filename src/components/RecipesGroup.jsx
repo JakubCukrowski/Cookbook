@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
-import { OrangeButton } from "../assets/styles/OrangeButton";
+import { OrangeButton } from "../assets/styles/Buttons";
 import { Link } from "@mui/material";
 import { shortenTheName, startWithUpper } from "../helpers/helpers";
 import { StyledAvatar } from "../assets/styles/StyledAvatar";

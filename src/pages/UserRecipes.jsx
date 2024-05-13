@@ -21,7 +21,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { RecipesGroup } from "../components/RecipesGroup";
-import { OrangeButton } from "../assets/styles/OrangeButton";
+import { OrangeButton } from "../assets/styles/Buttons";
 import { StyledH2 } from "../assets/styles/StyledH2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";

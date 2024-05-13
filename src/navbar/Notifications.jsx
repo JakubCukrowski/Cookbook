@@ -1,5 +1,5 @@
 import React from "react";
-import { OrangeButton } from "../assets/styles/OrangeButton";
+import { OrangeButton } from "../assets/styles/Buttons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FlexContainer } from "../assets/styles/Containers";
