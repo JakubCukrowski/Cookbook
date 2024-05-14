@@ -6,6 +6,7 @@ export const OrangeButton = styled(Button)`
     background-color: #e19f25;
     color: white;
     min-width: 0;
+    text-transform: none;
 
     &:hover {
       background-color: #cd8500;

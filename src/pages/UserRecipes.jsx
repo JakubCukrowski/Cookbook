@@ -23,10 +23,10 @@ import {
 import { RecipesGroup } from "../components/RecipesGroup";
 import { OrangeButton } from "../assets/styles/Buttons";
 import { StyledH2 } from "../assets/styles/StyledH2";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FormCategory } from "../components/FormCategory";
 import { FilterUserRecipesDiv } from "../assets/styles/RecipesStyles";
+import AddIcon from '@mui/icons-material/Add';
+import CheckIcon from '@mui/icons-material/Check';
 
 export const UserRecipes = () => {
   //username from url to match the recipes
@@ -184,13 +184,13 @@ export const UserRecipes = () => {
                 {user && user.displayName !== userData.username &&(isFollowed ? (
                   <>
                     <OrangeButton onClick={(handleFollow)}>
-                      <FontAwesomeIcon icon={faCheck} /> Obserwujesz
+                      <CheckIcon /> Obserwujesz
                     </OrangeButton>{" "}
                   </>
                 ) : (
                   <>
                     <OrangeButton onClick={handleFollow}>
-                      <FontAwesomeIcon icon={faPlus} /> Obserwuj
+                      <AddIcon /> {" "} Obserwuj
                     </OrangeButton>{" "}
                   </>
                 ))}
