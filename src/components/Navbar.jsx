@@ -23,6 +23,7 @@ import { StyledHomeLink, StyledLink } from "../assets/styles/StyledLink";
 import { HideOnScroll } from "./HideOnScroll";
 import { ScrollTop } from "./ScrollTop";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { SearchBar } from "./ui/SearchBar";
 
 export const CustomNavbar = () => {
   const { user, signout } = UserAuth();
