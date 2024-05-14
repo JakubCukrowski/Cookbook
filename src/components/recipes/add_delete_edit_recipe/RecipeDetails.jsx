@@ -31,6 +31,7 @@ export const RecipeDetails = ({
 
   return (
     <>
+      <h4 style={{ textAlign: "center" }}>Zdradź nam szczegóły</h4>
       <div className="recipe-details">
         <FormGroup className="mb-3">
           <Form.Label htmlFor="recipe_name">Nazwa przepisu</Form.Label>

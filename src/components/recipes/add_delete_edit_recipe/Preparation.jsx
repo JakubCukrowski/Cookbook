@@ -36,7 +36,7 @@ export const Preparation = ({
 
   return (
     <>
-      <p>Daj znać innym jak przygotować potrawę</p>
+      <h4 style={{ textAlign: "center" }}>Daj znać innym jak przygotować potrawę</h4>
       {details.preparationSteps.map((value, index) => {
         return (
           <FormGroup key={index} className="mb-3">
