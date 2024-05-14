@@ -16,9 +16,13 @@ import {
   Menu,
   MenuItem,
   Badge,
+  Fab,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { StyledHomeLink, StyledLink } from "../assets/styles/StyledLink";
+import { HideOnScroll } from "./HideOnScroll";
+import { ScrollTop } from "./ScrollTop";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export const CustomNavbar = () => {
   const { user, signout } = UserAuth();
@@ -109,82 +113,89 @@ export const CustomNavbar = () => {
 
   return (
     <>
-      <AppBar position="sticky" sx={{ backgroundColor: "#e19f25" }}>
-        <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
-            <StyledHomeLink to="/">Przepisowa pasja</StyledHomeLink>
+      <HideOnScroll>
+        <AppBar position="sticky" sx={{ backgroundColor: "#e19f25" }}>
+          <Container maxWidth="xxl">
+            <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
+              <StyledHomeLink to="/">Przepisowa pasja</StyledHomeLink>
 
-            <Box>
-              {user ? (
-                <>
-                  <IconButton
-                    size="large"
-                    aria-label="show 17 new notifications"
-                    color="inherit"
-                    sx={{ marginRight: "20px" }}
-                    onClick={() => setNotificationsOpen((prev) => !prev)}
-                  >
-                    <Badge
-                      badgeContent={
-                        notifications.filter(
-                          (notification) => !notification.read
-                        ).length
-                      }
-                      color="error"
+              <Box>
+                {user ? (
+                  <>
+                    <IconButton
+                      size="large"
+                      aria-label="show 17 new notifications"
+                      color="inherit"
+                      sx={{ marginRight: "20px" }}
+                      onClick={() => setNotificationsOpen((prev) => !prev)}
                     >
-                      <NotificationsIcon />
-                    </Badge>
-                  </IconButton>
-                  <Tooltip title="Menu">
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                      <Avatar alt="Remy Sharp" src={user.photoURL} />
+                      <Badge
+                        badgeContent={
+                          notifications.filter(
+                            (notification) => !notification.read
+                          ).length
+                        }
+                        color="error"
+                      >
+                        <NotificationsIcon />
+                      </Badge>
                     </IconButton>
-                  </Tooltip>
-                  <Menu
-                    sx={{ mt: "45px" }}
-                    id="menu-appbar"
-                    anchorEl={anchorElUser}
-                    anchorOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                    open={Boolean(anchorElUser)}
-                    onClose={handleCloseUserMenu}
-                  >
-                    <MenuItem onClick={redirectToDashboard}>
-                      Panel użytkownika
-                    </MenuItem>
-                    <MenuItem onClick={handleSignOut}>Wyloguj się</MenuItem>
-                  </Menu>
-                </>
-              ) : (
-                <StyledLink color="white" to="/signin">
-                  Zaloguj się
-                </StyledLink>
-              )}
-            </Box>
-            <Drawer
-              open={notificationsOpen}
-              onClose={() => setNotificationsOpen(false)}
-              anchor="right"
-            >
-              {user && (
-                <Notifications
-                  userData={userData}
-                  notifications={notifications}
-                  updateNotifications={updateNotifications}
-                  hideNotifications={updateNotificationsOpen}
-                />
-              )}
-            </Drawer>
-          </Toolbar>
-        </Container>
-      </AppBar>
+                    <Tooltip title="Menu">
+                      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                        <Avatar alt="Remy Sharp" src={user.photoURL} />
+                      </IconButton>
+                    </Tooltip>
+                    <Menu
+                      sx={{ mt: "45px" }}
+                      id="menu-appbar"
+                      anchorEl={anchorElUser}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      open={Boolean(anchorElUser)}
+                      onClose={handleCloseUserMenu}
+                    >
+                      <MenuItem onClick={redirectToDashboard}>
+                        Panel użytkownika
+                      </MenuItem>
+                      <MenuItem onClick={handleSignOut}>Wyloguj się</MenuItem>
+                    </Menu>
+                  </>
+                ) : (
+                  <StyledLink color="white" to="/signin">
+                    Zaloguj się
+                  </StyledLink>
+                )}
+              </Box>
+              <Drawer
+                open={notificationsOpen}
+                onClose={() => setNotificationsOpen(false)}
+                anchor="right"
+              >
+                {user && (
+                  <Notifications
+                    userData={userData}
+                    notifications={notifications}
+                    updateNotifications={updateNotifications}
+                    hideNotifications={updateNotificationsOpen}
+                  />
+                )}
+              </Drawer>
+            </Toolbar>
+          </Container>
+        </AppBar>
+      </HideOnScroll>
+      <ScrollTop>
+        <Fab onClick={() => window.scrollTo(0, 0)} size="small" aria-label="scroll back to top">
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </ScrollTop>
     </>
   );
 };
