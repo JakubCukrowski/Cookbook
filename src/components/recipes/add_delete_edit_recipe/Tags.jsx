@@ -49,7 +49,7 @@ export const Tags = ({updateRecipeTags, newRecipeDetails, updateTagsArray}) => {
 
   return (
     <>
-      <h4 style={{ textAlign: "center" }}>Dodaj tagi</h4>
+      <h4 style={{ textAlign: "center" }}>Otaguj swój przepis</h4>
       <Container>
         {splitTags.map((row, index) => {
           return (

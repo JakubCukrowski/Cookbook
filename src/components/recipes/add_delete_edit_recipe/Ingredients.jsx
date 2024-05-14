@@ -42,7 +42,7 @@ export const Ingredients = ({
 
   return (
     <>
-      <p>Dodaj składniki</p>
+      <h4 style={{ textAlign: "center" }}>Dodaj niezbędne składniki</h4>
       {details.ingredients.map((_, index) => (
         <FormGroup className="mb-3" key={index}>
           <Form.Label htmlFor={`ingredient${index + 1}`}>Składnik</Form.Label>
