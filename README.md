@@ -1,4 +1,4 @@
-## Live version available here: https://gleeful-conkies-1f4a7c.netlify.app/
+## Live version available here: https://przepisowa-pasja.netlify.app/
 
 # Recipes page a.k.a. Cookbook
 It's a page dedicated to recipes with photos, inspired a bit by smaker.pl and kwestiasmaku.com in terms of its logic. My project uses Firebase, Firestore, and Storage to create accounts, store user and recipes data, and enable the addition of photos. The project currently uses bootstrap, but I'm chagning it to material UI.
