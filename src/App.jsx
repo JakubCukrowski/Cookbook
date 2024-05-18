@@ -18,7 +18,7 @@ import { ProfanityViolation } from "./pages/ProfanityViolation";
 import { Soups } from "./components/recipes/main_page_recipes/Soups";
 import { Desserts } from "./components/recipes/main_page_recipes/Desserts";
 import { FilterRecipes } from "./pages/FilterRecipes";
-import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditRecipe";
+// import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditRecipe";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { SearchedTag } from "./pages/SearchedTag";
 import { MainDishes } from "./components/recipes/main_page_recipes/MainDishes";
@@ -57,7 +57,7 @@ function App() {
             <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/add-recipe" element={<AddRecipe />} />
-              <Route path="/recipes/edit/:recipeId" element={<EditRecipe />} />
+              {/* <Route path="/recipes/edit/:recipeId" element={<EditRecipe />} /> */}
               <Route path="/dashboard" element={<Dashboard />} />
             </Route>
           </Route>
