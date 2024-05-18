@@ -22,7 +22,7 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep, resetImage }) => 
     <Formik
       initialValues={initialNewRecipeData}
       validationSchema={Yup.object({
-        name: Yup.string().required("Musisz podać nazwę przepisu"),
+        name: Yup.string().required("Musisz podać nazwę przepisu").trim(),
         preparationTime: Yup.mixed().required(
           "Musisz podać czas przygotowania"
         ),

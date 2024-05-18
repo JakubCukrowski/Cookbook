@@ -46,10 +46,10 @@ const RecipeMultiStepForm = ({ initialNewRecipeData, isNewRecipe, updateInitialN
       <Typography sx={{ marginBottom: "50px" }} variant="h4" align="center">
         {isNewRecipe ? "Dodaj" : "Edytuj"} przepis
       </Typography>
-      <Stepper>
+      <Stepper activeStep={currentStep}>
         {stepTitles.map((_, index) => {
           return (
-            <Step key={index}>
+            <Step key={index} completed={currentStep > index}>
               <StepLabel>{stepTitles[index]}</StepLabel>
             </Step>
           );

@@ -6,17 +6,25 @@ import { useDropzone } from "react-dropzone";
 import { Crop } from "../../Crop";
 import { OrangeButton } from "../../../assets/styles/Buttons";
 
-const HandleImage = ({ errors, setFieldValue, initialNewRecipeData, resetImage }) => {
+const HandleImage = ({
+  errors,
+  setFieldValue,
+  initialNewRecipeData,
+  resetImage,
+}) => {
   const [isImageAdded, setIsImageAdded] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
 
   const onDrop = useCallback((acceptedFiles) => {
-    setImagePreview(URL.createObjectURL(acceptedFiles[0]));
-    setIsImageAdded(true);
+      setImagePreview(URL.createObjectURL(acceptedFiles[0]));
+      setIsImageAdded(true);
   }, []);
-  const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: {
-    'image/*': []
-  } });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      "image/*": [".jpeg", ".png"]
+    },
+  });
 
   const handleCloseCrop = () => {
     setIsImageAdded(false);
@@ -88,7 +96,7 @@ const HandleImage = ({ errors, setFieldValue, initialNewRecipeData, resetImage }
             onClick={() => {
               setImagePreview(null);
               setFieldValue("image", "");
-              resetImage()
+              resetImage();
             }}
           >
             Zmień

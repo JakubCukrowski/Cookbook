@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import Cropper from "react-easy-crop";
 import { StyledCrop, CropWrapper } from "../assets/styles/CropStyles";
-import getCroppedImg from "./CropImage";
+import {getCroppedImg} from "./CropImage";
 import { Button } from "@mui/material";
 
 export const Crop = ({ img, handleCloseCrop, updateImagePreview }) => {

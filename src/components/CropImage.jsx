@@ -1,57 +1,35 @@
-const createImage = (url) =>
-    new Promise((resolve, reject) => {
-      const image = new Image();
-      image.addEventListener("load", () => resolve(image));
-      image.addEventListener("error", (error) => reject(error));
-      image.setAttribute("crossOrigin", "anonymous");
-      image.src = url;
-    });
-  
-  function getRadianAngle(degreeValue) {
-    return (degreeValue * Math.PI) / 180;
-  }
-  
-  /**
-   * This function was adapted from the one in the ReadMe of https://github.com/DominicTobias/react-image-crop
-   * @param {File} image - Image File url
-   * @param {Object} pixelCrop - pixelCrop Object provided by react-easy-crop
-   * @param {number} rotation - optional rotation parameter
-   */
-  export default async function getCroppedImg(imageSrc, pixelCrop, rotation = 0) {
-    const image = await createImage(imageSrc);
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-  
-    const maxSize = Math.max(image.width, image.height);
-    const safeArea = 2 * ((maxSize / 2) * Math.sqrt(2));
-  
-    canvas.width = safeArea;
-    canvas.height = safeArea;
+export const getCroppedImg = (imageSrc, crop) => {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      const scaleX = image.naturalWidth / image.width;
+      const scaleY = image.naturalHeight / image.height;
+      canvas.width = crop.width;
+      canvas.height = crop.height;
+      const ctx = canvas.getContext('2d');
 
-    ctx.translate(safeArea / 2, safeArea / 2);
-    ctx.rotate(getRadianAngle(rotation));
-    ctx.translate(-safeArea / 2, -safeArea / 2);
-  
-    ctx.drawImage(
-      image,
-      safeArea / 2 - image.width * 0.5,
-      safeArea / 2 - image.height * 0.5
-    );
-    const data = ctx.getImageData(0, 0, safeArea, safeArea);
+      ctx.drawImage(
+        image,
+        crop.x * scaleX,
+        crop.y * scaleY,
+        crop.width * scaleX,
+        crop.height * scaleY,
+        0,
+        0,
+        crop.width,
+        crop.height
+      );
 
-    canvas.width = pixelCrop.width;
-    canvas.height = pixelCrop.height;
-
-    ctx.putImageData(
-      data,
-      Math.round(0 - safeArea / 2 + image.width * 0.5 - pixelCrop.x),
-      Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y)
-    );
-  
-    return new Promise((resolve) => {
-      canvas.toBlob((file) => {
-        console.log(file);
-        resolve(URL.createObjectURL(file));
-      }, "image/jpeg");
-    });
-  }
+      canvas.toBlob(blob => {
+        if (!blob) {
+          console.error('Canvas is empty');
+          reject(new Error('Canvas is empty'));
+          return;
+        }
+        resolve(URL.createObjectURL(blob));
+      }, 'image/jpeg');
+    };
+    image.src = imageSrc;
+  });
+};
