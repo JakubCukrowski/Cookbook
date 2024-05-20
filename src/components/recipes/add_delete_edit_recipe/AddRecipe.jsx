@@ -33,7 +33,6 @@ export const AddRecipe = () => {
     })
   }
 
-
   const updateInitialNewRecipeData = (newData) => {
     setInitialNewRecipeData(prev => ({...prev, ...newData}));
   };

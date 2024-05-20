@@ -14,7 +14,7 @@ import Tags from "./Tags";
 
 const RecipeMultiStepForm = ({ initialNewRecipeData, isNewRecipe, updateInitialNewRecipeData, resetImage }) => {
   const stepTitles = ["Dane", "Składniki", "Przygotowanie", "Tagi"];
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const handleNextStep = (newData) => {
     setCurrentStep((prev) => prev + 1);
