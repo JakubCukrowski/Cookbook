@@ -1,83 +1,114 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { Alert, Button, Form, FormGroup } from "react-bootstrap";
-import { DeleteButton } from "../../../assets/styles/RecipesStyles";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { FieldArray, Formik, getIn } from "formik";
+import {
+  StyledRecipeForm,
+  StyledTextarea,
+} from "../../../assets/styles/FormStyles";
+import {
+  FormControl,
+  Typography,
+  IconButton,
+  Box,
+  FormHelperText,
+} from "@mui/material";
+import * as Yup from "yup";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { OrangeButton } from "../../../assets/styles/Buttons";
+import AddIcon from "@mui/icons-material/Add";
 
-export const Preparation = ({
-  details,
-  addNextStep,
-  handleStepsArray,
-  errors,
-  handleStepsErrors,
+const Preparation = ({
+  initialNewRecipeData,
+  handleNextStep,
+  handlePreviousStep,
 }) => {
-  const handleInputChange = (e, index) => {
-    const newStepsArray = details.preparationSteps;
-    newStepsArray[index] = e.target.value;
-
-    handleStepsArray(newStepsArray);
-
-    // clear errors
-    const newErrorsArray = errors.preparationStepsErrors;
-    newErrorsArray[index] = false;
-    handleStepsErrors(newErrorsArray);
-  };
-
-  const handleDeleteButton = (index) => {
-    const newStepsArray = [...details.preparationSteps];
-    const newErrorsArray = [...errors.preparationStepsErrors];
-    const filterSteps = newStepsArray.filter((_, i) => i !== index);
-    handleStepsArray(filterSteps);
-
-    const filterErrors = newErrorsArray.filter((_, i) => i !== index);
-    handleStepsErrors(filterErrors);
-  };
-
   return (
-    <>
-      <h4 style={{ textAlign: "center" }}>Daj znać innym jak przygotować potrawę</h4>
-      {details.preparationSteps.map((value, index) => {
-        return (
-          <FormGroup key={index} className="mb-3">
-            <Form.Label>Krok {index + 1}</Form.Label>
-            {errors.preparationStepsErrors[index] && value.length === 0 ? (
-              <Alert variant="danger">Nie może być puste</Alert>
-            ) : null}
-            {errors.preparationStepsErrors[index] &&
-            value.length > 0 &&
-            value.length < 15 ? (
-              <Alert variant="danger">Ten krok jest za krótki</Alert>
-            ) : null}
-            <div style={{ display: "flex" }}>
-              <Form.Control
-                isInvalid={
-                  errors.preparationStepsErrors[index] && value.length === 0
-                }
-                as="textarea"
-                style={{ resize: "none" }}
-                rows={4}
-                onChange={(e) => handleInputChange(e, index)}
-                value={value}
-              />
-              {details.preparationSteps.length > 1 ? (
-                <DeleteButton
-                  type="button"
-                  onClick={() => handleDeleteButton(index)}
-                >
-                  <FontAwesomeIcon
-                    icon={faTrashCan}
-                    color="rgba(0, 0, 0, 0.4)"
-                  />
-                </DeleteButton>
-              ) : null}
-            </div>
-          </FormGroup>
-        );
+    <Formik
+      initialValues={initialNewRecipeData}
+      validationSchema={Yup.object().shape({
+        preparationSteps: Yup.array().of(
+          Yup.string().required("Krok nie może być pusty")
+        ),
       })}
-      <Button variant="dark" onClick={() => addNextStep()}>
-        <FontAwesomeIcon icon={faPlus} /> Dodaj kolejny
-      </Button>
-    </>
+      onSubmit={(values) => handleNextStep(values)}
+    >
+      {(formik) => {
+        return (
+          <StyledRecipeForm onSubmit={formik.handleSubmit}>
+            <Typography variant="h5">
+              Powiedz jak przygotować Twoje danie
+            </Typography>
+            <FieldArray name="preparationSteps">
+              {({ push, remove }) => (
+                <>
+                  {formik.values.preparationSteps.map(
+                    (preparationStep, index) => {
+                      const error = getIn(
+                        formik.errors,
+                        `preparationSteps.${index}`
+                      );
+                      const touched = getIn(
+                        formik.touched,
+                        `preparationSteps.${index}`
+                      );
+
+                      return (
+                        <FormControl
+                          key={index}
+                          fullWidth
+                          sx={{ position: "relative" }}
+                        >
+                          <label htmlFor={`preparationSteps.${index}`}>
+                            Krok {index + 1}
+                          </label>
+                          <StyledTextarea
+                            className={Boolean(touched && error) ? 'error' : null}
+                            name={`preparationSteps.${index}`}
+                            id={`preparationSteps.${index}`}
+                            {...formik.getFieldProps(
+                              `preparationSteps.${index}`
+                            )}
+                          />
+                          {formik.values.preparationSteps.length > 1 && (
+                              <IconButton
+                                onClick={() => remove(index)}
+                                sx={{ position: "absolute", right: 0, top: 0, padding: 0 }}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            )}
+                          {Boolean(touched && error) && (
+                            <FormHelperText error={Boolean(touched && error)}>
+                              {formik.errors.preparationSteps[index]}
+                            </FormHelperText>
+                          )}
+                        </FormControl>
+                      );
+                    }
+                  )}
+                  <Box sx={{ alignSelf: "flex-start" }}>
+                    <OrangeButton onClick={() => push("")}>
+                      <AddIcon /> Dodaj następny
+                    </OrangeButton>
+                  </Box>
+                </>
+              )}
+            </FieldArray>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <OrangeButton onClick={() => handlePreviousStep(formik.values)}>
+                Wróć
+              </OrangeButton>
+              <OrangeButton type="submit">Dalej</OrangeButton>
+            </Box>
+          </StyledRecipeForm>
+        );
+      }}
+    </Formik>
   );
 };
+
+export default Preparation;

@@ -1,7 +1,20 @@
-import React from "react";
-import { Col, Container, Form, Row } from "react-bootstrap";
+import { Formik, FieldArray } from "formik";
+import { StyledRecipeForm } from "../../../assets/styles/FormStyles";
+import * as Yup from "yup";
+import { OrangeButton } from "../../../assets/styles/Buttons";
+import {
+  FormControlLabel,
+  Checkbox,
+  Typography,
+  Box,
+  Grid,
+} from "@mui/material";
 
-export const Tags = ({updateRecipeTags, newRecipeDetails, updateTagsArray}) => {
+const Tags = ({
+  initialNewRecipeData,
+  handlePreviousStep,
+  submitForm,
+}) => {
   const tags = [
     "kuchnia polska",
     "dania główne",
@@ -28,50 +41,73 @@ export const Tags = ({updateRecipeTags, newRecipeDetails, updateTagsArray}) => {
     "kuchnia tradycyjna",
     "kuchnia meksykańska",
     "kuchnia indyjska",
-    "okazje"
+    "okazje",
   ];
-
-  const splitTags = [];
-
-  for (let i = 0; i < tags.length; i += 3) {
-    splitTags.push(tags.slice(i, i + 3));
-  }
-
-  const handleOnChange = (e) => {
-    if (e.target.checked) {
-        updateRecipeTags(e.target.value)
-    } else {
-        const newTags = newRecipeDetails.tags
-        const filteredTags = newTags.filter(tag => tag !== e.target.value)
-        updateTagsArray(filteredTags)
-    }
-  }
-
   return (
-    <>
-      <h4 style={{ textAlign: "center" }}>Otaguj swój przepis</h4>
-      <Container>
-        {splitTags.map((row, index) => {
-          return (
-            <Row key={`row-${index}`}>
-              {row.map((col, colIndex) => {
-                return (
-                  <Col key={`col-${colIndex}`}>
-                    <Form.Check
-                      onChange={handleOnChange}
-                      checked={newRecipeDetails.tags.find(tag => tag === col)}
-                      value={col}
-                      type="checkbox"
-                      id={`default-${col}-${colIndex}`}
-                      label={col}
-                    />
-                  </Col>
-                );
-              })}
-            </Row>
-          );
-        })}
-      </Container>
-    </>
+    <Formik
+      initialValues={initialNewRecipeData}
+      validationSchema={Yup.object().shape({
+        tags: Yup.array().of(Yup.string()),
+      })}
+      onSubmit={() => submitForm()}
+    >
+      {(formik) => {
+        return (
+          <StyledRecipeForm onSubmit={formik.handleSubmit}>
+            <Typography variant="h5">Możesz otagować swój przepis</Typography>
+            <Typography>
+              Tagując przepis pozwolisz innym użytkownikom ławiej go znaleźć{" "}
+              <br /> (Nie jest to obowiązkowe)
+            </Typography>
+            <FieldArray name="tags">
+              {({ push, remove }) => (
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                  {tags.map((tag, index) => (
+                    <Grid
+                      textAlign={"start"}
+                      item
+                      xs={2}
+                      sm={4}
+                      md={4}
+                      key={index}
+                    >
+                      <FormControlLabel
+                        onChange={() =>
+                          !formik.values.tags.includes(tag)
+                            ? push(tag)
+                            : remove(index)
+                        }
+                        value={tag}
+                        control={<Checkbox name={`tags.${index}`} />}
+                        label={tag}
+                        labelPlacement="end"
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </FieldArray>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <OrangeButton onClick={() => handlePreviousStep(formik.values)}>
+                Wróć
+              </OrangeButton>
+              <OrangeButton type="submit">Dalej</OrangeButton>
+            </Box>
+          </StyledRecipeForm>
+        );
+      }}
+    </Formik>
   );
 };
+
+export default Tags;

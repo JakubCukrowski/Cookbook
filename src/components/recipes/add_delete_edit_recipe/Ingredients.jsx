@@ -1,103 +1,104 @@
-import { faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { Alert, Button, Form, FormGroup } from "react-bootstrap";
-import { DeleteButton } from "../../../assets/styles/RecipesStyles";
+import { FieldArray, Formik, getIn } from "formik";
+import { StyledRecipeForm } from "../../../assets/styles/FormStyles";
+import {
+  FormControl,
+  TextField,
+  Typography,
+  IconButton,
+  Box,
+  FormHelperText,
+} from "@mui/material";
+import * as Yup from "yup";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { OrangeButton } from "../../../assets/styles/Buttons";
+import AddIcon from "@mui/icons-material/Add";
 
-export const Ingredients = ({
-  details,
-  handleAddIngredients,
-  handleIngredientsArray,
-  errors,
-  handleIngredientsErrors,
-  gibberishCheck,
+const Ingredients = ({
+  initialNewRecipeData,
+  handleNextStep,
+  handlePreviousStep,
 }) => {
-  // changes the value of ingredients array element, also clears the error
-  const handleInputChange = (e, index) => {
-    const newIngredientsArray = [...details.ingredients];
-    newIngredientsArray[index] = e.target.value;
-    handleIngredientsArray(newIngredientsArray);
-
-    const newErrorsArray = errors.ingredientsErrors;
-    newErrorsArray[index] = false;
-    handleIngredientsErrors(newErrorsArray);
-  };
-
-  //deletes input element
-  const handleDeleteInput = (index, array) => {
-    const filtered = array.filter((_, i) => i !== index);
-    handleIngredientsArray(filtered);
-  };
-
-  //deletes error from the errors array
-  const clearInputError = (index, array) => {
-    const filtered = array.filter((_, i) => i !== index);
-    handleIngredientsErrors(filtered);
-  };
-
-  const handleDeleteButton = (index, firstArray, secondArray) => {
-    handleDeleteInput(index, firstArray);
-    clearInputError(index, secondArray);
-  };
-
   return (
-    <>
-      <h4 style={{ textAlign: "center" }}>Dodaj niezbędne składniki</h4>
-      {details.ingredients.map((_, index) => (
-        <FormGroup className="mb-3" key={index}>
-          <Form.Label htmlFor={`ingredient${index + 1}`}>Składnik</Form.Label>
-          {errors.ingredientsErrors[index] &&
-          details.ingredients[index].length === 0 ? (
-            <Alert variant="danger">Nie może być puste</Alert>
-          ) : null}
-          {errors.ingredientsErrors[index] &&
-          details.ingredients[index].length > 0 &&
-          details.ingredients[index].length < 3 ? (
-            <Alert variant="danger">
-              Składnik musi mieć przynajmniej 3 znaki
-            </Alert>
-          ) : null}
-          {errors.ingredientsErrors[index] &&
-          details.ingredients[index].length >= 3 &&
-          details.ingredients[index].match(gibberishCheck) ? (
-            <Alert variant="danger">Próbujesz dodać coś co nie ma sensu</Alert>
-          ) : null}
-          <div style={{ marginBottom: 10, display: "flex" }}>
-            <Form.Control
-              value={details.ingredients[index]}
-              isInvalid={
-                (errors.ingredientsErrors[index] &&
-                  details.ingredients[index].length === 0) ||
-                (errors.ingredientsErrors[index] &&
-                  details.ingredients[index].length > 0 &&
-                  details.ingredients[index].length < 3) ||
-                (errors.ingredientsErrors[index] &&
-                  details.ingredients[index].length >= 3 &&
-                  details.ingredients[index].match(gibberishCheck))
-              }
-              id={`ingredient${index + 1}`}
-              onChange={(e) => handleInputChange(e, index)}
-            />
-            {details.ingredients.length > 1 ? (
-              <DeleteButton
-                type="button"
-                onClick={() =>
-                  handleDeleteButton(
-                    index,
-                    details.ingredients,
-                    errors.ingredientsErrors
-                  )
-                }
-              >
-                <FontAwesomeIcon icon={faTrashCan} color="rgba(0, 0, 0, 0.4)" />
-              </DeleteButton>
-            ) : null}
-          </div>
-        </FormGroup>
-      ))}
-      <Button variant="dark" style={{ marginTop: 20 }} onClick={() => handleAddIngredients()}>
-        <FontAwesomeIcon icon={faPlus} /> Dodaj kolejny
-      </Button>
-    </>
+    <Formik
+      initialValues={initialNewRecipeData}
+      validationSchema={Yup.object().shape({
+        ingredients: Yup.array().of(
+          Yup.string().required("Musisz podać składnik")
+        ),
+      })}
+      onSubmit={(values) => handleNextStep(values)}
+    >
+      {(formik) => {
+        return (
+          <StyledRecipeForm onSubmit={formik.handleSubmit}>
+            <Typography variant="h5">
+              Zdradź innym potrzebne składniki
+            </Typography>
+            <FieldArray name="ingredients">
+              {({ push, remove }) => (
+                <>
+                  {formik.values.ingredients.map((ingredient, index) => {
+                    const error = getIn(formik.errors, `ingredients.${index}`);
+                    const touched = getIn(
+                      formik.touched,
+                      `ingredients.${index}`
+                    );
+
+                    return (
+                      <FormControl
+                        sx={{ position: "relative" }}
+                        key={index}
+                        fullWidth
+                      >
+                        <TextField
+                          size="small"
+                          id={`ingredients.${index}`}
+                          name={`ingredients.${index}`}
+                          label="Składnik"
+                          error={Boolean(error && touched)}
+                          {...formik.getFieldProps(`ingredients.${index}`)}
+                        />
+                        {formik.values.ingredients.length > 1 && (
+                          <IconButton
+                            onClick={() => remove(index)}
+                            sx={{ position: "absolute", right: 0 }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        )}
+                        {Boolean(error && touched) && (
+                          <FormHelperText error={Boolean(error && touched)}>
+                            {formik.errors.ingredients[index]}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
+                    );
+                  })}
+                  <Box sx={{ alignSelf: "flex-start" }}>
+                    <OrangeButton onClick={() => push("")}>
+                      <AddIcon /> Dodaj następny
+                    </OrangeButton>
+                  </Box>
+                </>
+              )}
+            </FieldArray>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <OrangeButton onClick={() => handlePreviousStep(formik.values)}>
+                Wróć
+              </OrangeButton>
+              <OrangeButton type="submit">Dalej</OrangeButton>
+            </Box>
+          </StyledRecipeForm>
+        );
+      }}
+    </Formik>
   );
 };
+
+export default Ingredients;
