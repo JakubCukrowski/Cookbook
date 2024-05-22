@@ -11,9 +11,10 @@ import RecipeDetails from "./RecipeDetails";
 import Ingredients from "./Ingredients";
 import Preparation from "./Preparation";
 import Tags from "./Tags";
+import CustomSteppers from "../../CustomSteppers";
 
 const RecipeMultiStepForm = ({ initialNewRecipeData, isNewRecipe, updateInitialNewRecipeData, resetImage }) => {
-  const stepTitles = ["Dane", "Składniki", "Przygotowanie", "Tagi"];
+  const stepTitles = ["Szczegóły przepisu", "Składniki", "Przygotowanie", "Tagi"];
   const [currentStep, setCurrentStep] = useState(1);
 
   const handleNextStep = (newData) => {
@@ -46,15 +47,7 @@ const RecipeMultiStepForm = ({ initialNewRecipeData, isNewRecipe, updateInitialN
       <Typography sx={{ marginBottom: "50px" }} variant="h4" align="center">
         {isNewRecipe ? "Dodaj" : "Edytuj"} przepis
       </Typography>
-      <Stepper activeStep={currentStep}>
-        {stepTitles.map((_, index) => {
-          return (
-            <Step key={index} completed={currentStep > index}>
-              <StepLabel>{stepTitles[index]}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
+      <CustomSteppers currentStep={currentStep} stepTitles={stepTitles}/>
       <Box>{steps[currentStep]}</Box>
     </Container>
   );

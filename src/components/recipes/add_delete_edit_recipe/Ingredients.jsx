@@ -61,12 +61,14 @@ const Ingredients = ({
                           error={Boolean(error && touched)}
                           {...formik.getFieldProps(`ingredients.${index}`)}
                         />
-                        <IconButton
-                          onClick={() => remove(index)}
-                          sx={{ position: "absolute", right: 0 }}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
+                        {formik.values.ingredients.length > 1 && (
+                          <IconButton
+                            onClick={() => remove(index)}
+                            sx={{ position: "absolute", right: 0 }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        )}
                         {Boolean(error && touched) && (
                           <FormHelperText error={Boolean(error && touched)}>
                             {formik.errors.ingredients[index]}

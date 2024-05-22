@@ -24,7 +24,7 @@ export const StyledRecipeForm = styled(Form)`
     border-radius: 6px;
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 30px;
     justify-content: center;
     align-items: center;
 
