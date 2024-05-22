@@ -10,7 +10,7 @@ const RecipeMultiStepForm = ({
   initialNewRecipeData,
   isNewRecipe,
   updateInitialNewRecipeData,
-  resetImage,
+  submitForm
 }) => {
   const stepTitles = [
     "Szczegóły przepisu",
@@ -34,7 +34,6 @@ const RecipeMultiStepForm = ({
     <RecipeDetails
       initialNewRecipeData={initialNewRecipeData}
       handleNextStep={handleNextStep}
-      resetImage={resetImage}
     />,
     <Ingredients
       initialNewRecipeData={initialNewRecipeData}
@@ -48,8 +47,8 @@ const RecipeMultiStepForm = ({
     />,
     <Tags
       initialNewRecipeData={initialNewRecipeData}
-      handleNextStep={handleNextStep}
       handlePreviousStep={handlePreviousStep}
+      submitForm={submitForm}
     />,
   ];
 

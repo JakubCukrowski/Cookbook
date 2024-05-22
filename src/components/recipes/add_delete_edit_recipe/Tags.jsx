@@ -10,7 +10,11 @@ import {
   Grid,
 } from "@mui/material";
 
-const Tags = ({ initialNewRecipeData, handleNextStep, handlePreviousStep }) => {
+const Tags = ({
+  initialNewRecipeData,
+  handlePreviousStep,
+  submitForm,
+}) => {
   const tags = [
     "kuchnia polska",
     "dania główne",
@@ -45,7 +49,7 @@ const Tags = ({ initialNewRecipeData, handleNextStep, handlePreviousStep }) => {
       validationSchema={Yup.object().shape({
         tags: Yup.array().of(Yup.string()),
       })}
-      onSubmit={(values) => handleNextStep(values)}
+      onSubmit={() => submitForm()}
     >
       {(formik) => {
         return (

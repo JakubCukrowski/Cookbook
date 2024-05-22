@@ -4,7 +4,7 @@ import { StyledCrop, CropWrapper } from "../assets/styles/CropStyles";
 import {getCroppedImg} from "./CropImage";
 import { Button } from "@mui/material";
 
-export const Crop = ({ img, handleCloseCrop, updateImagePreview }) => {
+export const Crop = ({ img, handleCloseCrop, updateImageFile }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
@@ -15,7 +15,7 @@ export const Crop = ({ img, handleCloseCrop, updateImagePreview }) => {
 
   const onCrop = async () => {
     const croppedImageUrl = await getCroppedImg(img, croppedAreaPixels)
-    updateImagePreview(croppedImageUrl)
+    updateImageFile(croppedImageUrl)
     handleCloseCrop()
   }
 

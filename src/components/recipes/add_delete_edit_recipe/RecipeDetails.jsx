@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Typography,
@@ -19,23 +19,21 @@ import HandleImage from "./HandleImage";
 
 const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
   const [isImageAdded, setIsImageAdded] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   const updateIsImageAdded = (bool) => {
-    setIsImageAdded(bool)
-  }
+    setIsImageAdded(bool);
+  };
 
-  const updateImagePreview = (url) => {
-    setImagePreview(url)
-  }
+  const updateImageFile = (file) => {
+    setImageFile(file);
+  };
 
   useEffect(() => {
     if (initialNewRecipeData.image) {
-      setImagePreview(initialNewRecipeData.image)
+      setImageFile(URL.createObjectURL(initialNewRecipeData.image));
     }
-  }, [])
-
-  console.log(initialNewRecipeData);
+  }, []);
 
   return (
     <Formik
@@ -63,9 +61,9 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
             >
               <HandleImage
                 updateIsImageAdded={updateIsImageAdded}
-                updateImagePreview={updateImagePreview}
+                updateImageFile={updateImageFile}
                 isImageAdded={isImageAdded}
-                imagePreview={imagePreview}
+                imageFile={imageFile}
                 setFieldValue={formik.setFieldValue}
                 errors={formik.errors.image && formik.touched.image}
               />

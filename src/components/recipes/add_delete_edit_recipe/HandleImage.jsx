@@ -10,13 +10,14 @@ const HandleImage = ({
   errors,
   setFieldValue,
   updateIsImageAdded,
-  updateImagePreview,
+  updateImageFile,
   isImageAdded,
-  imagePreview,
+  imageFile,
 }) => {
 
   const onDrop = useCallback((acceptedFiles) => {
-    updateImagePreview(URL.createObjectURL(acceptedFiles[0]));
+    console.log(acceptedFiles[0]);
+    updateImageFile(acceptedFiles[0]);
     updateIsImageAdded(true);
   }, []);
   const { getRootProps, getInputProps } = useDropzone({
@@ -28,12 +29,12 @@ const HandleImage = ({
 
   const handleCloseCrop = () => {
     updateIsImageAdded(false);
-    setFieldValue("image", imagePreview);
+    setFieldValue("image", imageFile);
   };
 
   return (
     <>
-      {!isImageAdded && !imagePreview && (
+      {!isImageAdded && !imageFile && (
         <Box
           sx={{
             border: errors
@@ -60,7 +61,7 @@ const HandleImage = ({
           />
         </Box>
       )}
-      {!isImageAdded && imagePreview && (
+      {!isImageAdded && imageFile && (
         <Box
           sx={{
             display: "flex",
@@ -80,13 +81,13 @@ const HandleImage = ({
           >
             <img
               style={{ width: "100%", height: "100%" }}
-              src={imagePreview}
+              src={imageFile}
               alt="podglad"
             />
           </Box>
           <OrangeButton
             onClick={() => {
-              updateImagePreview(null);
+              updateImageFile(null);
               setFieldValue("image", "");
             }}
           >
@@ -94,11 +95,11 @@ const HandleImage = ({
           </OrangeButton>
         </Box>
       )}
-      {isImageAdded && imagePreview && (
+      {isImageAdded && imageFile && (
         <Crop
-          img={imagePreview}
+          img={URL.createObjectURL(imageFile)}
           handleCloseCrop={handleCloseCrop}
-          updateImagePreview={updateImagePreview}
+          updateImageFile={updateImageFile}
         ></Crop>
       )}
     </>
