@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
   TextField,
   Typography,
@@ -17,11 +17,26 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import HandleImage from "./HandleImage";
 
-const RecipeDetails = ({
-  initialNewRecipeData,
-  handleNextStep,
-  resetImage,
-}) => {
+const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
+  const [isImageAdded, setIsImageAdded] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const updateIsImageAdded = (bool) => {
+    setIsImageAdded(bool)
+  }
+
+  const updateImagePreview = (url) => {
+    setImagePreview(url)
+  }
+
+  useEffect(() => {
+    if (initialNewRecipeData.image) {
+      setImagePreview(initialNewRecipeData.image)
+    }
+  }, [])
+
+  console.log(initialNewRecipeData);
+
   return (
     <Formik
       initialValues={initialNewRecipeData}
@@ -47,10 +62,12 @@ const RecipeDetails = ({
               error={formik.errors.image && formik.touched.image}
             >
               <HandleImage
-                initialNewRecipeData={initialNewRecipeData}
+                updateIsImageAdded={updateIsImageAdded}
+                updateImagePreview={updateImagePreview}
+                isImageAdded={isImageAdded}
+                imagePreview={imagePreview}
                 setFieldValue={formik.setFieldValue}
                 errors={formik.errors.image && formik.touched.image}
-                resetImage={resetImage}
               />
               {formik.errors.image && formik.touched.image && (
                 <FormHelperText>{formik.errors.image}</FormHelperText>

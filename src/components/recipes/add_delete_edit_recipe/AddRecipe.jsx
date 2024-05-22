@@ -42,7 +42,6 @@ export const AddRecipe = () => {
       isNewRecipe={true}
       initialNewRecipeData={initialNewRecipeData}
       updateInitialNewRecipeData={updateInitialNewRecipeData}
-      resetImage={resetImage}
     />
   );
 };

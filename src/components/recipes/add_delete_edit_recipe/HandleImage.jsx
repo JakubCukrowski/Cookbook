@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { Box, Typography } from "@mui/material";
 import { StyledInputLabel } from "../../../assets/styles/FormStyles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -9,35 +9,31 @@ import { OrangeButton } from "../../../assets/styles/Buttons";
 const HandleImage = ({
   errors,
   setFieldValue,
-  initialNewRecipeData,
-  resetImage,
+  updateIsImageAdded,
+  updateImagePreview,
+  isImageAdded,
+  imagePreview,
 }) => {
-  const [isImageAdded, setIsImageAdded] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
 
   const onDrop = useCallback((acceptedFiles) => {
-      setImagePreview(URL.createObjectURL(acceptedFiles[0]));
-      setIsImageAdded(true);
+    updateImagePreview(URL.createObjectURL(acceptedFiles[0]));
+    updateIsImageAdded(true);
   }, []);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
-      "image/*": [".jpeg", ".png"]
+      "image/*": [".jpeg", ".png"],
     },
   });
 
   const handleCloseCrop = () => {
-    setIsImageAdded(false);
+    updateIsImageAdded(false);
     setFieldValue("image", imagePreview);
-  };
-
-  const updateImagePreview = (url) => {
-    setImagePreview(url);
   };
 
   return (
     <>
-      {!initialNewRecipeData.image && !isImageAdded && !imagePreview && (
+      {!isImageAdded && !imagePreview && (
         <Box
           sx={{
             border: errors
@@ -64,7 +60,7 @@ const HandleImage = ({
           />
         </Box>
       )}
-      {!isImageAdded && (imagePreview || initialNewRecipeData.image) && (
+      {!isImageAdded && imagePreview && (
         <Box
           sx={{
             display: "flex",
@@ -84,19 +80,14 @@ const HandleImage = ({
           >
             <img
               style={{ width: "100%", height: "100%" }}
-              src={
-                initialNewRecipeData.image
-                  ? initialNewRecipeData.image
-                  : imagePreview
-              }
+              src={imagePreview}
               alt="podglad"
             />
           </Box>
           <OrangeButton
             onClick={() => {
-              setImagePreview(null);
+              updateImagePreview(null);
               setFieldValue("image", "");
-              resetImage();
             }}
           >
             Zmień
