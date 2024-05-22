@@ -22,9 +22,7 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     .error {
-        border-color: tomato;
-        color: green;
-        padding: 20px;
+        border-color: tomato !important;
     }
 
     .add_pointer {

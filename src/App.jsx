@@ -19,7 +19,6 @@ import { Soups } from "./components/recipes/main_page_recipes/Soups";
 import { Desserts } from "./components/recipes/main_page_recipes/Desserts";
 import { FilterRecipes } from "./pages/FilterRecipes";
 // import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditRecipe";
-import { ScrollToTop } from "./components/ScrollToTop";
 import { SearchedTag } from "./pages/SearchedTag";
 import { MainDishes } from "./components/recipes/main_page_recipes/MainDishes";
 import { BlockedRoute } from "./components/BlockedRoute";
@@ -31,7 +30,6 @@ function App() {
     <AuthContextProvider>
       <BrowserRouter>
         <GlobalStyle />
-        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route

@@ -17,7 +17,11 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import HandleImage from "./HandleImage";
 
-const RecipeDetails = ({ initialNewRecipeData, handleNextStep, resetImage }) => {
+const RecipeDetails = ({
+  initialNewRecipeData,
+  handleNextStep,
+  resetImage,
+}) => {
   return (
     <Formik
       initialValues={initialNewRecipeData}
@@ -153,7 +157,7 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep, resetImage }) => 
                 id="description"
                 name="description"
                 {...formik.getFieldProps("description")}
-              ></StyledTextarea>
+              />
             </FormControl>
             <OrangeButton type="submit" style={{ alignSelf: "flex-end" }}>
               Dalej

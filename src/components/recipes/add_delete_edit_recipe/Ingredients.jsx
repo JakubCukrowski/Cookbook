@@ -26,10 +26,7 @@ const Ingredients = ({
           Yup.string().required("Musisz podać składnik")
         ),
       })}
-      onSubmit={(values) => {
-        console.log(values);
-        handleNextStep(values);
-      }}
+      onSubmit={(values) => handleNextStep(values)}
     >
       {(formik) => {
         return (
@@ -92,7 +89,9 @@ const Ingredients = ({
                 justifyContent: "space-between",
               }}
             >
-              <OrangeButton onClick={handlePreviousStep}>Wróć</OrangeButton>
+              <OrangeButton onClick={() => handlePreviousStep(formik.values)}>
+                Wróć
+              </OrangeButton>
               <OrangeButton type="submit">Dalej</OrangeButton>
             </Box>
           </StyledRecipeForm>
