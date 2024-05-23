@@ -20,15 +20,15 @@ import HandleImage from "./HandleImage";
 
 const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
   const [isImageAdded, setIsImageAdded] = useState(false);
-  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [notImage, setNotImage] = useState(false)
 
   const updateIsImageAdded = (bool) => {
     setIsImageAdded(bool);
   };
 
-  const updateImageFile = (file) => {
-    setImageFile(file);
+  const updateImagePreview = (file) => {
+    setImagePreview(file);
   };
 
   const updateNotImage = (bool) => {
@@ -36,8 +36,9 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
   }
 
   useEffect(() => {
+    console.log('from recipedetails');
     if (initialNewRecipeData.image) {
-      setImageFile(URL.createObjectURL(initialNewRecipeData.image));
+      setImagePreview(URL.createObjectURL(initialNewRecipeData.image));
     }
   }, []);
 
@@ -59,6 +60,7 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
       }}
     >
       {(formik) => {
+        console.log(formik.values);
         return (
           <StyledRecipeForm>
             <Typography variant="h5">Powiedz nam więcej o przepisie</Typography>
@@ -69,9 +71,9 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
               {notImage && <Alert sx={{marginBottom: '10px'}} severity="error" variant="filled">Wybrałeś zły plik. Spróbuj jeszcze raz.</Alert>}
               <HandleImage
                 updateIsImageAdded={updateIsImageAdded}
-                updateImageFile={updateImageFile}
+                updateImagePreview={updateImagePreview}
                 isImageAdded={isImageAdded}
-                imageFile={imageFile}
+                imagePreview={imagePreview}
                 updateNotImage={updateNotImage}
                 setFieldValue={formik.setFieldValue}
                 errors={formik.errors.image && formik.touched.image}

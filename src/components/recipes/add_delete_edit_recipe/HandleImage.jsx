@@ -10,15 +10,15 @@ const HandleImage = ({
   errors,
   setFieldValue,
   updateIsImageAdded,
-  updateImageFile,
+  updateImagePreview,
   isImageAdded,
-  imageFile,
+  imagePreview,
   updateNotImage
 }) => {
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles[0] !== undefined) {
       console.log(acceptedFiles[0]);
-      updateImageFile(acceptedFiles[0]);
+      updateImagePreview(acceptedFiles[0]);
       updateIsImageAdded(true);
     } else {
       updateNotImage(true)
@@ -33,12 +33,11 @@ const HandleImage = ({
 
   const handleCloseCrop = () => {
     updateIsImageAdded(false);
-    setFieldValue("image", imageFile);
   };
 
   return (
     <>
-      {!isImageAdded && !imageFile && (
+      {!isImageAdded && !imagePreview && (
         <Box
           sx={{
             border: errors
@@ -65,7 +64,7 @@ const HandleImage = ({
           />
         </Box>
       )}
-      {!isImageAdded && imageFile && (
+      {!isImageAdded && imagePreview && (
         <Box
           sx={{
             display: "flex",
@@ -85,13 +84,13 @@ const HandleImage = ({
           >
             <img
               style={{ width: "100%", height: "100%" }}
-              src={imageFile}
+              src={imagePreview}
               alt="podglad"
             />
           </Box>
           <OrangeButton
             onClick={() => {
-              updateImageFile(null);
+              updateImagePreview(null);
               setFieldValue("image", "");
               updateNotImage(false)
             }}
@@ -100,11 +99,12 @@ const HandleImage = ({
           </OrangeButton>
         </Box>
       )}
-      {isImageAdded && imageFile && (
+      {isImageAdded && imagePreview && (
         <Crop
-          img={URL.createObjectURL(imageFile)}
+          setFieldValue={setFieldValue}
+          img={URL.createObjectURL(imagePreview)}
           handleCloseCrop={handleCloseCrop}
-          updateImageFile={updateImageFile}
+          updateImagePreview={updateImagePreview}
         ></Crop>
       )}
     </>
