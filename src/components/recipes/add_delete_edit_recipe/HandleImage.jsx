@@ -13,12 +13,16 @@ const HandleImage = ({
   updateImageFile,
   isImageAdded,
   imageFile,
+  updateNotImage
 }) => {
-
   const onDrop = useCallback((acceptedFiles) => {
-    console.log(acceptedFiles[0]);
-    updateImageFile(acceptedFiles[0]);
-    updateIsImageAdded(true);
+    if (acceptedFiles[0] !== undefined) {
+      console.log(acceptedFiles[0]);
+      updateImageFile(acceptedFiles[0]);
+      updateIsImageAdded(true);
+    } else {
+      updateNotImage(true)
+    }
   }, []);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -89,6 +93,7 @@ const HandleImage = ({
             onClick={() => {
               updateImageFile(null);
               setFieldValue("image", "");
+              updateNotImage(false)
             }}
           >
             Zmień

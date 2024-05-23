@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   FormHelperText,
+  Alert
 } from "@mui/material";
 import {
   StyledRecipeForm,
@@ -20,6 +21,7 @@ import HandleImage from "./HandleImage";
 const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
   const [isImageAdded, setIsImageAdded] = useState(false);
   const [imageFile, setImageFile] = useState(null);
+  const [notImage, setNotImage] = useState(false)
 
   const updateIsImageAdded = (bool) => {
     setIsImageAdded(bool);
@@ -28,6 +30,10 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
   const updateImageFile = (file) => {
     setImageFile(file);
   };
+
+  const updateNotImage = (bool) => {
+    setNotImage(bool)
+  }
 
   useEffect(() => {
     if (initialNewRecipeData.image) {
@@ -45,9 +51,10 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
         ),
         difficulty: Yup.string().required("Nie wybrałeś poziomu trudności"),
         category: Yup.string().required("Nie wybrałeś kategorii"),
-        image: Yup.string().required("Dodaj zdjęcie"),
+        image: Yup.mixed().required("Dodaj zdjęcie"),
       })}
       onSubmit={(values) => {
+        setNotImage(false)
         handleNextStep(values);
       }}
     >
@@ -59,11 +66,13 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
               fullWidth
               error={formik.errors.image && formik.touched.image}
             >
+              {notImage && <Alert sx={{marginBottom: '10px'}} severity="error" variant="filled">Wybrałeś zły plik. Spróbuj jeszcze raz.</Alert>}
               <HandleImage
                 updateIsImageAdded={updateIsImageAdded}
                 updateImageFile={updateImageFile}
                 isImageAdded={isImageAdded}
                 imageFile={imageFile}
+                updateNotImage={updateNotImage}
                 setFieldValue={formik.setFieldValue}
                 errors={formik.errors.image && formik.touched.image}
               />
