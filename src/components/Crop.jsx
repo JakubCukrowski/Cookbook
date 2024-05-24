@@ -19,7 +19,7 @@ export const Crop = ({ img, handleCloseCrop, updateImagePreview, setFieldValue }
     fetch(croppedImageUrl)
       .then((res) => res.blob())
       .then((blob) => {
-        setFieldValue('image', new Image([blob], "image.jpeg", { type: "image.jpeg" }));
+        setFieldValue('image', new File([blob], "image.jpeg", { type: "image.jpeg" }));
       });
     handleCloseCrop();
   };
