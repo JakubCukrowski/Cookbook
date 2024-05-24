@@ -197,6 +197,8 @@ export const SingleRecipe = () => {
     return () => clearTimeout(timeOut);
   }, [recipeId]);
 
+  console.log(searchedRecipe);
+
   return (
     <section>
       {!isFound ? (
@@ -271,7 +273,7 @@ export const SingleRecipe = () => {
               </div>
               <div sm={5}>
                 <SingleRecipeH2>Jak przygotować</SingleRecipeH2>
-                {searchedRecipe.steps.map((value, index) => (
+                {searchedRecipe.preparationSteps.map((value, index) => (
                   <p key={index}>
                     {`${index + 1}.`}
                     <span> {value}</span>

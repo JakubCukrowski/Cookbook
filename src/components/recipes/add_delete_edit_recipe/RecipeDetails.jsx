@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   FormHelperText,
+  Alert
 } from "@mui/material";
 import {
   StyledRecipeForm,
@@ -19,19 +20,25 @@ import HandleImage from "./HandleImage";
 
 const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
   const [isImageAdded, setIsImageAdded] = useState(false);
-  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [notImage, setNotImage] = useState(false)
 
   const updateIsImageAdded = (bool) => {
     setIsImageAdded(bool);
   };
 
-  const updateImageFile = (file) => {
-    setImageFile(file);
+  const updateImagePreview = (file) => {
+    setImagePreview(file);
   };
 
+  const updateNotImage = (bool) => {
+    setNotImage(bool)
+  }
+
   useEffect(() => {
+    console.log('from recipedetails');
     if (initialNewRecipeData.image) {
-      setImageFile(URL.createObjectURL(initialNewRecipeData.image));
+      setImagePreview(URL.createObjectURL(initialNewRecipeData.image));
     }
   }, []);
 
@@ -45,13 +52,15 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
         ),
         difficulty: Yup.string().required("Nie wybrałeś poziomu trudności"),
         category: Yup.string().required("Nie wybrałeś kategorii"),
-        image: Yup.string().required("Dodaj zdjęcie"),
+        image: Yup.mixed().required("Dodaj zdjęcie"),
       })}
       onSubmit={(values) => {
+        setNotImage(false)
         handleNextStep(values);
       }}
     >
       {(formik) => {
+        console.log(formik.values);
         return (
           <StyledRecipeForm>
             <Typography variant="h5">Powiedz nam więcej o przepisie</Typography>
@@ -59,11 +68,13 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
               fullWidth
               error={formik.errors.image && formik.touched.image}
             >
+              {notImage && <Alert sx={{marginBottom: '10px'}} severity="error" variant="filled">Wybrałeś zły plik. Spróbuj jeszcze raz.</Alert>}
               <HandleImage
                 updateIsImageAdded={updateIsImageAdded}
-                updateImageFile={updateImageFile}
+                updateImagePreview={updateImagePreview}
                 isImageAdded={isImageAdded}
-                imageFile={imageFile}
+                imagePreview={imagePreview}
+                updateNotImage={updateNotImage}
                 setFieldValue={formik.setFieldValue}
                 errors={formik.errors.image && formik.touched.image}
               />
