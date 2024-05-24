@@ -13,13 +13,16 @@ const HandleImage = ({
   updateImagePreview,
   isImageAdded,
   imagePreview,
-  updateNotImage
+  updateNotImage,
+  imageName,
+  updateImageName
 }) => {
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles[0] !== undefined) {
-      console.log(acceptedFiles[0]);
       updateImagePreview(acceptedFiles[0]);
+      updateImageName(acceptedFiles[0].name)
       updateIsImageAdded(true);
+      updateNotImage(false)
     } else {
       updateNotImage(true)
     }
@@ -105,6 +108,7 @@ const HandleImage = ({
           img={URL.createObjectURL(imagePreview)}
           handleCloseCrop={handleCloseCrop}
           updateImagePreview={updateImagePreview}
+          imageName={imageName}
         ></Crop>
       )}
     </>

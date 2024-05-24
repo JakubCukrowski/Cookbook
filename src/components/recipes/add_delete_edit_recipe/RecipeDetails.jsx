@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select,
   FormHelperText,
-  Alert
+  Alert,
 } from "@mui/material";
 import {
   StyledRecipeForm,
@@ -18,10 +18,15 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import HandleImage from "./HandleImage";
 
-const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
+const RecipeDetails = ({
+  initialNewRecipeData,
+  handleNextStep,
+  imageName,
+  updateImageName,
+}) => {
   const [isImageAdded, setIsImageAdded] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-  const [notImage, setNotImage] = useState(false)
+  const [notImage, setNotImage] = useState(false);
 
   const updateIsImageAdded = (bool) => {
     setIsImageAdded(bool);
@@ -32,13 +37,14 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
   };
 
   const updateNotImage = (bool) => {
-    setNotImage(bool)
-  }
+    setNotImage(bool);
+  };
 
   useEffect(() => {
-    console.log('from recipedetails');
-    if (initialNewRecipeData.image) {
+    if (initialNewRecipeData.image.type) {
       setImagePreview(URL.createObjectURL(initialNewRecipeData.image));
+    } else if (initialNewRecipeData.image.includes("firebase")) {
+      setImagePreview(initialNewRecipeData.image);
     }
   }, []);
 
@@ -52,15 +58,13 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
         ),
         difficulty: Yup.string().required("Nie wybrałeś poziomu trudności"),
         category: Yup.string().required("Nie wybrałeś kategorii"),
-        image: Yup.mixed().required("Dodaj zdjęcie"),
+        image: Yup.string().required("Dodaj zdjęcie"),
       })}
       onSubmit={(values) => {
-        setNotImage(false)
         handleNextStep(values);
       }}
     >
       {(formik) => {
-        console.log(formik.values);
         return (
           <StyledRecipeForm>
             <Typography variant="h5">Powiedz nam więcej o przepisie</Typography>
@@ -68,15 +72,26 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
               fullWidth
               error={formik.errors.image && formik.touched.image}
             >
-              {notImage && <Alert sx={{marginBottom: '10px'}} severity="error" variant="filled">Wybrałeś zły plik. Spróbuj jeszcze raz.</Alert>}
+              {notImage && (
+                <Alert
+                  sx={{ marginBottom: "10px" }}
+                  severity="error"
+                  variant="filled"
+                >
+                  Plik ma niepoprawny format
+                </Alert>
+              )}
               <HandleImage
                 updateIsImageAdded={updateIsImageAdded}
                 updateImagePreview={updateImagePreview}
                 isImageAdded={isImageAdded}
                 imagePreview={imagePreview}
-                updateNotImage={updateNotImage}
                 setFieldValue={formik.setFieldValue}
                 errors={formik.errors.image && formik.touched.image}
+                updateImageName={updateImageName}
+                imageName={imageName}
+                notImage={notImage}
+                updateNotImage={updateNotImage}
               />
               {formik.errors.image && formik.touched.image && (
                 <FormHelperText>{formik.errors.image}</FormHelperText>
