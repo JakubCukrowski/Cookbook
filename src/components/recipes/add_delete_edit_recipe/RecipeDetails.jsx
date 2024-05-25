@@ -7,7 +7,6 @@ import {
   MenuItem,
   Select,
   FormHelperText,
-  Alert
 } from "@mui/material";
 import {
   StyledRecipeForm,
@@ -21,7 +20,6 @@ import HandleImage from "./HandleImage";
 const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
   const [isImageAdded, setIsImageAdded] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-  const [notImage, setNotImage] = useState(false)
 
   const updateIsImageAdded = (bool) => {
     setIsImageAdded(bool);
@@ -31,12 +29,7 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
     setImagePreview(file);
   };
 
-  const updateNotImage = (bool) => {
-    setNotImage(bool)
-  }
-
   useEffect(() => {
-    console.log('from recipedetails');
     if (initialNewRecipeData.image) {
       setImagePreview(URL.createObjectURL(initialNewRecipeData.image));
     }
@@ -55,12 +48,12 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
         image: Yup.mixed().required("Dodaj zdjęcie"),
       })}
       onSubmit={(values) => {
-        setNotImage(false)
+        setNotImage(false);
         handleNextStep(values);
       }}
     >
       {(formik) => {
-        console.log(formik.values);
+        console.log(formik.errors);
         return (
           <StyledRecipeForm>
             <Typography variant="h5">Powiedz nam więcej o przepisie</Typography>
@@ -68,15 +61,16 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
               fullWidth
               error={formik.errors.image && formik.touched.image}
             >
-              {notImage && <Alert sx={{marginBottom: '10px'}} severity="error" variant="filled">Wybrałeś zły plik. Spróbuj jeszcze raz.</Alert>}
               <HandleImage
                 updateIsImageAdded={updateIsImageAdded}
                 updateImagePreview={updateImagePreview}
                 isImageAdded={isImageAdded}
                 imagePreview={imagePreview}
-                updateNotImage={updateNotImage}
                 setFieldValue={formik.setFieldValue}
+                setFieldError={formik.setFieldError}
+                setFieldTouched={formik.setFieldTouched}
                 errors={formik.errors.image && formik.touched.image}
+                handleImageChange={formik.handleChange}
               />
               {formik.errors.image && formik.touched.image && (
                 <FormHelperText>{formik.errors.image}</FormHelperText>
