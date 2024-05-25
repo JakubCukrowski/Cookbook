@@ -49,7 +49,7 @@ const Tags = ({
       validationSchema={Yup.object().shape({
         tags: Yup.array().of(Yup.string()),
       })}
-      onSubmit={() => submitForm()}
+      onSubmit={(values) => submitForm(values)}
     >
       {(formik) => {
         return (

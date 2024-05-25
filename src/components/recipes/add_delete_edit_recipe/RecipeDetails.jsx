@@ -17,10 +17,14 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import HandleImage from "./HandleImage";
 
-const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
+const RecipeDetails = ({
+  initialNewRecipeData,
+  handleNextStep,
+  imageName,
+  updateImageName,
+}) => {
   const [isImageAdded, setIsImageAdded] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-
   const updateIsImageAdded = (bool) => {
     setIsImageAdded(bool);
   };
@@ -31,7 +35,15 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
 
   useEffect(() => {
     if (initialNewRecipeData.image) {
+  const updateNotImage = (bool) => {
+    setNotImage(bool);
+  };
+
+  useEffect(() => {
+    if (initialNewRecipeData.image.type) {
       setImagePreview(URL.createObjectURL(initialNewRecipeData.image));
+    } else if (initialNewRecipeData.image.includes("firebase")) {
+      setImagePreview(initialNewRecipeData.image);
     }
   }, []);
 
@@ -45,15 +57,13 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
         ),
         difficulty: Yup.string().required("Nie wybrałeś poziomu trudności"),
         category: Yup.string().required("Nie wybrałeś kategorii"),
-        image: Yup.mixed().required("Dodaj zdjęcie"),
+        image: Yup.string().required("Dodaj zdjęcie"),
       })}
       onSubmit={(values) => {
-        setNotImage(false);
         handleNextStep(values);
       }}
     >
       {(formik) => {
-        console.log(formik.errors);
         return (
           <StyledRecipeForm>
             <Typography variant="h5">Powiedz nam więcej o przepisie</Typography>
@@ -70,7 +80,6 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
                 setFieldError={formik.setFieldError}
                 setFieldTouched={formik.setFieldTouched}
                 errors={formik.errors.image && formik.touched.image}
-                handleImageChange={formik.handleChange}
               />
               {formik.errors.image && formik.touched.image && (
                 <FormHelperText>{formik.errors.image}</FormHelperText>
