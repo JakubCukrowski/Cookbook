@@ -47,10 +47,7 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
         category: Yup.string().required("Nie wybrałeś kategorii"),
         image: Yup.mixed().required("Dodaj zdjęcie"),
       })}
-      onSubmit={(values) => {
-        setNotImage(false);
-        handleNextStep(values);
-      }}
+      onSubmit={(values) => {handleNextStep(values)}}
     >
       {(formik) => {
         return (

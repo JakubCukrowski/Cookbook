@@ -36,9 +36,9 @@ export const AddRecipe = () => {
   };
 
   const submitForm = async (newData) => {
-    updateInitialNewRecipeData(newData);
     setAdding(true);
     try {
+      setInitialNewRecipeData(newData);
       const newRecipeRef = await addDoc(collection(db, "recipes"), {
         addedBy: initialNewRecipeData.addedBy,
         likedBy: initialNewRecipeData.likedBy,
@@ -58,13 +58,14 @@ export const AddRecipe = () => {
         updateDoc(doc(db, "recipes", newRecipeRef.id), {
           ...initialNewRecipeData,
           image: url,
+          createdAt: Date.now()
         });
       });
       setAdding(false)
+      navigate("/dashboard");
     } catch (error) {
       console.log(error);
     }
-    navigate("/dashboard");
   };
 
   return (
