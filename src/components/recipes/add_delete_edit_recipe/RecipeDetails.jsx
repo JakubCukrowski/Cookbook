@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   FormHelperText,
+  Alert,
 } from "@mui/material";
 import {
   StyledRecipeForm,
@@ -25,6 +26,8 @@ const RecipeDetails = ({
 }) => {
   const [isImageAdded, setIsImageAdded] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+  const [notImage, setNotImage] = useState(false);
+
   const updateIsImageAdded = (bool) => {
     setIsImageAdded(bool);
   };
@@ -33,8 +36,6 @@ const RecipeDetails = ({
     setImagePreview(file);
   };
 
-  useEffect(() => {
-    if (initialNewRecipeData.image) {
   const updateNotImage = (bool) => {
     setNotImage(bool);
   };
@@ -71,15 +72,26 @@ const RecipeDetails = ({
               fullWidth
               error={formik.errors.image && formik.touched.image}
             >
+              {notImage && (
+                <Alert
+                  sx={{ marginBottom: "10px" }}
+                  severity="error"
+                  variant="filled"
+                >
+                  Plik ma niepoprawny format
+                </Alert>
+              )}
               <HandleImage
                 updateIsImageAdded={updateIsImageAdded}
                 updateImagePreview={updateImagePreview}
                 isImageAdded={isImageAdded}
                 imagePreview={imagePreview}
                 setFieldValue={formik.setFieldValue}
-                setFieldError={formik.setFieldError}
-                setFieldTouched={formik.setFieldTouched}
                 errors={formik.errors.image && formik.touched.image}
+                updateImageName={updateImageName}
+                imageName={imageName}
+                notImage={notImage}
+                updateNotImage={updateNotImage}
               />
               {formik.errors.image && formik.touched.image && (
                 <FormHelperText>{formik.errors.image}</FormHelperText>
