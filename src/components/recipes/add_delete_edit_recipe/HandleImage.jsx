@@ -13,11 +13,24 @@ const HandleImage = ({
   updateImagePreview,
   isImageAdded,
   imagePreview,
-  updateNotImage,
-  imageName,
-  updateImageName
 }) => {
+  const acceptedFileFormats = [
+    "image/jpeg",
+    "image/svg",
+    "image/png",
+    "image/jpg",
+  ];
   const onDrop = useCallback((acceptedFiles) => {
+    try {
+      if (acceptedFileFormats.includes(acceptedFiles[0].type)) {
+        setFieldError("image", "");
+        setFieldTouched("image", false);
+        updateImagePreview(acceptedFiles[0]);
+        updateIsImageAdded(true);
+      }
+    } catch (error) {
+      setFieldError("image", "Dodany plik ma niewłaściwy format");
+      setFieldTouched("image", true, false);
     if (acceptedFiles[0] !== undefined) {
       updateImagePreview(acceptedFiles[0]);
       updateImageName(acceptedFiles[0].name)
@@ -59,11 +72,17 @@ const HandleImage = ({
             <Typography>Upuść zdjęcie</Typography>
           </Box>
           <Typography>Lub</Typography>
-          <StyledInputLabel htmlFor="file_drop">Prześlij</StyledInputLabel>
+          <StyledInputLabel>Prześlij</StyledInputLabel>
           <input
-            {...getInputProps()}
+            {...getInputProps({
+              name: "image",
+              onChange: (event) => {
+                const dropzoneProps = getInputProps();
+                dropzoneProps.onChange(event);
+                handleImageChange(event);
+              },
+            })}
             style={{ display: "none" }}
-            name="image"
           />
         </Box>
       )}
@@ -95,7 +114,6 @@ const HandleImage = ({
             onClick={() => {
               updateImagePreview(null);
               setFieldValue("image", "");
-              updateNotImage(false)
             }}
           >
             Zmień
