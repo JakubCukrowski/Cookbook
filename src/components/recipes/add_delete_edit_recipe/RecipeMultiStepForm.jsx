@@ -47,6 +47,7 @@ const RecipeMultiStepForm = ({
     />,
     <Tags
       initialNewRecipeData={initialNewRecipeData}
+      updateInitialNewRecipeData={updateInitialNewRecipeData}
       handlePreviousStep={handlePreviousStep}
       submitForm={submitForm}
     />,

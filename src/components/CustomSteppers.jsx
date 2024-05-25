@@ -5,7 +5,6 @@ import { Stepper, Step, StepLabel } from "@mui/material";
 
 const StyledMobileStepper = styled(MobileStepper)`
   && {
-    
     span {
       width: 100%;
       background-color: #f9d99e;
@@ -15,20 +14,19 @@ const StyledMobileStepper = styled(MobileStepper)`
       background-color: #e19f25;
     }
   }
-`
+`;
 
 const StyledDesktopStep = styled(Step)`
   && {
     .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
-      color: #e19f25;
+      color: #e19f25 !important;
     }
 
     .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed {
-      color: #e19f25
+      color: #e19f25 !important;
     }
   }
-
-`
+`;
 
 const CustomSteppers = ({ currentStep, stepTitles }) => {
   const medium = useMediaQuery("(min-width: 600px)");

@@ -13,6 +13,7 @@ import {
 const Tags = ({
   initialNewRecipeData,
   handlePreviousStep,
+  updateInitialNewRecipeData,
   submitForm,
 }) => {
   const tags = [
@@ -42,14 +43,23 @@ const Tags = ({
     "kuchnia meksykańska",
     "kuchnia indyjska",
     "okazje",
+    "ciasta",
+    "mięso mielone",
+    "indyk",
+    "potrawa bezglutenowa",
+    "wieprzowina",
   ];
+
+  const tempTags = initialNewRecipeData.tags;
   return (
     <Formik
       initialValues={initialNewRecipeData}
       validationSchema={Yup.object().shape({
         tags: Yup.array().of(Yup.string()),
       })}
-      onSubmit={() => submitForm()}
+      onSubmit={(values) => {
+        submitForm(values);
+      }}
     >
       {(formik) => {
         return (
@@ -76,13 +86,30 @@ const Tags = ({
                       key={index}
                     >
                       <FormControlLabel
-                        onChange={() =>
-                          !formik.values.tags.includes(tag)
-                            ? push(tag)
-                            : remove(index)
+                        control={
+                          <Checkbox
+                            checked={formik.values.tags.includes(tag)}
+                            onChange={() => {
+                              if (!formik.values.tags.includes(tag)) {
+                                push(tag);
+                                tempTags.push(tag);
+                                updateInitialNewRecipeData({ tags: tempTags });
+                              } else {
+                                const idx = formik.values.tags.indexOf(tag);
+                                remove(idx);
+                                const filteredTags = tempTags.filter(
+                                  (_, tagIndex) => tagIndex !== idx
+                                );
+                                updateInitialNewRecipeData({
+                                  tags: filteredTags,
+                                });
+                              }
+                            }}
+                            name={`tags.${index}`}
+                            id={`tags.${index}`}
+                            value={tag}
+                          />
                         }
-                        value={tag}
-                        control={<Checkbox name={`tags.${index}`} />}
                         label={tag}
                         labelPlacement="end"
                       />
