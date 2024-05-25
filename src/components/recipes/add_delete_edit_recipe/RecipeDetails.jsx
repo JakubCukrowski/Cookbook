@@ -30,8 +30,10 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
   };
 
   useEffect(() => {
-    if (initialNewRecipeData.image) {
+    if (initialNewRecipeData.image.type) {
       setImagePreview(URL.createObjectURL(initialNewRecipeData.image));
+    } else if (initialNewRecipeData.image.includes("firebase")) {
+      setImagePreview(initialNewRecipeData.image);
     }
   }, []);
 

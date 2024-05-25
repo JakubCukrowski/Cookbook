@@ -18,11 +18,11 @@ const StyledMobileStepper = styled(MobileStepper)`
 
 const StyledDesktopStep = styled(Step)`
   && {
-    .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
+    .css-4ff9q7.Mui-active {
       color: #e19f25 !important;
     }
 
-    .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed {
+    .css-4ff9q7.Mui-completed {
       color: #e19f25 !important;
     }
   }
