@@ -19,7 +19,6 @@ const RecipeMultiStepForm = ({
     "Tagi",
   ];
   const [currentStep, setCurrentStep] = useState(0);
-  const [imageName, setImageName] = useState(null)
 
   const handleNextStep = (newData) => {
     setCurrentStep((prev) => prev + 1);
@@ -31,16 +30,10 @@ const RecipeMultiStepForm = ({
     updateInitialNewRecipeData(newData);
   };
 
-  const updateImageName = (name) => {
-    setImageName(name)
-  }
-
   const steps = [
     <RecipeDetails
       initialNewRecipeData={initialNewRecipeData}
       handleNextStep={handleNextStep}
-      imageName={imageName}
-      updateImageName={updateImageName}
     />,
     <Ingredients
       initialNewRecipeData={initialNewRecipeData}

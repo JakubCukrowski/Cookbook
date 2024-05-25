@@ -17,14 +17,10 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import HandleImage from "./HandleImage";
 
-const RecipeDetails = ({
-  initialNewRecipeData,
-  handleNextStep,
-  imageName,
-  updateImageName,
-}) => {
+const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
   const [isImageAdded, setIsImageAdded] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+
   const updateIsImageAdded = (bool) => {
     setIsImageAdded(bool);
   };
@@ -35,15 +31,7 @@ const RecipeDetails = ({
 
   useEffect(() => {
     if (initialNewRecipeData.image) {
-  const updateNotImage = (bool) => {
-    setNotImage(bool);
-  };
-
-  useEffect(() => {
-    if (initialNewRecipeData.image.type) {
       setImagePreview(URL.createObjectURL(initialNewRecipeData.image));
-    } else if (initialNewRecipeData.image.includes("firebase")) {
-      setImagePreview(initialNewRecipeData.image);
     }
   }, []);
 
@@ -57,9 +45,10 @@ const RecipeDetails = ({
         ),
         difficulty: Yup.string().required("Nie wybrałeś poziomu trudności"),
         category: Yup.string().required("Nie wybrałeś kategorii"),
-        image: Yup.string().required("Dodaj zdjęcie"),
+        image: Yup.mixed().required("Dodaj zdjęcie"),
       })}
       onSubmit={(values) => {
+        setNotImage(false);
         handleNextStep(values);
       }}
     >
@@ -80,6 +69,7 @@ const RecipeDetails = ({
                 setFieldError={formik.setFieldError}
                 setFieldTouched={formik.setFieldTouched}
                 errors={formik.errors.image && formik.touched.image}
+                handleImageChange={formik.handleChange}
               />
               {formik.errors.image && formik.touched.image && (
                 <FormHelperText>{formik.errors.image}</FormHelperText>

@@ -13,6 +13,9 @@ const HandleImage = ({
   updateImagePreview,
   isImageAdded,
   imagePreview,
+  handleImageChange,
+  setFieldError,
+  setFieldTouched,
 }) => {
   const acceptedFileFormats = [
     "image/jpeg",
@@ -31,13 +34,6 @@ const HandleImage = ({
     } catch (error) {
       setFieldError("image", "Dodany plik ma niewłaściwy format");
       setFieldTouched("image", true, false);
-    if (acceptedFiles[0] !== undefined) {
-      updateImagePreview(acceptedFiles[0]);
-      updateImageName(acceptedFiles[0].name)
-      updateIsImageAdded(true);
-      updateNotImage(false)
-    } else {
-      updateNotImage(true)
     }
   }, []);
   const { getRootProps, getInputProps } = useDropzone({
@@ -126,7 +122,6 @@ const HandleImage = ({
           img={URL.createObjectURL(imagePreview)}
           handleCloseCrop={handleCloseCrop}
           updateImagePreview={updateImagePreview}
-          imageName={imageName}
         ></Crop>
       )}
     </>
