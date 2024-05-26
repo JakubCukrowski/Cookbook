@@ -18,7 +18,7 @@ const RecipeMultiStepForm = ({
     "Przygotowanie",
     "Tagi",
   ];
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(2);
 
   const handleNextStep = (newData) => {
     setCurrentStep((prev) => prev + 1);

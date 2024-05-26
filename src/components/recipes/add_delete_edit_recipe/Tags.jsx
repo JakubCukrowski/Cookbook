@@ -65,7 +65,7 @@ const Tags = ({
         return (
           <StyledRecipeForm onSubmit={formik.handleSubmit}>
             <Typography variant="h5">Możesz otagować swój przepis</Typography>
-            <Typography>
+            <Typography sx={{textAlign: "center"}}>
               Tagując przepis pozwolisz innym użytkownikom ławiej go znaleźć{" "}
               <br /> (Nie jest to obowiązkowe)
             </Typography>
@@ -76,7 +76,7 @@ const Tags = ({
                   spacing={{ xs: 2, md: 3 }}
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
-                  {tags.map((tag, index) => (
+                  {tags.sort().map((tag, index) => (
                     <Grid
                       textAlign={"start"}
                       item

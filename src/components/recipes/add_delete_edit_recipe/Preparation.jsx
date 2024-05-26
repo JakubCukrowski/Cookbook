@@ -1,7 +1,8 @@
 import { FieldArray, Formik, getIn } from "formik";
 import {
+  PreparationStepTextField,
   StyledRecipeForm,
-  StyledTextarea,
+  // StyledTextarea,
 } from "../../../assets/styles/FormStyles";
 import {
   FormControl,
@@ -9,9 +10,10 @@ import {
   IconButton,
   Box,
   FormHelperText,
+  TextField,
 } from "@mui/material";
 import * as Yup from "yup";
-import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from '@mui/icons-material/Close';
 import { OrangeButton } from "../../../assets/styles/Buttons";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -56,25 +58,27 @@ const Preparation = ({
                           fullWidth
                           sx={{ position: "relative" }}
                         >
-                          <label htmlFor={`preparationSteps.${index}`}>
-                            Krok {index + 1}
-                          </label>
-                          <StyledTextarea
-                            className={Boolean(touched && error) ? 'error' : null}
-                            name={`preparationSteps.${index}`}
+                          <PreparationStepTextField
+                            multiline
+                            rows={6}
                             id={`preparationSteps.${index}`}
-                            {...formik.getFieldProps(
-                              `preparationSteps.${index}`
-                            )}
+                            name={`preparationSteps.${index}`}
+                            label={`Krok ${index + 1}`}
+                            error={Boolean(touched && error)}
+                            {...formik.getFieldProps(`preparationSteps.${index}`)}
                           />
                           {formik.values.preparationSteps.length > 1 && (
-                              <IconButton
-                                onClick={() => remove(index)}
-                                sx={{ position: "absolute", right: 0, top: 0, padding: 0 }}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            )}
+                            <IconButton
+                              onClick={() => remove(index)}
+                              sx={{
+                                position: "absolute",
+                                right: 0,
+                                top: 0,
+                              }}
+                            >
+                              <CloseIcon />
+                            </IconButton>
+                          )}
                           {Boolean(touched && error) && (
                             <FormHelperText error={Boolean(touched && error)}>
                               {formik.errors.preparationSteps[index]}
