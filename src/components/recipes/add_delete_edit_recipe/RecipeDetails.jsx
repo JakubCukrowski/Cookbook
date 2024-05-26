@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import {
   StyledRecipeForm,
-  StyledTextarea,
 } from "../../../assets/styles/FormStyles";
 import { OrangeButton } from "../../../assets/styles/Buttons";
 import { Formik } from "formik";
@@ -168,12 +167,13 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
               )}
             </FormControl>
             <FormControl fullWidth>
-              <label htmlFor="about_recipe" style={{ fontSize: 14 }}>
-                O przepisie (opcjonalnie)
-              </label>
-              <StyledTextarea
+              <TextField
+                size="small"
+                multiline
+                rows={8}
                 id="description"
                 name="description"
+                label="O przepisie (Opcjonalnie)"
                 {...formik.getFieldProps("description")}
               />
             </FormControl>
