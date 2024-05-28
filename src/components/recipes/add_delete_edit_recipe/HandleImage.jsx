@@ -50,6 +50,12 @@ const HandleImage = ({
     updateIsImageAdded(false);
   };
 
+  const handleCancelCrop = () => {
+    updateIsImageAdded(false)
+    setImageName(null)
+    updateImagePreview(null)
+  }
+
   return (
     <>
       {!isImageAdded && !imagePreview && (
@@ -121,6 +127,7 @@ const HandleImage = ({
       )}
       {isImageAdded && imagePreview && (
         <Crop
+          handleCancelCrop={handleCancelCrop}
           imageName={imageName}
           setFieldValue={setFieldValue}
           img={URL.createObjectURL(imagePreview)}
