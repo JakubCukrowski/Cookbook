@@ -16,12 +16,13 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, storage } from "../../firebase";
 import { BootstrapModal } from "../../components/BootstrapModal";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { DeleteRecipeButton, OrangeButton } from "../../assets/styles/Buttons";
+import { deleteObject, listAll, ref } from "firebase/storage";
 
 export const DashboardRecipes = ({
   linkTo,
@@ -60,6 +61,13 @@ export const DashboardRecipes = ({
       collection(db, "users"),
       where("liked", "array-contains", linkTo)
     );
+
+    const recipeStorageRef = ref(storage, `/recipe/${linkTo}`)
+    await listAll(recipeStorageRef).then(res => {
+      const imageToDelete = res.items[0].name
+      const recipeImageRef = ref(storage, `/recipe/${linkTo}/${imageToDelete}`)
+      deleteObject(recipeImageRef)
+    })
 
     const batch = writeBatch(db);
 

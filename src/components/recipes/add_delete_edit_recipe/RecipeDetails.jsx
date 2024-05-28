@@ -51,7 +51,6 @@ const RecipeDetails = ({ initialNewRecipeData, handleNextStep }) => {
       onSubmit={(values) => {handleNextStep(values)}}
     >
       {(formik) => {
-        console.log(formik.values);
         return (
           <StyledRecipeForm>
             <Typography variant="h5">Powiedz nam więcej o przepisie</Typography>

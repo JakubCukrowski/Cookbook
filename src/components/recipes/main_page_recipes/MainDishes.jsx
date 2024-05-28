@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../../../context/AuthContext";
 import { RecipesGroup } from "../../../components/RecipesGroup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { StyledH2 } from "../../../assets/styles/StyledH2";
+import { Typography } from "@mui/material";
 
 export const MainDishes = () => {
   const { recipes } = UserAuth();
@@ -13,7 +14,7 @@ export const MainDishes = () => {
     const filterAndSort = [...recipes]
       .filter((recipe) => recipe.category === "Dania główne")
       .sort((a, b) => b.likedBy.length - a.likedBy.length);
-    setMainDishes(filterAndSort)
+    setMainDishes(filterAndSort);
   }, [recipes]);
 
   const handleClick = () => {
@@ -23,12 +24,19 @@ export const MainDishes = () => {
   return (
     <section id="main_dishes">
       <StyledH2>Dania główne</StyledH2>
-      <RecipesGroup
-        array={mainDishes}
-        onClick={handleClick}
-        addButton={true}
-        sliceBy={4}
-      />
+      {mainDishes.length > 0 ? (
+        <RecipesGroup
+          array={mainDishes}
+          onClick={handleClick}
+          addButton={true}
+          sliceBy={4}
+        />
+      ) : (
+        <Typography variant="h6" textAlign="center">
+          Obecnie brak przepisów w tej kategorii <br /> <Link to="signin">Zaloguj się</Link> i dodaj
+          przepis
+        </Typography>
+      )}
     </section>
   );
 };
