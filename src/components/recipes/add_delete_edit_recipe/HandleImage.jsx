@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { StyledInputLabel } from "../../../assets/styles/FormStyles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -23,6 +23,8 @@ const HandleImage = ({
     "image/png",
     "image/jpg",
   ];
+
+  const [imageName, setImageName] = useState(null) 
   const onDrop = useCallback((acceptedFiles) => {
     try {
       if (acceptedFileFormats.includes(acceptedFiles[0].type)) {
@@ -30,6 +32,7 @@ const HandleImage = ({
         setFieldTouched("image", false);
         updateImagePreview(acceptedFiles[0]);
         updateIsImageAdded(true);
+        setImageName(acceptedFiles[0].name)
       }
     } catch (error) {
       setFieldError("image", "Dodany plik ma niewłaściwy format");
@@ -118,6 +121,7 @@ const HandleImage = ({
       )}
       {isImageAdded && imagePreview && (
         <Crop
+          imageName={imageName}
           setFieldValue={setFieldValue}
           img={URL.createObjectURL(imagePreview)}
           handleCloseCrop={handleCloseCrop}
