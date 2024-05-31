@@ -4,6 +4,7 @@ import { RecipesGroup } from "../../../components/RecipesGroup";
 import { Link, useNavigate } from "react-router-dom";
 import { StyledH2 } from "../../../assets/styles/StyledH2";
 import { Typography } from "@mui/material";
+import MainPageRecipesContent from "./MainPageRecipesContent";
 
 export const Desserts = () => {
   const { recipes, isRecipeAdded } = UserAuth();
@@ -25,22 +26,14 @@ export const Desserts = () => {
   };
 
   return (
-    <section id="desserts" className="lax_m">
-      <StyledH2>Desery</StyledH2>
-      {sortedRecipes.length > 0 ? (
-        <RecipesGroup
-          title="Desery"
-          array={sortedRecipes}
-          onClick={handleClick}
-          addButton={true}
-          sliceBy={4}
-        />
-      ) : (
-        <Typography variant="h6" textAlign="center">
-          Obecnie brak przepisów w tej kategorii <br /> <Link to="/signin">Zaloguj się</Link> i dodaj
-          przepis
-        </Typography>
-      )}
-    </section>
+    <>
+      <MainPageRecipesContent
+        sectionId="desserts"
+        title="Desery"
+        array={sortedRecipes}
+        handleClick={handleClick}
+        addButton={true}
+      />
+    </>
   );
 };
