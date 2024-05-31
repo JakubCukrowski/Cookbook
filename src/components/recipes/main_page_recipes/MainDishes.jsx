@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../../../context/AuthContext";
-import { RecipesGroup } from "../../../components/RecipesGroup";
-import { Link, useNavigate } from "react-router-dom";
-import { StyledH2 } from "../../../assets/styles/StyledH2";
-import { Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import MainPageRecipesContent from "./MainPageRecipesContent";
 
 export const MainDishes = () => {
   const { recipes } = UserAuth();
@@ -22,21 +20,14 @@ export const MainDishes = () => {
   };
 
   return (
-    <section id="main_dishes">
-      <StyledH2>Dania główne</StyledH2>
-      {mainDishes.length > 0 ? (
-        <RecipesGroup
-          array={mainDishes}
-          onClick={handleClick}
-          addButton={true}
-          sliceBy={4}
-        />
-      ) : (
-        <Typography variant="h6" textAlign="center">
-          Obecnie brak przepisów w tej kategorii <br /> <Link to="signin">Zaloguj się</Link> i dodaj
-          przepis
-        </Typography>
-      )}
-    </section>
+    <>
+      <MainPageRecipesContent
+        sectionId="main_dishes"
+        title="Dania główne"
+        array={mainDishes}
+        handleClick={handleClick}
+        addButton={true}
+      />
+    </>
   );
 };
