@@ -16,6 +16,7 @@ export const AddRecipe = () => {
   const [initialNewRecipeData, setInitialNewRecipeData] = useState({
     addedBy: {
       user: user.displayName,
+      userId: user.uid,
       photo: user.photoURL,
     },
     category: "",

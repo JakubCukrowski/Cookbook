@@ -24,52 +24,61 @@ import { MainDishes } from "./components/recipes/main_page_recipes/MainDishes";
 import { BlockedRoute } from "./components/BlockedRoute";
 import { PopularTags } from "./pages/PopularTags";
 import { UserRecipes } from "./pages/UserRecipes";
+import { RecipesContextProvider } from "./context/RecipesContext";
 
 function App() {
   return (
     <AuthContextProvider>
-      <BrowserRouter>
-        <GlobalStyle />
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route
-              index
-              element={
-                <>
-                  <Hero />
-                  <NewestRecipes />
-                  <PopularRecipes />
-                  <MainDishes />
-                  <Soups />
-                  <Desserts />
-                </>
-              }
-            />
-            <Route path="/category/:categoryName" element={<FilterRecipes />} />
-            <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
-            <Route path="/search" element={<RecipesPage />} />
-            <Route path="/show" element={<SearchedTag />} />
-            <Route path="/violation" element={<ProfanityViolation />} />
-            <Route path="/popular/:tagName" element={<PopularTags />} />
-            <Route path="/:username" element={<UserRecipes />} />
-            <Route element={<PrivateRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/add-recipe" element={<AddRecipe />} />
-              <Route path="/recipes/edit/:recipeId" element={<EditRecipe />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+      <RecipesContextProvider>
+        <BrowserRouter>
+          <GlobalStyle />
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route
+                index
+                element={
+                  <>
+                    <Hero />
+                    <NewestRecipes />
+                    <PopularRecipes />
+                    <MainDishes />
+                    <Soups />
+                    <Desserts />
+                  </>
+                }
+              />
+              <Route
+                path="/category/:categoryName"
+                element={<FilterRecipes />}
+              />
+              <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
+              <Route path="/search" element={<RecipesPage />} />
+              <Route path="/show" element={<SearchedTag />} />
+              <Route path="/violation" element={<ProfanityViolation />} />
+              <Route path="/popular/:tagName" element={<PopularTags />} />
+              <Route path="/:username" element={<UserRecipes />} />
+              <Route element={<PrivateRoute />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/add-recipe" element={<AddRecipe />} />
+                <Route
+                  path="/recipes/edit/:recipeId"
+                  element={<EditRecipe />}
+                />
+                <Route path="/dashboard" element={<Dashboard />} />
+              </Route>
             </Route>
-          </Route>
-          <Route element={<BlockedRoute />}>
-            <Route path="/signup" element={<Layout />}>
-              <Route index element={<SignUp />} />
+            <Route element={<BlockedRoute />}>
+              <Route path="/signup" element={<Layout />}>
+                <Route index element={<SignUp />} />
+              </Route>
+              <Route path="/signin" element={<Layout />}>
+                <Route index element={<SignIn />} />
+              </Route>
             </Route>
-            <Route path="/signin" element={<Layout />}>
-              <Route index element={<SignIn />} />
-            </Route>
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </RecipesContextProvider>
     </AuthContextProvider>
   );
 }

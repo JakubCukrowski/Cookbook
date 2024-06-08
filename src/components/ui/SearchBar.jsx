@@ -6,12 +6,12 @@ import {
   StyledSearchedRecipes,
   StyledInput,
 } from "../../assets/styles/SearchBarStyles";
-import { UserAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Fuse from "fuse.js";
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import { RecipesProvider } from "../../context/RecipesContext";
 
 export const SearchBar = () => {
   const {
@@ -20,7 +20,7 @@ export const SearchBar = () => {
     queryResults,
     queryText,
     updateQueryText,
-  } = UserAuth();
+  } = RecipesProvider();
   const [isFocused, setIsFocused] = useState(false);
   const [activeIndex, setActiveIndex] = useState("");
   const [count, setCount] = useState(0);
@@ -113,10 +113,6 @@ export const SearchBar = () => {
     if (e.key === "Enter" && activeIndex === "" && queryText.length >= 2) {
       navigate(`/search?query=${queryText}`);
     }
-
-    // if (e.key === "Enter" && activeIndex === "" && queryText.length < 2) {
-    //   setInputError(true);
-    // }
   };
 
   const handleFocusOut = () => {
@@ -180,20 +176,6 @@ export const SearchBar = () => {
           name="searchbar"
           value={queryText}
         />
-
-        {/* <OrangeButton
-          onClick={(e) => {
-            e.preventDefault();
-
-            if (queryText.length >= 2) {
-              navigate(`/search?query=${queryText}`);
-            } else {
-              setInputError(true);
-            }
-          }}
-        >
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
-        </OrangeButton> */}
         {queryText.length > 1 && (
           <IconButton
             onClick={() => updateQueryText("")}

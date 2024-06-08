@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { UserAuth } from "../../../context/AuthContext";
 import { useEffect, useState } from "react";
 import RecipeMultiStepForm from "./RecipeMultiStepForm";
 import { doc, updateDoc } from "firebase/firestore";
@@ -11,9 +10,14 @@ import {
   listAll,
   deleteObject,
 } from "firebase/storage";
+import { RecipesProvider } from "../../../context/RecipesContext";
+import { UserAuth } from "../../../context/AuthContext";
+import { CircularProgress } from "@mui/material";
+import { SpinnerContainer } from "../../../assets/styles/Containers";
 
 export const EditRecipe = () => {
-  const { recipes, user } = UserAuth();
+  const { recipes } = RecipesProvider();
+  const { user } = UserAuth();
   const { recipeId } = useParams();
   const [recipeToEdit, setRecipeToEdit] = useState(null);
   const navigate = useNavigate();
@@ -22,8 +26,16 @@ export const EditRecipe = () => {
     if (recipes) {
       const findRecipeToEdit = recipes.find((recipe) => recipe.id === recipeId);
       setRecipeToEdit(findRecipeToEdit);
+
+      if (
+        user &&
+        findRecipeToEdit &&
+        findRecipeToEdit.addedBy.userId !== user.uid
+      ) {
+        navigate("/dashboard");
+      }
     }
-  }, [recipes]);
+  }, [user, recipes]);
 
   const updateEditedRecipeData = (newData) => {
     setRecipeToEdit((prev) => ({ ...prev, ...newData }));
@@ -69,12 +81,16 @@ export const EditRecipe = () => {
 
   return (
     <>
-      {recipeToEdit && (
+      {recipeToEdit ? (
         <RecipeMultiStepForm
           initialNewRecipeData={recipeToEdit}
           updateInitialNewRecipeData={updateEditedRecipeData}
           submitForm={submitForm}
         />
+      ) : (
+        <SpinnerContainer>
+          <CircularProgress color="inherit" />
+        </SpinnerContainer>
       )}
     </>
   );

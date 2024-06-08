@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { UserAuth } from "../../../context/AuthContext";
-import { RecipesGroup } from "../../../components/RecipesGroup";
-import { Link, useNavigate } from "react-router-dom";
-import { StyledH2 } from "../../../assets/styles/StyledH2";
-import { Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import MainPageRecipesContent from "./MainPageRecipesContent";
+import { RecipesProvider } from "../../../context/RecipesContext";
 
 export const Desserts = () => {
-  const { recipes, isRecipeAdded } = UserAuth();
+  const { recipes } = RecipesProvider();
   const navigate = useNavigate();
   const [sortedRecipes, setSortedRecipes] = useState([]);
 
@@ -19,7 +16,7 @@ export const Desserts = () => {
       (a, b) => b.likedBy.length - a.likedBy.length
     );
     setSortedRecipes(sortedDesserts);
-  }, [recipes, isRecipeAdded]);
+  }, [recipes]);
 
   const handleClick = () => {
     navigate("/category/desserts");
