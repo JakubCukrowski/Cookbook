@@ -2,11 +2,15 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import ClearIcon from '@mui/icons-material/Clear';
-import PersonIcon from '@mui/icons-material/Person';
+import ClearIcon from "@mui/icons-material/Clear";
+import PersonIcon from "@mui/icons-material/Person";
 import { Typography, Box, SpeedDial, SpeedDialAction } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  CustomizedRecipesContainer,
+  CustomizedRecipesWrapper,
+} from "../../assets/styles/DashboardStyles";
 
 const DashboardRecipesStructure = ({
   title,
@@ -14,44 +18,49 @@ const DashboardRecipesStructure = ({
   emptyMessage,
   addedRecipes,
 }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const navigateToRecipe = (recipeId) => {
-    navigate(`/recipes/${recipeId}`)
-  }
+    navigate(`/recipes/${recipeId}`);
+  };
 
   const editRecipe = (recipeId) => {
-    navigate(`/recipes/edit/${recipeId}`)
-  }
+    navigate(`/recipes/edit/${recipeId}`);
+  };
 
   const userRecipesActions = [
-    { icon: <ArrowForwardIcon />, name: "Idź do przepisu", onClick: navigateToRecipe},
-    { icon: <EditIcon />, name: "Edytuj przepis", onClick: editRecipe},
+    {
+      icon: <ArrowForwardIcon />,
+      name: "Idź do przepisu",
+      onClick: navigateToRecipe,
+    },
+    { icon: <EditIcon />, name: "Edytuj przepis", onClick: editRecipe },
     { icon: <DeleteIcon />, name: "Usuń przepis" },
   ];
 
   const userLikedRecipesActions = [
-    { icon: <ArrowForwardIcon />, name: "Idź do przepisu", onClick: navigateToRecipe },
+    {
+      icon: <ArrowForwardIcon />,
+      name: "Idź do przepisu",
+      onClick: navigateToRecipe,
+    },
     { icon: <ClearIcon />, name: "Nie lubię" },
     { icon: <PersonIcon />, name: "Profil twórcy" },
   ];
 
   return (
     <>
-      <Box
-        sx={{
-          borderRadius: "10px",
-          padding: "40px 80px",
-          boxShadow: "0 0 6px 2px #e19f2540",
-        }}
-      >
-        <Typography sx={{ textAlign: "center" }} variant="h4">
+      <CustomizedRecipesWrapper>
+        <Typography sx={{ textAlign: "center" }} variant="h5">
           {title}
         </Typography>
-        <Box sx={{ textAlign: "center" }}>
+        <CustomizedRecipesContainer>
           {array.length > 0 ? (
             array.map((recipe, index) => (
-              <Box key={index} sx={{ position: "relative", marginTop: "20px" }}>
+              <Box
+                key={index}
+                sx={{ position: "relative", marginBottom: "20px" }}
+              >
                 <SpeedDial
                   direction="right"
                   sx={{ position: "absolute", bottom: "10px", left: "10px" }}
@@ -87,8 +96,8 @@ const DashboardRecipesStructure = ({
           ) : (
             <Typography>{emptyMessage}</Typography>
           )}
-        </Box>
-      </Box>
+        </CustomizedRecipesContainer>
+      </CustomizedRecipesWrapper>
     </>
   );
 };
