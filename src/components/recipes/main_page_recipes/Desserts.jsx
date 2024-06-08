@@ -10,7 +10,7 @@ export const Desserts = () => {
 
   useEffect(() => {
     const desserts = [...recipes].filter(
-      (recipie) => recipie.category === "Desery"
+      (recipie) => recipie.category === "desserts"
     );
     const sortedDesserts = desserts.sort(
       (a, b) => b.likedBy.length - a.likedBy.length

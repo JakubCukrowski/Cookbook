@@ -10,7 +10,7 @@ export const MainDishes = () => {
 
   useEffect(() => {
     const filterAndSort = [...recipes]
-      .filter((recipe) => recipe.category === "Dania główne")
+      .filter((recipe) => recipe.category === "main_dishes")
       .sort((a, b) => b.likedBy.length - a.likedBy.length);
     setMainDishes(filterAndSort);
   }, [recipes]);

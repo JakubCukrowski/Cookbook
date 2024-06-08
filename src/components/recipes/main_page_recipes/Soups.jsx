@@ -10,7 +10,7 @@ export const Soups = () => {
   const [sortedRecipes, setSortedRecipes] = useState([]);
 
   useEffect(() => {
-    const soups = [...recipes].filter((recipe) => recipe.category === "Zupy");
+    const soups = [...recipes].filter((recipe) => recipe.category === "soups");
     const sortedSoupsByAddDate = [...soups]
       .sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt))
       .sort((a, b) => b.likedBy.length - a.likedBy.length);
