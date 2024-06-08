@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { UserAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import MainPageRecipesContent from "./MainPageRecipesContent";
+import { RecipesProvider } from "../../../context/RecipesContext";
 
 export const Soups = () => {
-  const { recipes, isRecipeAdded } = UserAuth();
+  const { recipes } = RecipesProvider();
   const checkDate = (date) => new Date(date);
   const navigate = useNavigate();
   const [sortedRecipes, setSortedRecipes] = useState([]);
@@ -15,7 +15,7 @@ export const Soups = () => {
       .sort((a, b) => checkDate(b.createdAt) - checkDate(a.createdAt))
       .sort((a, b) => b.likedBy.length - a.likedBy.length);
     setSortedRecipes(sortedSoupsByAddDate);
-  }, [recipes, isRecipeAdded]);
+  }, [recipes]);
 
   const handleClick = () => {
     navigate("/category/soups");

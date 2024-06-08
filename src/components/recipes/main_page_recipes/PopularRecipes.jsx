@@ -1,10 +1,10 @@
 import React from "react";
-import { UserAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import MainPageRecipesContent from "./MainPageRecipesContent";
+import { RecipesProvider } from "../../../context/RecipesContext";
 
 export const PopularRecipes = () => {
-  const { recipes } = UserAuth();
+  const { recipes } = RecipesProvider();
   const popular = [...recipes].sort(
     (a, b) => b.likedBy.length - a.likedBy.length
   );

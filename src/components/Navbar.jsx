@@ -143,7 +143,7 @@ export const CustomNavbar = () => {
                     </IconButton>
                     <Tooltip title="Menu">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar alt="Remy Sharp" src={user.photoURL} />
+                        <Avatar sx={{width: "50px", height: "50px"}} alt="Remy Sharp" src={user.photoURL} />
                       </IconButton>
                     </Tooltip>
                     <Menu

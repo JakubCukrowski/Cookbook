@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { UserAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import MainPageRecipesContent from "./MainPageRecipesContent";
+import { RecipesProvider } from "../../../context/RecipesContext";
 
 export const MainDishes = () => {
-  const { recipes } = UserAuth();
+  const { recipes } = RecipesProvider();
   const navigate = useNavigate();
   const [mainDishes, setMainDishes] = useState([]);
 

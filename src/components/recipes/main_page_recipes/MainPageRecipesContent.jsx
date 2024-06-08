@@ -25,12 +25,13 @@ const MainPageRecipesContent = ({
           sliceBy={4}
         />
       ) : null}
-      {array.length === 0 && user ? (
+      {array.length === 0 && user && (
         <Typography variant="h6" textAlign="center">
-          Obecnie brak przepisów w tej kategorii <br />{" "}
-          Przejdź do <Link to="/dashboard">panelu użytkownika</Link> i dodaj przepis
+          Obecnie brak przepisów w tej kategorii <br /> Przejdź do{" "}
+          <Link to="/dashboard">panelu użytkownika</Link> i dodaj przepis
         </Typography>
-      ) : (
+      )}
+      {array.length === 0 && !user && (
         <Typography variant="h6" textAlign="center">
           Obecnie brak przepisów w tej kategorii <br />{" "}
           <Link to="/signin">Zaloguj się</Link> i dodaj przepis

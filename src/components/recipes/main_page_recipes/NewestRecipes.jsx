@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { UserAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import MainPageRecipesContent from "./MainPageRecipesContent";
+import { RecipesProvider } from "../../../context/RecipesContext";
 
 export const NewestRecipes = () => {
-  const { recipes } = UserAuth();
+  const { recipes } = RecipesProvider();
   const checkDate = (date) => new Date(date);
   const [sortedRecipes, setSortedRecipes] = useState([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const sorted = [...recipes].sort(

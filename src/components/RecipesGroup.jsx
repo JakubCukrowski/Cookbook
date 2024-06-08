@@ -28,7 +28,7 @@ export const RecipesGroup = ({
       <Container maxWidth={"xl"}>
         <Grid sx={{ marginBottom: "20px" }} container spacing={4}>
           {array.slice(0, sliceBy).map((recipe, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Grid sx={{margin: '0 auto'}} item xs={12} sm={6} md={4} lg={3} key={index}>
               <Box>
                 <Card sx={{ backgroundColor: "rgb(247,247,247)" }}>
                   <CardHeader
