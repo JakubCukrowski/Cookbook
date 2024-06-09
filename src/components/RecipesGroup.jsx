@@ -9,12 +9,11 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { OrangeButton } from "../assets/styles/Buttons";
 import { Link } from "@mui/material";
 import { shortenTheName, startWithUpper } from "../helpers/helpers";
 import { StyledAvatar } from "../assets/styles/StyledAvatar";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 export const RecipesGroup = ({
   array,
@@ -28,7 +27,15 @@ export const RecipesGroup = ({
       <Container maxWidth={"xl"}>
         <Grid sx={{ marginBottom: "20px" }} container spacing={4}>
           {array.slice(0, sliceBy).map((recipe, index) => (
-            <Grid sx={{margin: '0 auto'}} item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Grid
+              sx={{ margin: "0 auto" }}
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              key={index}
+            >
               <Box>
                 <Card sx={{ backgroundColor: "rgb(247,247,247)" }}>
                   <CardHeader
@@ -39,9 +46,7 @@ export const RecipesGroup = ({
                           .replace(/[\u0300-\u036f]/g, "")
                           .toLowerCase()}
                       >
-                        <StyledAvatar
-                          src={recipe.addedBy.photo}
-                        />
+                        <StyledAvatar src={recipe.addedBy.photo} />
                       </Link>
                     }
                     title={
@@ -69,10 +74,14 @@ export const RecipesGroup = ({
                     <Typography variant="h6">
                       {shortenTheName(startWithUpper(recipe.name))}
                     </Typography>
-                    <Typography>
-                      <FontAwesomeIcon icon={faClock} />{" "}
-                      {recipe.preparationTime}
-                    </Typography>
+                    <Box>
+                      <AccessTimeIcon />{" "}
+                      <Typography variant="span">
+                        {recipe.preparationTime !== "90_and_more"
+                          ? `${recipe.preparationTime} minut`
+                          : "Ponad 90 minut"}
+                      </Typography>
+                    </Box>
                     <Typography>
                       Polubienia: <strong>{recipe.likedBy.length}</strong>
                     </Typography>
