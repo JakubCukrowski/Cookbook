@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { StyledH2 } from "../assets/styles/StyledH2";
 import { useSearchParams } from "react-router-dom";
-import { UserAuth } from "../context/AuthContext";
 import { Container, Spinner } from "react-bootstrap";
 import { RecipesGroup } from "../components/RecipesGroup";
 import { SpinnerContainer } from "../assets/styles/Containers";
+import { startWithUpper } from "../helpers/helpers";
+import { RecipesProvider } from "../context/RecipesContext";
 
 export const SearchedTag = () => {
-  const { recipes } = UserAuth();
+  const { recipes } = RecipesProvider();
   const [searchParams, setSearchParams] = useSearchParams();
   const tag = searchParams.get("tag");
   const [recipesByTags, setRecipesByTags] = useState([]);
-
-  const startsFromUpper = (tag) =>
-    tag.split("").splice(0, 1).join("").toUpperCase() +
-    tag.split("").splice(1, tag.length).join("");
 
   useEffect(() => {
     const filterByTags = recipes.filter((recipe) => recipe.tags.includes(tag));
@@ -30,7 +27,7 @@ export const SearchedTag = () => {
       ) : (
         <>
           <StyledH2>
-            Przepisy z tagiem <strong style={{color: '#e19f25'}}>{startsFromUpper(tag)}</strong>{" "}
+            Przepisy z tagiem <strong style={{color: '#e19f25'}}>{startWithUpper(tag)}</strong>{" "}
           </StyledH2>
           <Container>
             <RecipesGroup array={recipesByTags} />
