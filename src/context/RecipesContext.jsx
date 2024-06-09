@@ -34,13 +34,13 @@ export const RecipesContextProvider = ({ children }) => {
     setRecipesAddedByUser([]);
     setRecipesLikedByUser([]);
     const getRecipes = async () => {
-      if (user) {
-        const q = query(collection(db, "recipes"));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((recipe) => {
-          setRecipes((prev) => [...prev, { ...recipe.data(), id: recipe.id }]);
-        });
+      const q = query(collection(db, "recipes"));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((recipe) => {
+        setRecipes((prev) => [...prev, { ...recipe.data(), id: recipe.id }]);
+      });
 
+      if (user) {
         const userRecipesCollection = query(
           collection(db, "recipes"),
           where("addedBy.user", "==", user.displayName)
