@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { StyledH2 } from "../assets/styles/StyledH2";
 import { useSearchParams } from "react-router-dom";
-import { Container, Spinner } from "react-bootstrap";
 import { RecipesGroup } from "../components/RecipesGroup";
 import { SpinnerContainer } from "../assets/styles/Containers";
 import { startWithUpper } from "../helpers/helpers";
 import { RecipesProvider } from "../context/RecipesContext";
+import { Box, CircularProgress, Container, Typography } from "@mui/material";
 
 export const SearchedTag = () => {
   const { recipes } = RecipesProvider();
@@ -22,16 +21,19 @@ export const SearchedTag = () => {
     <section>
       {recipesByTags.length === 0 ? (
         <SpinnerContainer>
-          <Spinner />
+          <CircularProgress />
         </SpinnerContainer>
       ) : (
         <>
-          <StyledH2>
-            Przepisy z tagiem <strong style={{color: '#e19f25'}}>{startWithUpper(tag)}</strong>{" "}
-          </StyledH2>
-          <Container>
+          <Box sx={{ padding: "20px" }}>
+            <Typography
+              variant="h4"
+              sx={{ textAlign: "center", marginBottom: "20px" }}
+            >
+              Przepisy z tagiem <strong>{startWithUpper(tag)}</strong>{" "}
+            </Typography>
             <RecipesGroup array={recipesByTags} />
-          </Container>
+          </Box>
         </>
       )}
     </section>
