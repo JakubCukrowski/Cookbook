@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
-import { StyledH2 } from "../assets/styles/StyledH2";
 import { useParams } from "react-router-dom";
-import { UserAuth } from "../context/AuthContext";
 import { RecipesGroup } from "../components/RecipesGroup";
+import { RecipesProvider } from "../context/RecipesContext";
+import { Typography, Box } from "@mui/material";
+import { startWithUpper } from "../helpers/helpers";
 
 export const PopularTags = () => {
   const tagName = useParams();
-  const { recipes } = UserAuth();
+  const { recipes } = RecipesProvider();
   const [filtered, setFiltered] = useState([]);
 
   useEffect(() => {
@@ -19,10 +19,14 @@ export const PopularTags = () => {
   }, [recipes]);
 
   return (
-    <Container>
-      <StyledH2>Użytkownicy chwalą sobie przepisy z tej kategorii</StyledH2>
-
-      <RecipesGroup array={filtered} />
-    </Container>
+    <section>
+      <Box sx={{padding: "20px"}}>
+        <Typography variant="h4" sx={{ textAlign: "center", marginBottom: "20px" }}>
+          Najpopularniejsze przepisy z tagiem{" "}
+          <strong>{startWithUpper(tagName.tagName)}</strong>
+        </Typography>
+        <RecipesGroup array={filtered} />
+      </Box>
+    </section>
   );
 };
