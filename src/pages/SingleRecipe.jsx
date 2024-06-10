@@ -24,7 +24,11 @@ const SingleRecipe = () => {
       setSingleRecipe(foundSingleRecipe);
       if (singleRecipe) {
         const unsub = onSnapshot(doc(db, "comments", recipeId), (doc) => {
-          setRecipeComments([...doc.data().comments]);
+          if (doc.exists() && doc.data().comments.length > 0) {
+            setRecipeComments([...doc.data().comments]);
+          } else if (doc.exists() && doc.data().comments.length === 0) {
+            setRecipeComments([])
+          }
         });
       }
     }
@@ -53,7 +57,10 @@ const SingleRecipe = () => {
                 >
                   {singleRecipe.tags.length > 0 &&
                     singleRecipe.tags.map((tag) => (
-                      <OrangeButton onClick={() => navigate(`/show?tag=${tag}`)}>
+                      <OrangeButton
+                        key={tag}
+                        onClick={() => navigate(`/show?tag=${tag}`)}
+                      >
                         {startWithUpper(tag)}
                       </OrangeButton>
                     ))}
@@ -112,7 +119,10 @@ const SingleRecipe = () => {
                     gap: "6px",
                   }}
                 >
-                  <Typography variant="h4" sx={{ marginBottom: "20px", textAlign: 'center' }}>
+                  <Typography
+                    variant="h4"
+                    sx={{ marginBottom: "20px", textAlign: "center" }}
+                  >
                     Jak przygotować?
                   </Typography>
                   {singleRecipe.preparationSteps.map((step, index) => (
