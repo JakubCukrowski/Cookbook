@@ -1,4 +1,11 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  limit,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../firebase";
 import { UserAuth } from "./AuthContext";
@@ -31,46 +38,48 @@ export const RecipesContextProvider = ({ children }) => {
   }, [pathname]);
 
   useEffect(() => {
-    setRecipesAddedByUser([]);
-    setRecipesLikedByUser([]);
     const getRecipes = async () => {
-      const q = query(collection(db, "recipes"));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((recipe) => {
-        setRecipes((prev) => [...prev, { ...recipe.data(), id: recipe.id }]);
+      const q = query(collection(db, "recipes"), limit(20));
+      const unsub = onSnapshot(q, (querySnapshot) => {
+        const tempRecipes = [];
+        querySnapshot.forEach((recipe) => {
+          tempRecipes.push({ ...recipe.data(), id: recipe.id });
+        });
+        setRecipes(tempRecipes);
       });
 
-      if (user) {
-        const userRecipesCollection = query(
-          collection(db, "recipes"),
-          where("addedBy.user", "==", user.displayName)
-        );
-        const userRecipesSnapshot = await getDocs(userRecipesCollection);
-        userRecipesSnapshot.forEach((recipe) => {
-          setRecipesAddedByUser((prev) => [
-            ...prev,
-            { ...recipe.data(), id: recipe.id },
-          ]);
-        });
-
-        const likedRecipesCollection = query(
-          collection(db, "recipes"),
-          where("likedBy", "array-contains", user.uid)
-        );
-        const likedRecipesSnapshot = await getDocs(likedRecipesCollection);
-        likedRecipesSnapshot.forEach((recipe) => {
-          setRecipesLikedByUser((prev) => [
-            ...prev,
-            { ...recipe.data(), id: recipe.id },
-          ]);
-        });
-      }
+      const userRecipesCollection = query(
+        collection(db, "recipes"),
+        where("addedBy.user", "==", user.displayName)
+      );
+      const userRecipesSnapshot = await getDocs(userRecipesCollection);
+      const tempUserRecipes = [];
+      userRecipesSnapshot.forEach((recipe) => {
+        tempUserRecipes.push({ ...recipe.data(), id: recipe.id });
+      });
+      setRecipesAddedByUser(tempUserRecipes);
     };
 
     getRecipes();
-  }, [user]);
+  }, []);
 
-  useEffect(() => {});
+  useEffect(() => {
+    const updateDashboardRecipes = async () => {
+      const likedRecipesCollection = query(
+        collection(db, "recipes"),
+        where("likedBy", "array-contains", user.uid)
+      );
+
+      const likedRecipesSnapshot = await getDocs(likedRecipesCollection);
+      const tempLiked = [];
+      likedRecipesSnapshot.forEach((recipe) => {
+        tempLiked.push({ ...recipe.data(), id: recipe.id });
+      });
+      setRecipesLikedByUser(tempLiked);
+    };
+
+    updateDashboardRecipes();
+  }, [recipes]);
 
   return (
     <recipesContext.Provider

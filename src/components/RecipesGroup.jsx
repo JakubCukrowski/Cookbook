@@ -14,6 +14,7 @@ import { Link } from "@mui/material";
 import { shortenTheName, startWithUpper } from "../helpers/helpers";
 import { StyledAvatar } from "../assets/styles/StyledAvatar";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { useNavigate } from "react-router-dom";
 
 export const RecipesGroup = ({
   array,
@@ -22,6 +23,8 @@ export const RecipesGroup = ({
   addButton,
   sliceBy,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <>
       <Container maxWidth={"xl"}>
@@ -87,9 +90,7 @@ export const RecipesGroup = ({
                     </Typography>
                   </CardContent>
                   <CardContent>
-                    <Link href={`/recipes/${recipe.id}`}>
-                      <OrangeButton>Przejdź do przepisu</OrangeButton>
-                    </Link>
+                    <OrangeButton onClick={() => navigate(`/recipes/${recipe.id}`)}>Przejdź do przepisu</OrangeButton>
                   </CardContent>
                 </Card>
               </Box>
