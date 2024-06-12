@@ -48,34 +48,38 @@ export const RecipesContextProvider = ({ children }) => {
         setRecipes(tempRecipes);
       });
 
-      const userRecipesCollection = query(
-        collection(db, "recipes"),
-        where("addedBy.user", "==", user.displayName)
-      );
-      const userRecipesSnapshot = await getDocs(userRecipesCollection);
-      const tempUserRecipes = [];
-      userRecipesSnapshot.forEach((recipe) => {
-        tempUserRecipes.push({ ...recipe.data(), id: recipe.id });
-      });
-      setRecipesAddedByUser(tempUserRecipes);
+      if (user) {
+        const userRecipesCollection = query(
+          collection(db, "recipes"),
+          where("addedBy.user", "==", user.displayName)
+        );
+        const userRecipesSnapshot = await getDocs(userRecipesCollection);
+        const tempUserRecipes = [];
+        userRecipesSnapshot.forEach((recipe) => {
+          tempUserRecipes.push({ ...recipe.data(), id: recipe.id });
+        });
+        setRecipesAddedByUser(tempUserRecipes);
+      }
     };
 
     getRecipes();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const updateDashboardRecipes = async () => {
-      const likedRecipesCollection = query(
-        collection(db, "recipes"),
-        where("likedBy", "array-contains", user.uid)
-      );
+      if (user) {
+        const likedRecipesCollection = query(
+          collection(db, "recipes"),
+          where("likedBy", "array-contains", user.uid)
+        );
 
-      const likedRecipesSnapshot = await getDocs(likedRecipesCollection);
-      const tempLiked = [];
-      likedRecipesSnapshot.forEach((recipe) => {
-        tempLiked.push({ ...recipe.data(), id: recipe.id });
-      });
-      setRecipesLikedByUser(tempLiked);
+        const likedRecipesSnapshot = await getDocs(likedRecipesCollection);
+        const tempLiked = [];
+        likedRecipesSnapshot.forEach((recipe) => {
+          tempLiked.push({ ...recipe.data(), id: recipe.id });
+        });
+        setRecipesLikedByUser(tempLiked);
+      }
     };
 
     updateDashboardRecipes();

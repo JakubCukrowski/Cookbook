@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ClearIcon from "@mui/icons-material/Clear";
 import PersonIcon from "@mui/icons-material/Person";
-import { Typography, Box, SpeedDial, SpeedDialAction } from "@mui/material";
+import {
+  Typography,
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
   CustomizedRecipesContainer,
@@ -84,47 +89,39 @@ const DashboardRecipesStructure = ({
         handleDelete={handleDeleteRecipe}
       />
       <CustomizedRecipesWrapper>
-        <Typography sx={{ textAlign: "center" }} variant="h5">
-          {title}
-        </Typography>
+        <Box
+          sx={{
+            textAlign: "center",
+            position: "sticky",
+            top: 0,
+            width: "100%",
+            padding: "20px",
+            zIndex: 200,
+            backgroundColor: "white",
+          }}
+        >
+          <Typography variant="h5">{title}</Typography>
+        </Box>
+
         <CustomizedRecipesContainer>
           {array.length > 0 ? (
-            array.map((recipe, index) => (
-              <Box
-                key={index}
-                sx={{ position: "relative", marginBottom: "20px" }}
-              >
-                <SpeedDial
-                  direction="right"
-                  sx={{ position: "absolute", bottom: "10px", left: "10px" }}
-                  ariaLabel="user recipe utils"
-                  icon={<KeyboardArrowRightIcon />}
-                >
-                  {addedRecipes
-                    ? userRecipesActions.map((action) => (
-                        <SpeedDialAction
-                          key={action.name}
-                          icon={action.icon}
-                          tooltipTitle={action.name}
-                          onClick={() => action.onClick(recipe.id)}
-                        />
-                      ))
-                    : userLikedRecipesActions.map((action) => (
-                        <SpeedDialAction
-                          key={action.name}
-                          icon={action.icon}
-                          tooltipTitle={action.name}
-                          onClick={() => action.onClick(recipe.id)}
-                        />
-                      ))}
-                </SpeedDial>
-                <Typography variant="h6">{recipe.name}</Typography>
-                <img
-                  style={{ width: "100%" }}
-                  src={recipe.image}
-                  alt="recipe_image"
-                />
-              </Box>
+            array.map((recipe) => (
+              <List>
+                <ListItem>
+                  <ListItemButton sx={{ gap: "20px" }} onClick={() => navigateToRecipe(recipe.id)}>
+                    <img
+                      style={{ width: "50%" }}
+                      src={recipe.image}
+                      alt="recipe_image"
+                    />
+                    <Box>
+                      <Typography sx={{ flexGrow: 1 }}>
+                        {recipe.name}
+                      </Typography>
+                    </Box>
+                  </ListItemButton>
+                </ListItem>
+              </List>
             ))
           ) : (
             <Typography>{emptyMessage}</Typography>
