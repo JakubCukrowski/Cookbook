@@ -129,7 +129,7 @@ const SingleRecipe = () => {
                     />
                   </Grid>
 
-                  {singleRecipe.addedBy.userId !== user.uid && (
+                  {user && singleRecipe.addedBy.userId !== user.uid && (
                     <Grid item xs={12}>
                       <OrangeButton
                         onClick={handleLikeRecipe}

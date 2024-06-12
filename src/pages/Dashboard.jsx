@@ -21,7 +21,7 @@ export const Dashboard = () => {
   const handleAddRecipe = () => navigate("/add-recipe");
   return (
     <>
-      {userData ? (
+      {user && userData ? (
         <DashboardSection>
           <Container>
             <Box sx={{ width: "100%" }}>
