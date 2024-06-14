@@ -1,20 +1,19 @@
 import React from "react";
 import {
+  Avatar,
   Box,
   Card,
+  CardActionArea,
   CardContent,
-  CardHeader,
   CardMedia,
   Container,
   Grid,
   Typography,
 } from "@mui/material";
 import { OrangeButton } from "../assets/styles/Buttons";
-import { Link } from "@mui/material";
-import { shortenTheName, startWithUpper } from "../helpers/helpers";
-import { StyledAvatar } from "../assets/styles/StyledAvatar";
+import { normalizedString, shortenTheName, startWithUpper } from "../helpers/helpers";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export const RecipesGroup = ({
   array,
@@ -28,55 +27,46 @@ export const RecipesGroup = ({
   return (
     <>
       <Container maxWidth={"xl"}>
-        <Grid sx={{ marginBottom: "20px" }} container spacing={4}>
+        <Grid sx={{ marginBottom: "20px" }} container spacing={8}>
           {array.slice(0, sliceBy).map((recipe, index) => (
             <Grid
               sx={{ margin: "0 auto" }}
               item
               xs={12}
               sm={6}
-              md={4}
-              lg={3}
+              lg={4}
+              xl={3}
               key={index}
             >
               <Box>
                 <Card sx={{ backgroundColor: "rgb(247,247,247)" }}>
-                  <CardHeader
-                    avatar={
-                      <Link
-                        href={`/${recipe.addedBy.user}`
-                          .normalize("NFD")
-                          .replace(/[\u0300-\u036f]/g, "")
-                          .toLowerCase()}
-                      >
-                        <StyledAvatar src={recipe.addedBy.photo} />
-                      </Link>
-                    }
-                    title={
-                      <Link
-                        sx={{
-                          textDecoration: "none",
-                          color: "black",
-                          fontSize: 18,
-                        }}
-                        href={`/${recipe.addedBy.user}`
-                          .normalize("NFD")
-                          .replace(/[\u0300-\u036f]/g, "")
-                          .toLowerCase()}
-                      >
-                        {recipe.addedBy.user}
-                      </Link>
-                    }
-                  />
                   <CardMedia
                     component="img"
                     image={recipe.image}
                     height={220}
                   />
                   <CardContent>
-                    <Typography variant="h6">
+                    <Typography variant="h5" sx={{whiteSpace: "nowrap"}}>
                       {shortenTheName(startWithUpper(recipe.name))}
                     </Typography>
+                    <CardActionArea sx={{margin: "10px 0"}}>
+                      <Link
+                      to={`/${normalizedString(recipe.addedBy.user)}`}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          width: "auto",
+                          textDecoration: 'none',
+                          color: "inherit"
+                        }}
+                      >
+                        <Avatar src={recipe.addedBy.photo} />
+                        <Typography variant="h7" sx={{ fontWeight: 600 }}>
+                          {recipe.addedBy.user}
+                        </Typography>
+                      </Link>
+                    </CardActionArea>
                     <Box>
                       <AccessTimeIcon />{" "}
                       <Typography variant="span">
@@ -90,7 +80,11 @@ export const RecipesGroup = ({
                     </Typography>
                   </CardContent>
                   <CardContent>
-                    <OrangeButton onClick={() => navigate(`/recipes/${recipe.id}`)}>Przejdź do przepisu</OrangeButton>
+                    <OrangeButton
+                      onClick={() => navigate(`/recipes/${recipe.id}`)}
+                    >
+                      Przejdź do przepisu
+                    </OrangeButton>
                   </CardContent>
                 </Card>
               </Box>
