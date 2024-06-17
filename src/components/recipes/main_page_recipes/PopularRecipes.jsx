@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import MainPageRecipesContent from "./MainPageRecipesContent";
 import { RecipesProvider } from "../../../context/RecipesContext";
+import MainRecipesStructure from "./MainRecipesStructure";
 
 export const PopularRecipes = () => {
   const { recipes } = RecipesProvider();
@@ -16,12 +16,11 @@ export const PopularRecipes = () => {
 
   return (
     <>
-      <MainPageRecipesContent
-        sectionId="popular"
-        title="Najpopularniejsze przepisy"
-        array={popular}
-        handleClick={handleClick}
-        addButton={true}
+      <MainRecipesStructure
+        sectionId="newest_recipes"
+        recipesGroupTitle="Najpopularniejsze przepisy"
+        recipesArray={popular}
+        onButtonClick={handleClick}
       />
     </>
   );

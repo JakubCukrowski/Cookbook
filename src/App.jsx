@@ -10,7 +10,7 @@ import { SignUp } from "./pages/SignUp";
 import { SignIn } from "./pages/SignIn";
 import { Dashboard } from "./pages/Dashboard";
 import { NotFound } from "./pages/NotFound";
-import { RecipesPage } from "./pages/RecipesPage";
+// import { RecipesPage } from "./pages/RecipesPage";
 import { GlobalStyle } from "./assets/styles/GlobalStyles";
 import { AddRecipe } from "./components/recipes/add_delete_edit_recipe/AddRecipe";
 import { PrivateRoute } from "./components/PrivateRoute";
@@ -19,10 +19,10 @@ import { Soups } from "./components/recipes/main_page_recipes/Soups";
 import { Desserts } from "./components/recipes/main_page_recipes/Desserts";
 import { FilterRecipes } from "./pages/FilterRecipes";
 import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditRecipe";
-import { SearchedTag } from "./pages/SearchedTag";
+// import { SearchedTag } from "./pages/SearchedTag";
 import { MainDishes } from "./components/recipes/main_page_recipes/MainDishes";
 import { BlockedRoute } from "./components/BlockedRoute";
-import { PopularTags } from "./pages/PopularTags";
+// import { PopularTags } from "./pages/PopularTags";
 import { UserRecipes } from "./pages/UserRecipes";
 import { RecipesContextProvider } from "./context/RecipesContext";
 
@@ -52,10 +52,10 @@ function App() {
                 element={<FilterRecipes />}
               />
               <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
-              <Route path="/search" element={<RecipesPage />} />
-              <Route path="/show" element={<SearchedTag />} />
+              {/* <Route path="/search" element={<RecipesPage />} /> */}
+              {/* <Route path="/show" element={<SearchedTag />} /> */}
               <Route path="/violation" element={<ProfanityViolation />} />
-              <Route path="/popular/:tagName" element={<PopularTags />} />
+              {/* <Route path="/popular/:tagName" element={<PopularTags />} /> */}
               <Route path="/:username" element={<UserRecipes />} />
               <Route element={<PrivateRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
