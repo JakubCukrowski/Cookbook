@@ -39,7 +39,7 @@ export const RecipesContextProvider = ({ children }) => {
 
   useEffect(() => {
     const getRecipes = async () => {
-      const q = query(collection(db, "recipes"), limit(20));
+      const q = query(collection(db, "recipes"), limit(10));
       const unsub = onSnapshot(q, (querySnapshot) => {
         const tempRecipes = [];
         querySnapshot.forEach((recipe) => {

@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MainPageRecipesContent from "./MainPageRecipesContent";
 import { RecipesProvider } from "../../../context/RecipesContext";
+import { Container, Grid, Typography } from "@mui/material";
+import { RecipeStructure } from "../../RecipeStructure";
+import MainRecipesStructure from "./MainRecipesStructure";
 
 export const NewestRecipes = () => {
   const { recipes } = RecipesProvider();
   const checkDate = (date) => new Date(date);
-  const [sortedRecipes, setSortedRecipes] = useState([]);
-  const navigate = useNavigate()
+  const [newestRecipes, setNewestRecipes] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sorted = [...recipes].sort(
       (a, b) => checkDate(b.createdAt) - checkDate(a.createdAt)
     );
-    setSortedRecipes(sorted);
+    setNewestRecipes(sorted);
   }, [recipes]);
 
   const handleClick = () => {
@@ -22,12 +24,11 @@ export const NewestRecipes = () => {
 
   return (
     <>
-      <MainPageRecipesContent
-        sectionId="newest"
-        title="Najnowsze przepisy"
-        array={sortedRecipes}
-        handleClick={handleClick}
-        addButton={true}
+      <MainRecipesStructure
+        sectionId="newest_recipes"
+        recipesGroupTitle="Najnowsze przepisy"
+        recipesArray={newestRecipes}
+        onButtonClick={handleClick}
       />
     </>
   );

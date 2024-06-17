@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MainPageRecipesContent from "./MainPageRecipesContent";
 import { RecipesProvider } from "../../../context/RecipesContext";
+import MainRecipesStructure from "./MainRecipesStructure";
 
 export const Desserts = () => {
   const { recipes } = RecipesProvider();
   const navigate = useNavigate();
-  const [sortedRecipes, setSortedRecipes] = useState([]);
+  const [sortedDesserts, setSortedDesserts] = useState([]);
 
   useEffect(() => {
     const desserts = [...recipes].filter(
@@ -15,7 +15,7 @@ export const Desserts = () => {
     const sortedDesserts = desserts.sort(
       (a, b) => b.likedBy.length - a.likedBy.length
     );
-    setSortedRecipes(sortedDesserts);
+    setSortedDesserts(sortedDesserts);
   }, [recipes]);
 
   const handleClick = () => {
@@ -24,12 +24,11 @@ export const Desserts = () => {
 
   return (
     <>
-      <MainPageRecipesContent
+      <MainRecipesStructure
         sectionId="desserts"
-        title="Desery"
-        array={sortedRecipes}
-        handleClick={handleClick}
-        addButton={true}
+        recipesGroupTitle="Desery"
+        recipesArray={sortedDesserts}
+        onButtonClick={handleClick}
       />
     </>
   );

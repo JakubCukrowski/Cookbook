@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MainPageRecipesContent from "./MainPageRecipesContent";
 import { RecipesProvider } from "../../../context/RecipesContext";
+import MainRecipesStructure from "./MainRecipesStructure";
 
 export const MainDishes = () => {
   const { recipes } = RecipesProvider();
@@ -21,12 +21,11 @@ export const MainDishes = () => {
 
   return (
     <>
-      <MainPageRecipesContent
+      <MainRecipesStructure
         sectionId="main_dishes"
-        title="Dania główne"
-        array={mainDishes}
-        handleClick={handleClick}
-        addButton={true}
+        recipesGroupTitle="Dania główne"
+        recipesArray={mainDishes}
+        onButtonClick={handleClick}
       />
     </>
   );
