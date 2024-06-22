@@ -15,9 +15,11 @@ const UserFollowers = ({ followers }) => {
             <UserFollowerStructure follower={follower} />
           ))
         ) : (
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
-            Nikt jeszcze nie obserwuje tego użytkownika
-          </Typography>
+          <Grid item xs={12}>
+            <Typography variant="h6" sx={{ textAlign: "center" }}>
+              Nikt jeszcze nie obserwuje tego użytkownika
+            </Typography>
+          </Grid>
         )}
       </Grid>
     </>

@@ -45,7 +45,9 @@ const UserFollowerStructure = ({ follower }) => {
               </Box>
             </Box>
           </Button>
-          {follower.id !== user.uid && <OrangeButton>Obserwuj</OrangeButton>}
+          {user && follower.id !== user.uid && (
+            <OrangeButton>Obserwuj</OrangeButton>
+          )}
         </Box>
       </Grid>
     </>
