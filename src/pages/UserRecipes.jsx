@@ -40,12 +40,13 @@ export const UserRecipes = () => {
   const [userRecipes, setUserRecipes] = useState([]);
   const [likedByUser, setLikedByUser] = useState([]);
   const [isFollowed, setIsFollowed] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("added");
+  const [selectedTab, setSelectedTab] = useState(null);
   const navigate = useNavigate();
 
   //get data of the user
   useEffect(() => {
     const getUserData = async () => {
+      setSelectedTab('added')
       setUserData(null);
       const q = query(
         collection(db, "users"),

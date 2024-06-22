@@ -1,8 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 import UserFollowerStructure from "./UserFollowerStructure";
 
-const UserFollowing = ({following}) => {
-  console.log(following);
+const UserFollowing = ({ following }) => {
   return (
     <>
       <Grid item xs={12}>
@@ -16,9 +15,11 @@ const UserFollowing = ({following}) => {
             <UserFollowerStructure follower={followed} />
           ))
         ) : (
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
-            Ten użytkownik nikogo jeszcze nie obserwuje
-          </Typography>
+          <Grid item xs={12}>
+            <Typography variant="h6" sx={{ textAlign: "center" }}>
+              Ten użytkownik nikogo jeszcze nie obserwuje
+            </Typography>
+          </Grid>
         )}
       </Grid>
     </>
