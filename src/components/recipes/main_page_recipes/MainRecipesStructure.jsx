@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Container, Grid, Typography, Box, Divider } from "@mui/material";
 import { OrangeButton } from "../../../assets/styles/Buttons";
 import { RecipeStructure } from "../../RecipeStructure";
+import { CustomDivider } from "../../../assets/styles/CustomDivider";
 
 const MainRecipesStructure = ({
   sectionId,
@@ -15,11 +16,11 @@ const MainRecipesStructure = ({
       <Container maxWidth="xl">
         <Grid container rowSpacing={3}>
           <Grid item xs={12}>
-            <Divider variant="middle" sx={{textWrap: "wrap"}}>
+            <CustomDivider variant="middle">
               <Typography variant="h4" sx={{ fontWeight: 700 }}>
                 {recipesGroupTitle}
               </Typography>
-            </Divider>
+            </CustomDivider>
           </Grid>
           <Grid container item columnSpacing={8} rowSpacing={3}>
             {recipesArray.slice(0, 4).map((recipe, index) => (

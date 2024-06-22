@@ -56,7 +56,7 @@ function App() {
               {/* <Route path="/show" element={<SearchedTag />} /> */}
               <Route path="/violation" element={<ProfanityViolation />} />
               {/* <Route path="/popular/:tagName" element={<PopularTags />} /> */}
-              <Route path="/:username" element={<UserRecipes />} />
+              <Route path="/:username" element={<UserRecipes />}/>
               <Route element={<PrivateRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/add-recipe" element={<AddRecipe />} />

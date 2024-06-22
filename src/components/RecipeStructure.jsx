@@ -27,7 +27,7 @@ export const RecipeStructure = ({ recipe, onClick }) => {
           <Card
             sx={{ backgroundColor: "rgb(247,247,247)", position: "relative" }}
           >
-            {user.uid === recipe.addedBy.userId && (
+            {user && user.uid === recipe.addedBy.userId && (
               <div className="ribbon">Twój przepis</div>
             )}
             <CardMedia component="img" image={recipe.image} height={220} />

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { Container, FormLabel, Spinner } from "react-bootstrap";
-import { StyledH2 } from "../assets/styles/StyledH2";
 import { Form } from "react-bootstrap";
 import { FormCategory } from "../components/FormCategory";
 import { FormDifficulty } from "../components/FormDifficulty";
