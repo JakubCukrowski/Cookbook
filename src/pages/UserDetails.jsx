@@ -63,11 +63,9 @@ export const UserDetails = () => {
   }, [username]);
 
   useEffect(() => {
+    setIsFollowed(visitedUserData.followers?.some(follower => follower.name === user.displayName))
     const getVisitedUserRecipes = () => {
-      if (user) {
-        setIsFollowed(visitedUserData.followers?.some(follower => follower.name === user.displayName))
-      }
-      
+
       if (visitedUserData) {
         const filteredRecipes = recipes.filter(
           (recipe) => recipe.addedBy.userId === visitedUserData.id
@@ -89,10 +87,12 @@ export const UserDetails = () => {
     getRecipesLikedByVisitedUser();
   }, [visitedUserData]);
 
+
   const handleFollow = async () => {
     const visitedUserRef = doc(db, "users", visitedUserData.id);
     const loggedUserRef = doc(db, "users", user.uid);
     if (!isFollowed) {
+      setIsFollowed(true)
       await updateDoc(visitedUserRef, {
         followers: arrayUnion({
           name: user.displayName,
@@ -109,7 +109,10 @@ export const UserDetails = () => {
         }),
       });
 
-    } else {
+
+    }
+    if (isFollowed) {
+      setIsFollowed(false)
       await updateDoc(visitedUserRef, {
         followers: arrayRemove({
           name: user.displayName,
@@ -126,13 +129,11 @@ export const UserDetails = () => {
         }),
       });
     }
-
-    setIsFollowed((prev) => !prev);
   };
 
   return (
     <section id="user_details">
-      {visitedUserRecipes && (
+      {visitedUserData && (
         <Container>
           <Grid container sx={{ margin: "10px 0" }} rowSpacing={4}>
             <Grid item xs={12} md={6}>
