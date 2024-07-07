@@ -23,7 +23,7 @@ import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditReci
 import { MainDishes } from "./components/recipes/main_page_recipes/MainDishes";
 import { BlockedRoute } from "./components/BlockedRoute";
 // import { PopularTags } from "./pages/PopularTags";
-import { UserRecipes } from "./pages/UserRecipes";
+import { UserDetails} from "./pages/UserDetails";
 import { RecipesContextProvider } from "./context/RecipesContext";
 
 function App() {
@@ -56,7 +56,7 @@ function App() {
               {/* <Route path="/show" element={<SearchedTag />} /> */}
               <Route path="/violation" element={<ProfanityViolation />} />
               {/* <Route path="/popular/:tagName" element={<PopularTags />} /> */}
-              <Route path="/:username" element={<UserRecipes />}/>
+              <Route path="/:username" element={<UserDetails />}/>
               <Route element={<PrivateRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/add-recipe" element={<AddRecipe />} />
