@@ -40,7 +40,6 @@ export const AuthContextProvider = ({ children }) => {
             .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase(),
           email: email,
-          liked: [],
           followers: []
         });
         const updatedUser = {

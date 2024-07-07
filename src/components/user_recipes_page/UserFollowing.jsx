@@ -1,18 +1,24 @@
 import { Grid, Typography } from "@mui/material";
-import UserFollowerStructure from "./UserFollowerStructure";
+import UserFollowStatusStructure from "./UserFollowStatusStructure";
 
-const UserFollowing = ({ following }) => {
+const UserFollowing = ({ visitedUserData, username, selectedTab }) => {
   return (
     <>
       <Grid item xs={12}>
         <Typography variant="h4" sx={{ textAlign: "center" }}>
-          Obserwowani ({following.length})
+          Obserwowani (
+          {visitedUserData.following ? visitedUserData.following.length : 0})
         </Typography>
       </Grid>
       <Grid container item xs={12} rowSpacing={4}>
-        {following.length > 0 ? (
-          following.map((followed) => (
-            <UserFollowerStructure follower={followed} />
+        {visitedUserData.following && visitedUserData.following.length > 0 ? (
+          visitedUserData.following.map((followed) => (
+            <UserFollowStatusStructure
+              follower={followed}
+              username={username}
+              selectedTab={selectedTab}
+              visitedUserData={visitedUserData}
+            />
           ))
         ) : (
           <Grid item xs={12}>

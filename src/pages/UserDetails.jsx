@@ -32,136 +32,120 @@ import UserRecipesLiked from "../components/user_recipes_page/UserRecipesLiked";
 import UserFollowing from "../components/user_recipes_page/UserFollowing";
 import UserFollowers from "../components/user_recipes_page/UserFollowers";
 
-export const UserRecipes = () => {
+export const UserDetails = () => {
   const { username } = useParams();
-  const { user } = UserAuth();
+  const { user, userData } = UserAuth(); //userData refers to logged user
   const { recipes } = RecipesProvider();
-  const [userData, setUserData] = useState(null);
-  const [userRecipes, setUserRecipes] = useState([]);
-  const [likedByUser, setLikedByUser] = useState([]);
+  const [visitedUserRecipes, setVisitedUserRecipes] = useState([]); // refers to the user we are currently visiting
+  const [visitedUserData, setVisitedUserData] = useState([]);
+  const [likedByVisitedUser, setLikedByVisitedUser] = useState([]);
   const [isFollowed, setIsFollowed] = useState(false);
   const [selectedTab, setSelectedTab] = useState(null);
   const navigate = useNavigate();
 
-  //get data of the user
   useEffect(() => {
-    const getUserData = async () => {
-      setSelectedTab('added')
-      setUserData(null);
-      const q = query(
-        collection(db, "users"),
-        where("normalizedName", "==", username)
-      );
-
-      //check if logged user is following the recipe creator
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        if (user && doc.data().followers) {
-          setUserData({ ...doc.data(), id: doc.id });
-        } else {
-          setUserData({ ...doc.data(), id: doc.id, followers: [] });
-        }
-
-        if (user && doc.data().followers) {
-          setIsFollowed(
-            doc.data().followers.some((follower) => follower.id === user.uid)
-          );
-        } else {
-          setIsFollowed(false);
-        }
-      });
+    const getVisitedUserData = async () => {
+      setSelectedTab("added");
+      if (username) {
+        const q = query(
+          collection(db, "users"),
+          where("normalizedName", "==", username)
+        );
+        const unsub = onSnapshot(q, (querySnapshot) => {
+          querySnapshot.forEach(doc => {
+            setVisitedUserData({ ...doc.data(), id: doc.id })
+          })
+        })
+      }
     };
 
-    getUserData();
+    getVisitedUserData();
   }, [username]);
 
-  //then catch user recipes
   useEffect(() => {
-    const getUserRecipes = () => {
-      if (userData) {
-        setUserRecipes(
-          recipes.filter((recipe) => recipe.addedBy.user === userData.username)
+    const getVisitedUserRecipes = () => {
+      if (user) {
+        setIsFollowed(visitedUserData.followers?.some(follower => follower.name === user.displayName))
+      }
+      
+      if (visitedUserData) {
+        const filteredRecipes = recipes.filter(
+          (recipe) => recipe.addedBy.userId === visitedUserData.id
         );
+        setVisitedUserRecipes(filteredRecipes);
       }
     };
 
-    const getRecipesLikedByUser = () => {
-      if (userData) {
-        setLikedByUser(
-          recipes.filter((recipe) => recipe.likedBy.includes(userData.id))
+    const getRecipesLikedByVisitedUser = () => {
+      if (visitedUserData) {
+        const filterLikedRecipes = [...recipes].filter((recipe) =>
+          recipe.likedBy.includes(visitedUserData.id)
         );
+        setLikedByVisitedUser(filterLikedRecipes);
       }
     };
 
-    getRecipesLikedByUser();
-    getUserRecipes();
-  }, [userData, username]);
+    getVisitedUserRecipes();
+    getRecipesLikedByVisitedUser();
+  }, [visitedUserData]);
 
-  useEffect(() => {
-    
-  })
-
-  //handle follow/unfollow
   const handleFollow = async () => {
-    const tempUserData = { ...userData };
-    const docOfRecipeCreator = doc(db, "users", userData.id);
+    const visitedUserRef = doc(db, "users", visitedUserData.id);
     const loggedUserRef = doc(db, "users", user.uid);
-    const loggedUserData = await getDoc(loggedUserRef);
-    if (
-      tempUserData.followers &&
-      tempUserData.followers.find((follower) => follower.id === user.uid)
-    ) {
-      const filteredUserData = tempUserData.followers.filter(
-        (follower) => follower.id !== user.uid
-      );
-      await updateDoc(docOfRecipeCreator, {
-        followers: filteredUserData,
-      });
-      tempUserData.followers = filteredUserData;
-      setUserData(tempUserData);
-      setIsFollowed(false);
-
-      await updateDoc(loggedUserRef, {
-        following: arrayRemove({
-          ...userData,
-        }),
-      });
-    } else {
-      await updateDoc(docOfRecipeCreator, {
+    if (!isFollowed) {
+      await updateDoc(visitedUserRef, {
         followers: arrayUnion({
-          ...loggedUserData.data(),
-          id: loggedUserData.id,
+          name: user.displayName,
+          profilePhoto: user.photoURL,
+          userId: user.uid,
         }),
       });
-      tempUserData.followers.push({
-        ...loggedUserData.data(),
-        id: loggedUserData.id,
-      });
-      setUserData(tempUserData);
-      setIsFollowed(true);
-
+  
       await updateDoc(loggedUserRef, {
         following: arrayUnion({
-          ...userData,
+          name: visitedUserData.username,
+          userId: visitedUserData.id,
+          profilePhoto: visitedUserData.profilePhoto,
+        }),
+      });
+
+    } else {
+      await updateDoc(visitedUserRef, {
+        followers: arrayRemove({
+          name: user.displayName,
+          profilePhoto: user.photoURL,
+          userId: user.uid,
+        }),
+      });
+  
+      await updateDoc(loggedUserRef, {
+        following: arrayRemove({
+          name: visitedUserData.username,
+          userId: visitedUserData.id,
+          profilePhoto: visitedUserData.profilePhoto,
         }),
       });
     }
+
+    setIsFollowed((prev) => !prev);
   };
 
   return (
-    <section id="user_data">
-      {userData && (
+    <section id="user_details">
+      {visitedUserRecipes && (
         <Container>
           <Grid container sx={{ margin: "10px 0" }} rowSpacing={4}>
             <Grid item xs={12} md={6}>
               <Box sx={{ display: "flex", alignItems: "flex-end", gap: "8px" }}>
                 <Avatar
-                  src={userData.profilePhoto}
+                  src={visitedUserData.profilePhoto}
                   sx={{ width: "140px", height: "140px" }}
                 />
                 <Box>
-                  <Typography variant="h4">{userData.username}</Typography>
-                  <Typography>Przepisy: {userRecipes.length}</Typography>
+                  <Typography variant="h4">
+                    {visitedUserData.username}
+                  </Typography>
+                  <Typography>Przepisy: {visitedUserRecipes.length}</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -175,7 +159,7 @@ export const UserRecipes = () => {
                   width: "100%",
                 }}
               >
-                {user && userData.id !== user.uid && (
+                {user && visitedUserData.id !== user.uid && (
                   <>
                     <OrangeButton onClick={handleFollow}>
                       {isFollowed ? (
@@ -237,16 +221,30 @@ export const UserRecipes = () => {
               </List>
             </Grid>
             {selectedTab === "added" && (
-              <UserRecipesAdded userRecipes={userRecipes} />
+              <UserRecipesAdded
+                userRecipes={visitedUserRecipes}
+                username={username}
+              />
             )}
             {selectedTab === "liked" && (
-              <UserRecipesLiked likedByUser={likedByUser} />
+              <UserRecipesLiked
+                likedByUser={likedByVisitedUser}
+                username={username}
+              />
             )}
             {selectedTab === "following" && (
-              <UserFollowing following={userData.following} />
+              <UserFollowing
+                visitedUserData={visitedUserData}
+                username={username}
+                selectedTab={selectedTab}
+              />
             )}
             {selectedTab === "followers" && (
-              <UserFollowers followers={userData.followers} />
+              <UserFollowers
+                visitedUserData={visitedUserData}
+                username={username}
+                selectedTab={selectedTab}
+              />
             )}
           </Grid>
         </Container>
