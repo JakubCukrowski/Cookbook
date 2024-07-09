@@ -9,7 +9,6 @@ import {
   arrayUnion,
   arrayRemove,
   onSnapshot,
-  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { UserAuth } from "../context/AuthContext";
@@ -65,7 +64,7 @@ export const UserDetails = () => {
     if (user) {
       setIsFollowed(
         visitedUserData.followers?.some(
-          (follower) => follower.name === user.displayName
+          (follower) => follower.username === user.displayName
         )
       );
     }
@@ -92,59 +91,68 @@ export const UserDetails = () => {
     getRecipesLikedByVisitedUser();
   }, [visitedUserData]);
 
-  const handleFollow = async () => {
-    const visitedUserRef = doc(db, "users", visitedUserData.id);
+  const handleFollow = async (userToHandle, loggedUserData, state, updateState) => {
+    const userRef = doc(db, "users", userToHandle.id);
     const loggedUserRef = doc(db, "users", user.uid);
-    const tempUserData = userData;
-    if (!isFollowed) {
-      setIsFollowed(true);
-      await updateDoc(visitedUserRef, {
+    const tempUserData = loggedUserData;
+
+    if (!tempUserData.following) {
+      tempUserData.following = [];
+    }
+
+    if (!state) {
+      updateState(true);
+      await updateDoc(userRef, {
         followers: arrayUnion({
-          name: user.displayName,
+          username: user.displayName,
           profilePhoto: user.photoURL,
-          userId: user.uid,
+          id: user.uid,
         }),
       });
 
       await updateDoc(loggedUserRef, {
         following: arrayUnion({
-          name: visitedUserData.username,
-          userId: visitedUserData.id,
-          profilePhoto: visitedUserData.profilePhoto,
+          username: userToHandle.username,
+          id: userToHandle.id,
+          profilePhoto: userToHandle.profilePhoto,
         }),
       });
 
-      tempUserData.following.push({
-        name: visitedUserData.username,
-        userId: visitedUserData.id,
-        profilePhoto: visitedUserData.profilePhoto,
+      const tempFollowing = tempUserData.following;
+      tempFollowing.push({
+        username: userToHandle.username,
+        id: userToHandle.id,
+        profilePhoto: userToHandle.profilePhoto,
       });
+      tempUserData.following = tempFollowing;
 
-      updateUserData(tempUserData)
+      updateUserData(tempUserData);
     }
 
-    if (isFollowed) {
-      setIsFollowed(false);
-      await updateDoc(visitedUserRef, {
+    if (state) {
+      updateState(false);
+      await updateDoc(userRef, {
         followers: arrayRemove({
-          name: user.displayName,
+          username: user.displayName,
           profilePhoto: user.photoURL,
-          userId: user.uid,
+          id: user.uid,
         }),
       });
 
       await updateDoc(loggedUserRef, {
         following: arrayRemove({
-          name: visitedUserData.username,
-          userId: visitedUserData.id,
-          profilePhoto: visitedUserData.profilePhoto,
+          username: userToHandle.username,
+          id: userToHandle.id,
+          profilePhoto: userToHandle.profilePhoto,
         }),
       });
 
-      const userDataFollowing = tempUserData.following
-      const unfollow = userDataFollowing.filter(userFollowed => userFollowed.userId !== visitedUserData.id)
-      tempUserData.following = unfollow
-      updateUserData(tempUserData)
+      const userDataFollowing = tempUserData.following;
+      const unfollow = userDataFollowing.filter(
+        (userFollowed) => userFollowed.id !== userToHandle.id
+      );
+      tempUserData.following = unfollow;
+      updateUserData(tempUserData);
     }
   };
 
@@ -179,7 +187,11 @@ export const UserDetails = () => {
               >
                 {user && visitedUserData.id !== user.uid && (
                   <>
-                    <OrangeButton onClick={handleFollow}>
+                    <OrangeButton
+                      onClick={() =>
+                        handleFollow(visitedUserData, userData, isFollowed, setIsFollowed)
+                      }
+                    >
                       {isFollowed ? (
                         "Przestań obserwować"
                       ) : (
@@ -254,14 +266,14 @@ export const UserDetails = () => {
               <UserFollowing
                 visitedUserData={visitedUserData}
                 username={username}
-                selectedTab={selectedTab}
+                handleFollow={handleFollow}
               />
             )}
             {selectedTab === "followers" && (
               <UserFollowers
                 visitedUserData={visitedUserData}
                 username={username}
-                selectedTab={selectedTab}
+                handleFollow={handleFollow}
               />
             )}
           </Grid>
