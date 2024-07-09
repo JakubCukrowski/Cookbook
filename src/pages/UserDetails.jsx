@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   collection,
-  getDocs,
   query,
   where,
   doc,
@@ -34,7 +33,7 @@ import UserFollowers from "../components/user_recipes_page/UserFollowers";
 
 export const UserDetails = () => {
   const { username } = useParams();
-  const { user, userData } = UserAuth(); //userData refers to logged user
+  const { user, userData, updateUserData } = UserAuth(); //userData refers to logged user
   const { recipes } = RecipesProvider();
   const [visitedUserRecipes, setVisitedUserRecipes] = useState([]); // refers to the user we are currently visiting
   const [visitedUserData, setVisitedUserData] = useState([]);
@@ -52,10 +51,10 @@ export const UserDetails = () => {
           where("normalizedName", "==", username)
         );
         const unsub = onSnapshot(q, (querySnapshot) => {
-          querySnapshot.forEach(doc => {
-            setVisitedUserData({ ...doc.data(), id: doc.id })
-          })
-        })
+          querySnapshot.forEach((doc) => {
+            setVisitedUserData({ ...doc.data(), id: doc.id });
+          });
+        });
       }
     };
 
@@ -63,9 +62,15 @@ export const UserDetails = () => {
   }, [username]);
 
   useEffect(() => {
-    setIsFollowed(visitedUserData.followers?.some(follower => follower.name === user.displayName))
-    const getVisitedUserRecipes = () => {
+    if (user) {
+      setIsFollowed(
+        visitedUserData.followers?.some(
+          (follower) => follower.name === user.displayName
+        )
+      );
+    }
 
+    const getVisitedUserRecipes = () => {
       if (visitedUserData) {
         const filteredRecipes = recipes.filter(
           (recipe) => recipe.addedBy.userId === visitedUserData.id
@@ -87,12 +92,12 @@ export const UserDetails = () => {
     getRecipesLikedByVisitedUser();
   }, [visitedUserData]);
 
-
   const handleFollow = async () => {
     const visitedUserRef = doc(db, "users", visitedUserData.id);
     const loggedUserRef = doc(db, "users", user.uid);
+    const tempUserData = userData;
     if (!isFollowed) {
-      setIsFollowed(true)
+      setIsFollowed(true);
       await updateDoc(visitedUserRef, {
         followers: arrayUnion({
           name: user.displayName,
@@ -100,7 +105,7 @@ export const UserDetails = () => {
           userId: user.uid,
         }),
       });
-  
+
       await updateDoc(loggedUserRef, {
         following: arrayUnion({
           name: visitedUserData.username,
@@ -109,10 +114,17 @@ export const UserDetails = () => {
         }),
       });
 
+      tempUserData.following.push({
+        name: visitedUserData.username,
+        userId: visitedUserData.id,
+        profilePhoto: visitedUserData.profilePhoto,
+      });
 
+      updateUserData(tempUserData)
     }
+
     if (isFollowed) {
-      setIsFollowed(false)
+      setIsFollowed(false);
       await updateDoc(visitedUserRef, {
         followers: arrayRemove({
           name: user.displayName,
@@ -120,7 +132,7 @@ export const UserDetails = () => {
           userId: user.uid,
         }),
       });
-  
+
       await updateDoc(loggedUserRef, {
         following: arrayRemove({
           name: visitedUserData.username,
@@ -128,6 +140,11 @@ export const UserDetails = () => {
           profilePhoto: visitedUserData.profilePhoto,
         }),
       });
+
+      const userDataFollowing = tempUserData.following
+      const unfollow = userDataFollowing.filter(userFollowed => userFollowed.userId !== visitedUserData.id)
+      tempUserData.following = unfollow
+      updateUserData(tempUserData)
     }
   };
 
