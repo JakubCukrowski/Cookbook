@@ -19,10 +19,10 @@ import { Soups } from "./components/recipes/main_page_recipes/Soups";
 import { Desserts } from "./components/recipes/main_page_recipes/Desserts";
 import { FilterRecipes } from "./pages/FilterRecipes";
 import { EditRecipe } from "./components/recipes/add_delete_edit_recipe/EditRecipe";
-// import { SearchedTag } from "./pages/SearchedTag";
+import { SearchedTag } from "./pages/SearchedTag";
 import { MainDishes } from "./components/recipes/main_page_recipes/MainDishes";
 import { BlockedRoute } from "./components/BlockedRoute";
-// import { PopularTags } from "./pages/PopularTags";
+import { PopularTags } from "./pages/PopularTags";
 import { UserDetails} from "./pages/UserDetails";
 import { RecipesContextProvider } from "./context/RecipesContext";
 
@@ -53,9 +53,9 @@ function App() {
               />
               <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
               {/* <Route path="/search" element={<RecipesPage />} /> */}
-              {/* <Route path="/show" element={<SearchedTag />} /> */}
+              <Route path="/show" element={<SearchedTag />} />
               <Route path="/violation" element={<ProfanityViolation />} />
-              {/* <Route path="/popular/:tagName" element={<PopularTags />} /> */}
+              <Route path="/popular/:tagName" element={<PopularTags />} />
               <Route path="/:username" element={<UserDetails />}/>
               <Route element={<PrivateRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
