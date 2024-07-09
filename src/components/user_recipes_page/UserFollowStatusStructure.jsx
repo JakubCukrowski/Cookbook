@@ -5,69 +5,28 @@ import { OrangeButton } from "../../assets/styles/Buttons";
 import { UserAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { normalizedString } from "../../helpers/helpers";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
-import { db } from "../../firebase";
 
-const UserFollowStatusStructure = ({ follower, username, visitedUserData }) => {
+const UserFollowStatusStructure = ({ follower, username, visitedUserData, handleFollow }) => {
   const { recipes } = RecipesProvider();
-  const { user, userData, updateUserData } = UserAuth();
+  const { user, userData } = UserAuth();
   const [followerRecipes, setFollowerRecipes] = useState([]);
   const navigate = useNavigate();
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const filteredFollowerRecipes = recipes.filter(
-      (recipe) => recipe.addedBy.userId === follower.userId
+      (recipe) => recipe.addedBy.userId === follower.id
     );
     setFollowerRecipes(filteredFollowerRecipes);
 
     if (user && userData.following) {
       setIsFollowing(
         userData.following.some(
-          (userFollowing) => userFollowing.userId === follower.userId
+          (userFollowing) => userFollowing.id === follower.id
         )
       );
     }
   }, [recipes, username]);
-
-  const handleFollow = async () => {
-    const userToFollowRef = doc(db, "users", follower.userId);
-    const loggedUserRef = doc(db, "users", user.uid);
-    const tempUserData = userData;
-
-    setIsFollowing(true);
-    await updateDoc(userToFollowRef, {
-      followers: arrayUnion({
-        name: user.displayName,
-        profilePhoto: user.photoURL,
-        userId: user.uid,
-      }),
-    });
-
-    await updateDoc(loggedUserRef, {
-      following: arrayUnion({
-        name: follower.name,
-        userId: follower.userId,
-        profilePhoto: follower.profilePhoto,
-      }),
-    });
-
-    tempUserData.following.push({
-      name: follower.name,
-      userId: follower.userId,
-      profilePhoto: follower.profilePhoto,
-    });
-
-    const tempFollowing = tempUserData.following
-    tempFollowing.push({
-      name: follower.name,
-      userId: follower.userId,
-      profilePhoto: follower.profilePhoto,
-    })
-    tempUserData.following = tempFollowing
-
-    updateUserData(tempUserData)
-  };
 
   return (
     <>
@@ -83,7 +42,7 @@ const UserFollowStatusStructure = ({ follower, username, visitedUserData }) => {
         >
           <Button
             sx={{ textTransform: "none", textAlign: "left" }}
-            onClick={() => navigate(`/${normalizedString(follower.name)}`)}
+            onClick={() => navigate(`/${normalizedString(follower.username)}`)}
           >
             <Box sx={{ display: "flex", gap: "6px", alignItems: "flex-end" }}>
               <Avatar
@@ -92,7 +51,7 @@ const UserFollowStatusStructure = ({ follower, username, visitedUserData }) => {
                 alt="follower_photo"
               />
               <Box>
-                <Typography variant="h6">{follower.name}</Typography>
+                <Typography variant="h6">{follower.username}</Typography>
                 <Typography>Przepisy {followerRecipes.length}</Typography>
               </Box>
             </Box>
@@ -100,19 +59,19 @@ const UserFollowStatusStructure = ({ follower, username, visitedUserData }) => {
 
           {user &&
             user.uid !== visitedUserData.id &&
-            user.uid !== follower.userId &&
+            user.uid !== follower.id &&
             !isFollowing && (
-              <OrangeButton onClick={handleFollow}>Obserwuj</OrangeButton>
+              <OrangeButton onClick={() => handleFollow(follower, userData, isFollowing, setIsFollowing)}>Obserwuj</OrangeButton>
             )}
 
           {user &&
             user.uid !== visitedUserData.id &&
-            user.uid !== follower.userId &&
+            user.uid !== follower.id &&
             isFollowing && <Typography>Obserwujesz</Typography>}
 
           {user &&
             user.uid !== visitedUserData.id &&
-            user.uid === follower.userId && (
+            user.uid === follower.id && (
               <OrangeButton onClick={() => navigate("/dashboard")}>
                 Twój profil
               </OrangeButton>

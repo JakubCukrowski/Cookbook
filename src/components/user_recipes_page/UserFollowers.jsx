@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 import UserFollowStatusStructure from "./UserFollowStatusStructure";
 
-const UserFollowers = ({ visitedUserData, username }) => {
+const UserFollowers = ({ visitedUserData, username, handleFollow }) => {
   return (
     <>
       <Grid item xs={12}>
@@ -18,6 +18,7 @@ const UserFollowers = ({ visitedUserData, username }) => {
               follower={follower}
               username={username}
               visitedUserData={visitedUserData}
+              handleFollow={handleFollow}
             />
           ))
         ) : (
