@@ -58,6 +58,10 @@ export const AuthContextProvider = ({ children }) => {
     return signOut(auth);
   };
 
+  const updateUserData = (value) => {
+    setUserData(value)
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -86,7 +90,8 @@ export const AuthContextProvider = ({ children }) => {
         createUser,
         login,
         signout,
-        userData
+        userData,
+        updateUserData
       }}
     >
       {!loading && children}

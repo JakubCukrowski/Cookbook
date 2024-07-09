@@ -5,18 +5,15 @@ import { OrangeButton } from "../../assets/styles/Buttons";
 import { UserAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { normalizedString } from "../../helpers/helpers";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { db } from "../../firebase";
 
-const UserFollowStatusStructure = ({
-  follower,
-  username,
-  selectedTab,
-  visitedUserData,
-}) => {
+const UserFollowStatusStructure = ({ follower, username, visitedUserData }) => {
   const { recipes } = RecipesProvider();
-  const { user, userData } = UserAuth();
+  const { user, userData, updateUserData } = UserAuth();
   const [followerRecipes, setFollowerRecipes] = useState([]);
   const navigate = useNavigate();
-  const [isFollowed, setIsFollowed] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const filteredFollowerRecipes = recipes.filter(
@@ -24,22 +21,53 @@ const UserFollowStatusStructure = ({
     );
     setFollowerRecipes(filteredFollowerRecipes);
 
-    if (user && visitedUserData.followers) {
-      if (
-        userData.followers.some(
-          (userFollowed) => userFollowed.userId === follower.userId
-        )
-      ) {
-        setIsFollowed(true);
-      } else if (
+    if (user && userData.following) {
+      setIsFollowing(
         userData.following.some(
-          (userFollowed) => userFollowed.userId === follower.userId
+          (userFollowing) => userFollowing.userId === follower.userId
         )
-      ) {
-        setIsFollowed(true);
-      }
+      );
     }
   }, [recipes, username]);
+
+  const handleFollow = async () => {
+    const userToFollowRef = doc(db, "users", follower.userId);
+    const loggedUserRef = doc(db, "users", user.uid);
+    const tempUserData = userData;
+
+    setIsFollowing(true);
+    await updateDoc(userToFollowRef, {
+      followers: arrayUnion({
+        name: user.displayName,
+        profilePhoto: user.photoURL,
+        userId: user.uid,
+      }),
+    });
+
+    await updateDoc(loggedUserRef, {
+      following: arrayUnion({
+        name: follower.name,
+        userId: follower.userId,
+        profilePhoto: follower.profilePhoto,
+      }),
+    });
+
+    tempUserData.following.push({
+      name: follower.name,
+      userId: follower.userId,
+      profilePhoto: follower.profilePhoto,
+    });
+
+    const tempFollowing = tempUserData.following
+    tempFollowing.push({
+      name: follower.name,
+      userId: follower.userId,
+      profilePhoto: follower.profilePhoto,
+    })
+    tempUserData.following = tempFollowing
+
+    updateUserData(tempUserData)
+  };
 
   return (
     <>
@@ -71,33 +99,16 @@ const UserFollowStatusStructure = ({
           </Button>
 
           {user &&
-            user.uid === visitedUserData.id &&
-            selectedTab === "following" && (
-              <OrangeButton>Nie obserwuj</OrangeButton>
-            )}
-          {user &&
-            user.uid === visitedUserData.id &&
-            selectedTab === "followers" && (
-              <OrangeButton>Usuń obserwującego</OrangeButton>
-            )}
-        
-          {user &&
             user.uid !== visitedUserData.id &&
-            selectedTab === "following" &&
-            user.uid !== follower.userId && !isFollowed && (
-              <OrangeButton>Także obserwuj</OrangeButton>
+            user.uid !== follower.userId &&
+            !isFollowing && (
+              <OrangeButton onClick={handleFollow}>Obserwuj</OrangeButton>
             )}
 
           {user &&
             user.uid !== visitedUserData.id &&
-            selectedTab === "followers" &&
             user.uid !== follower.userId &&
-            !isFollowed && <OrangeButton>Obserwuj</OrangeButton>}
-
-          {user &&
-            user.uid !== visitedUserData.id &&
-            user.uid !== follower.userId &&
-            isFollowed && <Typography>Obserwujesz</Typography>}
+            isFollowing && <Typography>Obserwujesz</Typography>}
 
           {user &&
             user.uid !== visitedUserData.id &&
