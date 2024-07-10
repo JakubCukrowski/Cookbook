@@ -12,7 +12,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 const UserDetails = ({
   avatarSrc,
   userName,
-  followersCount,
+  userData,
   recipesCount,
   addNewRecipe,
   created,
@@ -39,7 +39,7 @@ const UserDetails = ({
                   <strong>{userName}</strong>
                 </Typography>
                 <Typography variant="span">
-                  {followersCount} Obserwuje
+                  {userData.followers ? userData.followers.length : 0} Obserwuje
                 </Typography>
                 <Typography>Konto założone {created}</Typography>
               </StyledUserDetailsBox>

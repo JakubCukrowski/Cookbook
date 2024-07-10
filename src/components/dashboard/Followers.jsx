@@ -12,9 +12,9 @@ const Followers = ({ followersArray }) => {
         }}
       >
         <Typography variant="h5">Obserwujący</Typography>
-        {followersArray.length > 0 ? (
+        {followersArray && followersArray.length > 0 ? (
           followersArray.map((follower, index) => {
-            <div>{follower.name}</div>;
+            <div>{follower.username}</div>;
           })
         ) : (
           <Typography>Tutaj pojawią się użytkownicy, którzy Cię zaobserwują</Typography>

@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 
 const Following = ({ followingArray }) => {
+  console.log(followingArray);
   return (
     <>
       <Box
@@ -12,10 +13,10 @@ const Following = ({ followingArray }) => {
         }}
       >
         <Typography variant="h5">Obserwujesz</Typography>
-        {followingArray.length > 0 ? (
-          followingArray.map((follower, index) => {
-            <div>{follower.name}</div>;
-          })
+        {followingArray && followingArray.length > 0 ? (
+          followingArray.map((follower, index) => (
+            <div>{follower.username}</div>
+          ))
         ) : (
           <Typography>Jeśli zaobserwujesz jakiegoś użytkownika, pojawi on się w tym miejscu</Typography>
         )}
