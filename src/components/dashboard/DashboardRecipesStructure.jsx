@@ -105,8 +105,8 @@ const DashboardRecipesStructure = ({
 
         <CustomizedRecipesContainer>
           {array.length > 0 ? (
-            array.map((recipe) => (
-              <List>
+            array.map((recipe, index) => (
+              <List key={index}>
                 <ListItem>
                   <ListItemButton sx={{ gap: "20px" }} onClick={() => navigateToRecipe(recipe.id)}>
                     <img

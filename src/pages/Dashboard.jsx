@@ -33,7 +33,7 @@ export const Dashboard = () => {
                       created={creationTime}
                       userName={user.displayName}
                       userEmail={user.email}
-                      followersCount={userData.followers.length}
+                      userData={userData}
                       recipesCount={recipesAddedByUser.length}
                       addNewRecipe={handleAddRecipe}
                     />
