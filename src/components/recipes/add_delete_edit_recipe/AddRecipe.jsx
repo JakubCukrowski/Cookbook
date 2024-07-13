@@ -5,8 +5,7 @@ import { storage, db } from "../../../firebase";
 import { addDoc, collection, updateDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { SpinnerContainer } from "../../../assets/styles/Containers";
-import { CircularProgress } from "@mui/material";
+import CircularProgressPage from "../../../pages/CircularProgressPage";
 
 export const AddRecipe = () => {
   const { user } = UserAuth();
@@ -72,9 +71,7 @@ export const AddRecipe = () => {
   return (
     <>
       {adding ? (
-        <SpinnerContainer>
-          <CircularProgress color="inherit"/>
-        </SpinnerContainer>
+        <CircularProgressPage />
       ) : (
         <RecipeMultiStepForm
           isNewRecipe={true}

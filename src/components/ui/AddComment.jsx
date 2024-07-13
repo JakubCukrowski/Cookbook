@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { FlexContainer } from "../../assets/styles/Containers";
 import { UserAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { CommentInput } from "../ui/CommentInput";
+import { Container } from "@mui/material";
 
 export const AddComment = ({ searchedRecipe }) => {
   const { user } = UserAuth();
@@ -54,7 +54,7 @@ export const AddComment = ({ searchedRecipe }) => {
   };
 
   return (
-    <FlexContainer justify="center" align="center" direction="column">
+    <Container maxWidth='xl'>
       {user ? (
         <CommentInput
           comment={comment}
@@ -69,6 +69,6 @@ export const AddComment = ({ searchedRecipe }) => {
           <span>, aby dodać komentarz</span>
         </div>
       )}
-    </FlexContainer>
+    </Container>
   );
 };

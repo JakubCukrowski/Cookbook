@@ -6,15 +6,11 @@ export const StyledH1 = styled.h1`
 `;
 
 export const SearchBarContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 80%;
   position: relative;
+  width: 100%;
 
   @media (min-width: 992px) {
-    width: 50%;
+    width: 60%;
   }
 `;
 

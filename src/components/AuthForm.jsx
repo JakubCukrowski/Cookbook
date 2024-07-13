@@ -1,16 +1,16 @@
 import React from "react";
-import { FlexContainer, SpinnerContainer } from "../assets/styles/Containers";
 import { StyledLink } from "../assets/styles/StyledLink";
 import {
   StyledSignSection,
   StyledForm,
 } from "../assets/styles/CredentialsStyles";
 import { ConfirmButton } from "../assets/styles/Buttons";
-import { CircularProgress, FormControlLabel, Checkbox } from "@mui/material";
+import { FormControlLabel, Checkbox, Container } from "@mui/material";
 import { AuthInput } from "./AuthInput";
 import bckImg from "../assets/images/signForm2.jpg";
 import { StyledAlert } from "../assets/styles/StyledAlert";
 import { StyledTestAccount } from "../assets/styles/StyledTestAccount";
+import CircularProgressPage from "../pages/CircularProgressPage";
 
 export const AuthForm = ({
   title,
@@ -29,12 +29,10 @@ export const AuthForm = ({
     <>
       <StyledSignSection backgroundimage={bckImg}>
         {loggingIn ? (
-          <SpinnerContainer style={{ position: "static", zIndex: 200 }}>
-            <CircularProgress color="inherit" />
-          </SpinnerContainer>
+          <CircularProgressPage />
         ) : (
           <>
-            <FlexContainer direction="column" align="center">
+            <Container sx={{zIndex: 200}}>
               <StyledForm onSubmit={handleSubmit} noValidate>
                 <h2 style={{ padding: 20 }}>{title}</h2>
                 <span style={{ fontSize: 18, margin: 10 }}>
@@ -89,7 +87,7 @@ export const AuthForm = ({
                   </p>
                 </StyledTestAccount>
               )}
-            </FlexContainer>
+            </Container>
           </>
         )}
       </StyledSignSection>

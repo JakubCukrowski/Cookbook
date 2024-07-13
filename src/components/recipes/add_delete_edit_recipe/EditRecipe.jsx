@@ -12,8 +12,7 @@ import {
 } from "firebase/storage";
 import { RecipesProvider } from "../../../context/RecipesContext";
 import { UserAuth } from "../../../context/AuthContext";
-import { CircularProgress } from "@mui/material";
-import { SpinnerContainer } from "../../../assets/styles/Containers";
+import CircularProgressPage from "../../../pages/CircularProgressPage";
 
 export const EditRecipe = () => {
   const { recipes } = RecipesProvider();
@@ -88,9 +87,7 @@ export const EditRecipe = () => {
           submitForm={submitForm}
         />
       ) : (
-        <SpinnerContainer>
-          <CircularProgress color="inherit" />
-        </SpinnerContainer>
+        <CircularProgressPage />
       )}
     </>
   );

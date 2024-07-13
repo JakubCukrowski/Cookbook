@@ -25,7 +25,7 @@ import { startWithUpper } from "../helpers/helpers";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import { UserAuth } from "../context/AuthContext";
-import { SpinnerContainer } from "../assets/styles/Containers";
+import CircularProgressPage from '../pages/CircularProgressPage'
 
 const SingleRecipe = () => {
   const { recipeId } = useParams();
@@ -238,9 +238,7 @@ const SingleRecipe = () => {
           </Box>
         </Container>
       ) : (
-        <SpinnerContainer>
-          <CircularProgress />
-        </SpinnerContainer>
+        <CircularProgressPage />
       )}
     </section>
   );
