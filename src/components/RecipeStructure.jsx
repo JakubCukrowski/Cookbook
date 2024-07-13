@@ -38,7 +38,7 @@ export const RecipeStructure = ({ recipe, onClick }) => {
             <CardActionArea sx={{ margin: "10px 0" }}>
               <Link
                 to={
-                  user.uid === recipe.addedBy.userId
+                  user && user.uid === recipe.addedBy.userId
                     ? "/dashboard"
                     : `/${normalizedString(recipe.addedBy.user)}`
                 }
