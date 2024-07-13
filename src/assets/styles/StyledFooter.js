@@ -4,7 +4,6 @@ export const StyledFooter = styled.footer`
     background-color: #e19f25;
     color: white;
     padding: 10px 0;
-    margin-top: auto;
     position: static;
     z-index: 10;
 

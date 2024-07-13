@@ -29,6 +29,7 @@ import UserRecipesAdded from "../components/user_recipes_page/UserRecipesAdded";
 import UserRecipesLiked from "../components/user_recipes_page/UserRecipesLiked";
 import UserFollowing from "../components/user_recipes_page/UserFollowing";
 import UserFollowers from "../components/user_recipes_page/UserFollowers";
+import CustomSignUpModal from "../components/user_recipes_page/CustomSignUpModal";
 
 export const UserDetails = () => {
   const { username } = useParams();
@@ -38,6 +39,7 @@ export const UserDetails = () => {
   const [visitedUserData, setVisitedUserData] = useState([]);
   const [likedByVisitedUser, setLikedByVisitedUser] = useState([]);
   const [isFollowed, setIsFollowed] = useState(false);
+  const [isLogged, setIsLogged] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
   const navigate = useNavigate();
 
@@ -91,7 +93,12 @@ export const UserDetails = () => {
     getRecipesLikedByVisitedUser();
   }, [visitedUserData]);
 
-  const handleFollow = async (userToHandle, loggedUserData, state, updateState) => {
+  const handleFollow = async (
+    userToHandle,
+    loggedUserData,
+    state,
+    updateState
+  ) => {
     const userRef = doc(db, "users", userToHandle.id);
     const loggedUserRef = doc(db, "users", user.uid);
     const tempUserData = loggedUserData;
@@ -158,6 +165,10 @@ export const UserDetails = () => {
 
   return (
     <section id="user_details">
+      <CustomSignUpModal
+        isOpen={isLogged === false}
+        isClose={() => setIsLogged(null)}
+      />
       {visitedUserData && (
         <Container>
           <Grid container sx={{ margin: "10px 0" }} rowSpacing={4}>
@@ -185,27 +196,31 @@ export const UserDetails = () => {
                   width: "100%",
                 }}
               >
-                {user && visitedUserData.id !== user.uid && (
-                  <>
-                    <OrangeButton
-                      onClick={() =>
-                        handleFollow(visitedUserData, userData, isFollowed, setIsFollowed)
-                      }
-                    >
-                      {isFollowed ? (
-                        "Przestań obserwować"
-                      ) : (
-                        <>
-                          <AddIcon />
-                          Obserwuj
-                        </>
-                      )}
-                    </OrangeButton>
-                    <OrangeButton>
-                      <MessageIcon /> Napisz wiadomość
-                    </OrangeButton>
-                  </>
-                )}
+                <OrangeButton
+                  onClick={
+                    user && visitedUserData.id !== user.uid
+                      ? () =>
+                          handleFollow(
+                            visitedUserData,
+                            userData,
+                            isFollowed,
+                            setIsFollowed
+                          )
+                      : () => setIsLogged(false)
+                  }
+                >
+                  {isFollowed ? (
+                    "Przestań obserwować"
+                  ) : (
+                    <>
+                      <AddIcon />
+                      Obserwuj
+                    </>
+                  )}
+                </OrangeButton>
+                <OrangeButton>
+                  <MessageIcon /> Napisz wiadomość
+                </OrangeButton>
               </Box>
             </Grid>
             <Grid item xs={12}>
