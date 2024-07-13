@@ -1,27 +1,28 @@
 import { Alert } from "react-bootstrap";
-import { AddCommentButton, StyledInputGroup } from "../../assets/styles/commentsStyles";
-import Form from "react-bootstrap/Form";
+import { AddCommentButton } from "../../assets/styles/commentsStyles";
+import { TextField } from "@mui/material";
 
-export const CommentInput = ({comment, onChange, onClick, buttonText, error}) => {
+export const CommentInput = ({
+  comment,
+  onChange,
+  onClick,
+  buttonText,
+  error,
+}) => {
   return (
     <>
       {error && comment.length < 5 ? (
         <Alert variant="danger">Za krótko</Alert>
       ) : null}
-      <StyledInputGroup>
-        <Form.Control
-          isInvalid={error && comment.length < 5}
-          onChange={onChange}
-          value={comment}
-          style={{ resize: "none", width: "100%", height: 120 }}
-          size="sm"
-          as="textarea"
-          aria-label="With textarea"
-        />
-        <AddCommentButton onClick={onClick}>
-          {buttonText}
-        </AddCommentButton>
-      </StyledInputGroup>
+      <TextField
+        sx={{ width: "100%" }}
+        multiline
+        rows={4}
+        onChange={onChange}
+        value={comment}
+        error={error && comment.length < 5}
+      />
+      <AddCommentButton onClick={onClick}>{buttonText}</AddCommentButton>
     </>
   );
 };

@@ -2,7 +2,6 @@ import { FieldArray, Formik, getIn } from "formik";
 import {
   PreparationStepTextField,
   StyledRecipeForm,
-  // StyledTextarea,
 } from "../../../assets/styles/FormStyles";
 import {
   FormControl,
@@ -10,7 +9,6 @@ import {
   IconButton,
   Box,
   FormHelperText,
-  TextField,
 } from "@mui/material";
 import * as Yup from "yup";
 import CloseIcon from '@mui/icons-material/Close';

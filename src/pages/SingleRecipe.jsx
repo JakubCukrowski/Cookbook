@@ -4,7 +4,6 @@ import {
   Box,
   Grid,
   Avatar,
-  CircularProgress,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { RecipesProvider } from "../context/RecipesContext";
@@ -214,7 +213,8 @@ const SingleRecipe = () => {
 
                 <Grid
                   item
-                  xs={8}
+                  xs={12}
+                  md={9}
                   sx={{ margin: "0 auto", textAlign: "center" }}
                 >
                   <Typography variant="h5">Skomentuj</Typography>
@@ -222,7 +222,7 @@ const SingleRecipe = () => {
                 </Grid>
 
                 {recipeComments && recipeComments.length > 0 && (
-                  <Grid item xs={12}>
+                  <Grid item xs={12} md={9} sx={{margin: '0 auto'}}>
                     <Typography variant="h5" sx={{ textAlign: "center" }}>
                       Komentarze
                     </Typography>
