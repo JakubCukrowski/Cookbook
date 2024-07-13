@@ -206,12 +206,6 @@ export const UserDetails = () => {
                     </OrangeButton>
                   </>
                 )}
-
-                {user && userData === user.uid && (
-                  <OrangeButton onClick={() => navigate("/dashboard")}>
-                    Panel użytkownika
-                  </OrangeButton>
-                )}
               </Box>
             </Grid>
             <Grid item xs={12}>
