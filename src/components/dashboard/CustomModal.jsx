@@ -1,25 +1,12 @@
 import { Box, Typography, Modal } from "@mui/material";
-import styled from "styled-components";
 import { OrangeButton } from "../../assets/styles/Buttons";
-
-const ModalContentWrapper = styled(Box)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  -webkit-box-shadow: 0 0 6px 4px rgba(66, 68, 90, 1);
-  -moz-box-shadow: 0 0 6px 4px rgba(66, 68, 90, 1);
-  box-shadow: 0 0 6px 4px rgba(66, 68, 90, 1);
-  background-color: white;
-  border-radius: 8px;
-`;
+import { ModalContent } from "../../assets/styles/ModalStyle";
 
 const CustomizedModal = ({ modalOpen, handleCloseModal, recipeName, handleDelete, handleCancel }) => {
   return (
     <>
       <Modal open={modalOpen} onClose={handleCloseModal}>
-        <ModalContentWrapper>
+        <ModalContent>
           <Typography>Jesteś pewien, że chcesz usunąć {recipeName}?</Typography>
           <Box
             sx={{
@@ -39,7 +26,7 @@ const CustomizedModal = ({ modalOpen, handleCloseModal, recipeName, handleDelete
             </OrangeButton>
             <OrangeButton onClick={handleCancel}>Anuluj</OrangeButton>
           </Box>
-        </ModalContentWrapper>
+        </ModalContent>
       </Modal>
     </>
   );

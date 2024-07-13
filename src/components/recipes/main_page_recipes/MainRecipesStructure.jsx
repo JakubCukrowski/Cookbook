@@ -12,7 +12,7 @@ const MainRecipesStructure = ({
 }) => {
   const navigate = useNavigate();
   return (
-    <section id={sectionId} style={{ marginTop: 20 }}>
+    <section id={sectionId} style={{ margin: '10px 0'}}>
       <Container maxWidth="xl">
         <Grid container rowSpacing={3}>
           <Grid item xs={12}>
