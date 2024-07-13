@@ -1,9 +1,5 @@
 import React from "react";
 import { OrangeButton } from "../assets/styles/Buttons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { FlexContainer } from "../assets/styles/Containers";
-import { Container } from "react-bootstrap";
 import {
   NotificationDiv,
   NotificationLink,
@@ -13,6 +9,7 @@ import { db } from "../firebase";
 import { UserAuth } from "../context/AuthContext";
 import { normalizedString } from "../helpers/helpers";
 import CloseIcon from '@mui/icons-material/Close';
+import { Container } from "@mui/material";
 
 export const Notifications = ({
   hideNotifications,
@@ -39,12 +36,12 @@ export const Notifications = ({
 
   return (
     <>
-      <FlexContainer style={{marginTop: 20}} justify="space-between" align="center">
+      <Container style={{marginTop: 20}} justify="space-between" align="center">
         <h3 style={{ margin: 0 }}>Powiadomienia</h3>
         <OrangeButton onClick={hideNotifications}>
           <CloseIcon />
         </OrangeButton>
-      </FlexContainer>
+      </Container>
       <Container>
         {notifications.length === 0 && <p>Brak powiadomień</p>}
         {notifications &&

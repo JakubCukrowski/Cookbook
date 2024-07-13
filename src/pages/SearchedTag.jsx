@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { RecipeStructure } from "../components/RecipeStructure";
-import { SpinnerContainer } from "../assets/styles/Containers";
 import { startWithUpper } from "../helpers/helpers";
 import { RecipesProvider } from "../context/RecipesContext";
 import {
   Box,
-  CircularProgress,
   Grid,
   Typography,
 } from "@mui/material";
+import CircularProgressPage from "./CircularProgressPage";
 
 export const SearchedTag = () => {
   const { recipes } = RecipesProvider();
@@ -26,9 +25,7 @@ export const SearchedTag = () => {
   return (
     <section>
       {recipesByTags.length === 0 ? (
-        <SpinnerContainer>
-          <CircularProgress />
-        </SpinnerContainer>
+        <CircularProgressPage />
       ) : (
         <>
           <Box sx={{ padding: "20px" }}>

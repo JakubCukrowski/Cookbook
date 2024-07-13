@@ -6,7 +6,6 @@ import { Form } from "react-bootstrap";
 import { FormCategory } from "../components/FormCategory";
 import { FormDifficulty } from "../components/FormDifficulty";
 import { FormPrepTime } from "../components/FormPrepTime";
-import { FakeSpinnerContainer } from "../assets/styles/Containers";
 import { FilterFormStyle, NoResults } from "../assets/styles/RecipesStyles";
 import { FilterBootstrapPagination } from "../components/FilterBootstrapPagination";
 

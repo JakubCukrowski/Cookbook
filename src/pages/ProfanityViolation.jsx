@@ -1,5 +1,5 @@
+import { Container } from "@mui/material";
 import React from "react";
-import { FlexContainer } from "../assets/styles/Containers";
 
 export const ProfanityViolation = () => {
   return (
@@ -10,7 +10,7 @@ export const ProfanityViolation = () => {
         display: "flex",
       }}
     >
-      <FlexContainer>
+      <Container>
         <div style={{margin: '50px 0', backgroundColor: 'rgba(33, 37, 41, 0.1)', padding: 10, borderRadius: 6, textAlign: "center"}}>
           <p style={{fontSize: 22, color: "tomato", fontWeight: 500 }}>
             Dodawanie wulgarnych słów na naszej stronie
@@ -21,7 +21,7 @@ export const ProfanityViolation = () => {
             <strong>niecenzuralnych</strong>. Spróbuj jeszcze raz.
           </p>
         </div>
-      </FlexContainer>
+      </Container>
     </section>
   );
 };

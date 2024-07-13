@@ -28,12 +28,11 @@ export const StyledSignSection = styled.section`
 `;
 
 export const StyledForm = styled.form`
-  margin-top: 50px;
   border: 1px solid white;
   padding: 0 30px;
   border-radius: 10px;
   width: 100%;
-  margin-bottom: 50px;
+  margin: 50px auto;
   position: static;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);

@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { PopularButtonsContainer } from "../../assets/styles/Containers";
 import { useNavigate } from "react-router-dom";
 import { OrangeButton } from "../../assets/styles/Buttons";
 import { RecipesProvider } from "../../context/RecipesContext";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import styled from "styled-components";
+
+const StyledBox = styled(Box)`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+`
 
 export const PopularButtons = () => {
   const { recipes } = RecipesProvider();
@@ -34,11 +42,11 @@ export const PopularButtons = () => {
   }, [recipes]);
 
   return (
-    <div>
-      <h2>Popularne tagi</h2>
+    <Box>
+      <Typography variant="h4" sx={{textAlign: 'center'}}>Popularne tagi</Typography>
 
       {popularTags.length > 0 ? (
-        <PopularButtonsContainer>
+        <StyledBox>
           {popularTags.map((tag) => (
             <OrangeButton
               onClick={() => navigate(`/popular/${tag.name}`)}
@@ -48,10 +56,10 @@ export const PopularButtons = () => {
                 tag.name.split("").slice(1, tag.name.length).join("")}
             </OrangeButton>
           ))}
-        </PopularButtonsContainer>
+        </StyledBox>
       ) : (
         <Typography color={"white"}>Brak przepisów</Typography>
       )}
-    </div>
+    </Box>
   );
 };

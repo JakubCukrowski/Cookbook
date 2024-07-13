@@ -5,7 +5,6 @@ import { UserAuth } from "../context/AuthContext";
 import { RecipesProvider } from "../context/RecipesContext";
 import { useNavigate } from "react-router-dom";
 import DashboardRecipesStructure from "../components/dashboard/DashboardRecipesStructure";
-import { SpinnerContainer } from "../assets/styles/Containers";
 import Followers from "../components/dashboard/Followers";
 import Following from "../components/dashboard/Following";
 
@@ -70,9 +69,9 @@ export const Dashboard = () => {
           </Container>
         </DashboardSection>
       ) : (
-        <SpinnerContainer>
+        <Box>
           <CircularProgress />
-        </SpinnerContainer>
+        </Box>
       )}
     </>
   );
