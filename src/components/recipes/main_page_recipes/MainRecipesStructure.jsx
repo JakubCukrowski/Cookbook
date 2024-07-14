@@ -22,7 +22,7 @@ const MainRecipesStructure = ({
               </Typography>
             </CustomDivider>
           </Grid>
-          <Grid container item columnSpacing={8} rowSpacing={3}>
+          <Grid container item columnSpacing={5} rowSpacing={3}>
             {recipesArray.slice(0, 4).map((recipe, index) => (
               <RecipeStructure
                 key={index}
