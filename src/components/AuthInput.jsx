@@ -12,7 +12,8 @@ export const AuthInput = ({
   value,
   name,
   type,
-  error
+  error,
+  autoComplete
 }) => {
   return (
     <>
@@ -31,6 +32,7 @@ export const AuthInput = ({
         name={name}
         type={type}
         error={error}
+        autoComplete={autoComplete}
       />
     </>
   );

@@ -60,6 +60,7 @@ export const AuthForm = ({
                       name={input.name}
                       type={input.type}
                       error={input.inputFillError}
+                      autoComplete={input.autoComplete}
                     />
                   );
                 })}

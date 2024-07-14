@@ -86,6 +86,7 @@ export const SignUp = () => {
       inputFillError: formik.touched.displayName && formik.errors.displayName,
       onChange: formik.handleChange,
       onBlur: formik.handleBlur,
+      autoComplete: "one-time-code",
     },
     {
       inputErrors: formik.touched.email && formik.errors.email,
@@ -100,6 +101,7 @@ export const SignUp = () => {
         formik.errors.loginStatus,
       onChange: formik.handleChange,
       onBlur: formik.handleBlur,
+      autoComplete: "one-time-code"
     },
     {
       inputErrors: formik.touched.password && formik.errors.password,
@@ -112,6 +114,7 @@ export const SignUp = () => {
       inputFillError: formik.touched.password && formik.errors.password,
       onChange: formik.handleChange,
       onBlur: formik.handleBlur,
+      autoComplete: "one-time-code"
     },
     {
       inputErrors:
@@ -126,6 +129,7 @@ export const SignUp = () => {
         formik.touched.repeatedPassword && formik.errors.repeatedPassword,
       onChange: formik.handleChange,
       onBlur: formik.handleBlur,
+      autoComplete: "one-time-code"
     },
   ];
 
