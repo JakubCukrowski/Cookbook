@@ -6,6 +6,7 @@ export const StyledFooter = styled.footer`
     padding: 10px 0;
     position: static;
     z-index: 10;
+    margin-top: auto;
 
     p {
         margin: 8px 0;
