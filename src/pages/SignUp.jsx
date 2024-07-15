@@ -1,147 +1,207 @@
 import React, { useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import { AuthForm } from "../components/AuthForm";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import {
+  StyledForm,
+  StyledSignSection,
+  StyledTextField,
+} from "../assets/styles/CredentialsStyles";
+import bckImg from "../assets/images/signForm2.jpg";
+import CircularProgressPage from "./CircularProgressPage";
+import { Container } from "@mui/system";
+import { FormControl, FormHelperText, Typography } from "@mui/material";
+import { StyledLink } from "../assets/styles/StyledLink";
+import { ConfirmButton } from "../assets/styles/Buttons";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebase";
+import { normalizedString } from "../helpers/helpers";
 
 export const SignUp = () => {
   const { createUser } = UserAuth();
   const navigate = useNavigate();
   const [loggingIn, setLoggingIn] = useState(false);
 
-  const validate = (values) => {
-    const errors = {};
-
-    if (!values.displayName) {
-      errors.displayName = "Musisz podać nazwę użytkownika";
-    } else if (values.displayName.length < 4) {
-      errors.displayName =
-        "Nazwa użytkownika powinna posiadać przynajmniej 4 znaki";
-    }
-
-    if (!values.email) {
-      errors.email = "Musisz podać email";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-    ) {
-      errors.email = "Email nie jest poprawny";
-    }
-
-    if (!values.password) {
-      errors.password = "Musisz podać hasło";
-    }
-
-    if (values.password.length < 8) {
-      errors.password = "Hasło musi mieć przynajmniej 8 znaków";
-    }
-
-    if (
-      values.password.length >= 8 &&
-      !values.password.match(
-        /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+,\-.={}[\]:;'"<>?|])/
-      )
-    ) {
-      errors.password = "Hasło musi zawierać wielką literę i znak specjalny";
-    }
-
-    if (values.password !== values.repeatedPassword) {
-      errors.paassword = "Hasła nie zgadzają się";
-      errors.repeatedPassword = "Hasła nie zgadzają się";
-    }
-
-    return errors;
+  const checkUsername = async (name) => {
+    const usersRef = collection(db, "users");
+    const q = query(
+      usersRef,
+      where("normalizedName", "==", normalizedString(name).toLowerCase())
+    );
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.empty;
   };
 
-  const formik = useFormik({
-    initialValues: {
-      displayName: "",
-      email: "",
-      password: "",
-      repeatedPassword: "",
-    },
-    validate,
-    onSubmit: async (values) => {
-      try {
-        setLoggingIn(true);
-        await createUser(values.displayName, values.email, values.password);
-        navigate("/dashboard");
-      } catch (error) {
-        if (error.code === "auth/email-already-in-use") {
-          setLoggingIn(false);
-          formik.errors.email = "Ten email jest już zajęty";
-        }
-      }
-    },
-  });
-
-  const inputs = [
-    {
-      inputErrors: formik.touched.displayName && formik.errors.displayName,
-      errorContent: formik.errors.displayName,
-      id: "displayName",
-      label: "Nazwa użytkownika",
-      value: formik.values.displayName,
-      name: "displayName",
-      type: "text",
-      inputFillError: formik.touched.displayName && formik.errors.displayName,
-      onChange: formik.handleChange,
-      onBlur: formik.handleBlur,
-      autoComplete: "one-time-code",
-    },
-    {
-      inputErrors: formik.touched.email && formik.errors.email,
-      errorContent: formik.errors.email,
-      id: "email",
-      label: "Email",
-      value: formik.values.email,
-      name: "email",
-      type: "email",
-      inputFillError:
-        (formik.touched.email && formik.errors.email) ||
-        formik.errors.loginStatus,
-      onChange: formik.handleChange,
-      onBlur: formik.handleBlur,
-      autoComplete: "one-time-code"
-    },
-    {
-      inputErrors: formik.touched.password && formik.errors.password,
-      errorContent: formik.errors.password,
-      id: "password",
-      label: "Hasło",
-      value: formik.values.password,
-      name: "password",
-      type: "password",
-      inputFillError: formik.touched.password && formik.errors.password,
-      onChange: formik.handleChange,
-      onBlur: formik.handleBlur,
-      autoComplete: "one-time-code"
-    },
-    {
-      inputErrors:
-        formik.touched.repeatedPassword && formik.errors.repeatedPassword,
-      errorContent: formik.errors.repeatedPassword,
-      id: "repeatedPassword",
-      label: "Hasło",
-      value: formik.values.repeatedPassword,
-      name: "repeatedPassword",
-      type: "password",
-      inputFillError:
-        formik.touched.repeatedPassword && formik.errors.repeatedPassword,
-      onChange: formik.handleChange,
-      onBlur: formik.handleBlur,
-      autoComplete: "one-time-code"
-    },
-  ];
-
   return (
-    <AuthForm
-      title="Zarejestruj się"
-      accountExists="Masz już konto?"
-      linkTo="Zaloguj się"
-      href="/signin"
-      handleSubmit={formik.handleSubmit}
-      inputs={inputs}
-      loggingIn={loggingIn}
-    />
+    <>
+      <Formik
+        initialValues={{
+          displayName: "",
+          email: "",
+          password: "",
+          repeatedPassword: "",
+        }}
+        validationSchema={Yup.object({
+          displayName: Yup.string()
+            .required("Podaj nazwę użytkownika")
+            .min(3, "Nazwa użytkownika musi posiadać przynajmniej 3 znaki")
+            .max(15, "Nazwa użytkownika może posiadać maksymalnie 15 znaków."),
+          email: Yup.string()
+            .required("Musisz podać email")
+            .email("Ten adres email nie jest poprawny"),
+          password: Yup.string()
+            .required("Podaj hasło")
+            .min(6, "Hasło musi posiadać 6 lub więcej znaków")
+            .matches(
+              /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+,\-.={}[\]:;'"<>?|])/,
+              "Hasło musi zawierać wielką literę i znak specjalny."
+            ),
+          repeatedPassword: Yup.string().oneOf(
+            [Yup.ref("password"), null],
+            "Hasła nie zgadzają się."
+          ),
+        })}
+        onSubmit={async (values, { setFieldError }) => {
+          try {
+            if (checkUsername(values.displayName)) {
+              setFieldError(
+                "displayName",
+                "Ta nazwa użytkownika jest już zajęta."
+              );
+            } else {
+              setLoggingIn(true);
+              await createUser(
+                values.displayName,
+                values.email,
+                values.password
+              );
+              navigate("/dashboard");
+            }
+          } catch (error) {
+            if (error.code === "auth/email-already-in-use") {
+              setLoggingIn(false);
+              setFieldError("email", "Ten email jest już zajęty");
+            }
+          }
+        }}
+      >
+        {(formik) => (
+          <StyledSignSection backgroundimage={bckImg}>
+            {loggingIn ? (
+              <CircularProgressPage />
+            ) : (
+              <Container sx={{ zIndex: 200 }}>
+                <StyledForm onSubmit={formik.handleSubmit} noValidate>
+                  <Typography variant="h4">Zarejestruj się</Typography>
+                  <Typography>
+                    Masz już konto?{" "}
+                    <StyledLink to={"/signin"}>Zaloguj się</StyledLink>
+                  </Typography>
+                  {formik.errors.accountExists ? (
+                    <FormHelperText error>
+                      {formik.errors.accountExists}
+                    </FormHelperText>
+                  ) : null}
+                  <FormControl
+                    fullWidth
+                    error={
+                      formik.errors.displayName && formik.touched.displayName
+                    }
+                  >
+                    <StyledTextField
+                      label="Nazwa użytkownika"
+                      id="displayName"
+                      name="displayName"
+                      type="text"
+                      autoComplete="one-time-code"
+                      error={
+                        formik.errors.displayName && formik.touched.displayName
+                      }
+                      helperText={
+                        formik.errors.displayName && formik.touched.displayName
+                          ? formik.errors.displayName
+                          : null
+                      }
+                      {...formik.getFieldProps("displayName")}
+                    />
+                  </FormControl>
+                  <FormControl
+                    fullWidth
+                    error={formik.errors.email && formik.touched.email}
+                  >
+                    <StyledTextField
+                      label="Email"
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="one-time-code"
+                      error={
+                        (formik.errors.email && formik.touched.email) ||
+                        formik.errors.accountExists
+                      }
+                      helperText={
+                        formik.errors.email && formik.touched.email
+                          ? formik.errors.email
+                          : null
+                      }
+                      {...formik.getFieldProps("email")}
+                    />
+                  </FormControl>
+                  <FormControl
+                    fullWidth
+                    error={formik.errors.password && formik.touched.password}
+                  >
+                    <StyledTextField
+                      label="Hasło"
+                      id="password"
+                      name="password"
+                      type="password"
+                      autoComplete="one-time-code"
+                      error={formik.errors.password && formik.touched.password}
+                      helperText={
+                        formik.errors.password && formik.touched.password
+                          ? formik.errors.password
+                          : null
+                      }
+                      {...formik.getFieldProps("password")}
+                    />
+                  </FormControl>
+                  <FormControl
+                    fullWidth
+                    error={
+                      formik.errors.repeatedPassword &&
+                      formik.touched.repeatedPassword
+                    }
+                  >
+                    <StyledTextField
+                      label="Powtórz hasło"
+                      id="repeatedPassword"
+                      name="repeatedPassword"
+                      type="password"
+                      autoComplete="one-time-code"
+                      error={
+                        formik.errors.repeatedPassword &&
+                        formik.touched.repeatedPassword
+                      }
+                      helperText={
+                        formik.errors.repeatedPassword &&
+                        formik.touched.repeatedPassword
+                          ? formik.errors.repeatedPassword
+                          : null
+                      }
+                      {...formik.getFieldProps("repeatedPassword")}
+                    />
+                  </FormControl>
+                  <ConfirmButton variant="contained" type="submit">
+                    Zarejestruj
+                  </ConfirmButton>
+                </StyledForm>
+              </Container>
+            )}
+          </StyledSignSection>
+        )}
+      </Formik>
+    </>
   );
 };

@@ -4,10 +4,9 @@ import styled from "styled-components";
 export const StyledSignSection = styled.section`
   color: white;
   max-width: 100%;
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-grow: 1;
+  justify-content: flex-start;
   align-items: center;
   background: transparent center no-repeat
     url(${(props) => props.backgroundimage});
@@ -29,7 +28,7 @@ export const StyledSignSection = styled.section`
 
 export const StyledForm = styled.form`
   border: 1px solid white;
-  padding: 0 30px;
+  padding: 20px;
   border-radius: 10px;
   width: 100%;
   margin: 50px auto;
@@ -50,7 +49,7 @@ export const StyledTextField = styled(TextField)`
       border: 1px solid white;
     }
     label {
-      color: white !important;
+      color: inherit;
     }
     input {
       color: white;
