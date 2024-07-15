@@ -23,16 +23,6 @@ export const SignUp = () => {
   const navigate = useNavigate();
   const [loggingIn, setLoggingIn] = useState(false);
 
-  const checkUsername = async (name) => {
-    const usersRef = collection(db, "users");
-    const q = query(
-      usersRef,
-      where("normalizedName", "==", normalizedString(name).toLowerCase())
-    );
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.empty;
-  };
-
   return (
     <>
       <Formik
@@ -46,7 +36,24 @@ export const SignUp = () => {
           displayName: Yup.string()
             .required("Podaj nazwę użytkownika")
             .min(3, "Nazwa użytkownika musi posiadać przynajmniej 3 znaki")
-            .max(15, "Nazwa użytkownika może posiadać maksymalnie 15 znaków."),
+            .max(15, "Nazwa użytkownika może posiadać maksymalnie 15 znaków.")
+            .test(
+              "username-exists",
+              "Ta nazwa użytkownika jest już zajęta",
+              async (value) => {
+                const usersRef = collection(db, "users");
+                const q = query(
+                  usersRef,
+                  where(
+                    "normalizedName",
+                    "==",
+                    normalizedString(value).toLowerCase()
+                  )
+                );
+                const querySnapshot = await getDocs(q);
+                return querySnapshot.empty;
+              }
+            ),
           email: Yup.string()
             .required("Musisz podać email")
             .email("Ten adres email nie jest poprawny"),
@@ -64,20 +71,9 @@ export const SignUp = () => {
         })}
         onSubmit={async (values, { setFieldError }) => {
           try {
-            if (checkUsername(values.displayName)) {
-              setFieldError(
-                "displayName",
-                "Ta nazwa użytkownika jest już zajęta."
-              );
-            } else {
-              setLoggingIn(true);
-              await createUser(
-                values.displayName,
-                values.email,
-                values.password
-              );
-              navigate("/dashboard");
-            }
+            setLoggingIn(true);
+            await createUser(values.displayName, values.email, values.password);
+            navigate("/dashboard");
           } catch (error) {
             if (error.code === "auth/email-already-in-use") {
               setLoggingIn(false);
