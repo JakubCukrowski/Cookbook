@@ -16,9 +16,6 @@ import { RecipesProvider } from "../context/RecipesContext";
 import {
   Avatar,
   Grid,
-  List,
-  ListItemButton,
-  ListItemText,
   Typography,
 } from "@mui/material";
 import { Box, Container } from "@mui/system";
@@ -30,6 +27,8 @@ import UserRecipesLiked from "../components/user_recipes_page/UserRecipesLiked";
 import UserFollowing from "../components/user_recipes_page/UserFollowing";
 import UserFollowers from "../components/user_recipes_page/UserFollowers";
 import CustomSignUpModal from "../components/user_recipes_page/CustomSignUpModal";
+import { NotFound } from "./NotFound";
+import UserDetailsButtons from '../components/ui/UserDetailsButtons'
 
 export const UserDetails = () => {
   const { username } = useParams();
@@ -41,6 +40,7 @@ export const UserDetails = () => {
   const [isFollowed, setIsFollowed] = useState(false);
   const [isLogged, setIsLogged] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
+  const [isEmpty, setIsEmpty] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,6 +52,7 @@ export const UserDetails = () => {
           where("normalizedName", "==", username)
         );
         const unsub = onSnapshot(q, (querySnapshot) => {
+          if (querySnapshot.empty) setIsEmpty(true);
           querySnapshot.forEach((doc) => {
             setVisitedUserData({ ...doc.data(), id: doc.id });
           });
@@ -89,6 +90,13 @@ export const UserDetails = () => {
       }
     };
 
+    const redirectToDashboard = () => {
+      if (user && user.displayName === visitedUserData.username) {
+        return navigate("/dashboard");
+      }
+    };
+
+    redirectToDashboard();
     getVisitedUserRecipes();
     getRecipesLikedByVisitedUser();
   }, [visitedUserData]);
@@ -163,131 +171,112 @@ export const UserDetails = () => {
     }
   };
 
+  const updateSelectedTab = (value) => {
+    setSelectedTab(value)
+  }
+
   return (
-    <section id="user_details">
-      <CustomSignUpModal
-        isOpen={isLogged === false}
-        isClose={() => setIsLogged(null)}
-      />
-      {visitedUserData && (
-        <Container>
-          <Grid container sx={{ margin: "10px 0" }} rowSpacing={4}>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ display: "flex", alignItems: "flex-end", gap: "8px" }}>
-                <Avatar
-                  src={visitedUserData.profilePhoto}
-                  sx={{ width: "140px", height: "140px" }}
-                />
-                <Box>
-                  <Typography variant="h4">
-                    {visitedUserData.username}
-                  </Typography>
-                  <Typography>Przepisy: {visitedUserRecipes.length}</Typography>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: "20px",
-                  alignItems: "flex-end",
-                  justifyContent: "flex-end",
-                  width: "100%",
-                }}
-              >
-                <OrangeButton
-                  onClick={
-                    user && visitedUserData.id !== user.uid
-                      ? () =>
-                          handleFollow(
-                            visitedUserData,
-                            userData,
-                            isFollowed,
-                            setIsFollowed
-                          )
-                      : () => setIsLogged(false)
-                  }
-                >
-                  {isFollowed ? (
-                    "Przestań obserwować"
-                  ) : (
-                    <>
-                      <AddIcon />
-                      Obserwuj
-                    </>
-                  )}
-                </OrangeButton>
-                <OrangeButton>
-                  <MessageIcon /> Napisz wiadomość
-                </OrangeButton>
-              </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <List
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  backgroundColor: "#e19f25",
-                  color: "white",
-                  borderRadius: "4px",
-                }}
-              >
-                <ListItemButton
-                  onClick={() => setSelectedTab("added")}
-                  selected={selectedTab === "added"}
-                >
-                  <ListItemText primary="Dodane przepisy" />
-                </ListItemButton>
-                <ListItemButton
-                  selected={selectedTab === "liked"}
-                  onClick={() => setSelectedTab("liked")}
-                >
-                  <ListItemText primary="Polubione przepisy" />
-                </ListItemButton>
-                <ListItemButton
-                  selected={selectedTab === "following"}
-                  onClick={() => setSelectedTab("following")}
-                >
-                  <ListItemText primary="Obserwowani" />
-                </ListItemButton>
-                <ListItemButton
-                  selected={selectedTab === "followers"}
-                  onClick={() => setSelectedTab("followers")}
-                >
-                  <ListItemText primary="Obserwujący" />
-                </ListItemButton>
-              </List>
-            </Grid>
-            {selectedTab === "added" && (
-              <UserRecipesAdded
-                userRecipes={visitedUserRecipes}
-                username={username}
-              />
-            )}
-            {selectedTab === "liked" && (
-              <UserRecipesLiked
-                likedByUser={likedByVisitedUser}
-                username={username}
-              />
-            )}
-            {selectedTab === "following" && (
-              <UserFollowing
-                visitedUserData={visitedUserData}
-                username={username}
-                handleFollow={handleFollow}
-              />
-            )}
-            {selectedTab === "followers" && (
-              <UserFollowers
-                visitedUserData={visitedUserData}
-                username={username}
-                handleFollow={handleFollow}
-              />
-            )}
-          </Grid>
-        </Container>
+    <>
+      {isEmpty ? (
+        <NotFound />
+      ) : (
+        <section id="user_details">
+          <CustomSignUpModal
+            isOpen={isLogged === false}
+            isClose={() => setIsLogged(null)}
+          />
+          {visitedUserData && (
+            <Container>
+              <Grid container sx={{ margin: "10px 0" }} rowSpacing={4}>
+                <Grid item xs={12} md={6}>
+                  <Box
+                    sx={{ display: "flex", alignItems: "flex-end", gap: "8px" }}
+                  >
+                    <Avatar
+                      src={visitedUserData.profilePhoto}
+                      sx={{ width: "140px", height: "140px" }}
+                    />
+                    <Box>
+                      <Typography variant="h4">
+                        {visitedUserData.username}
+                      </Typography>
+                      <Typography>
+                        Przepisy: {visitedUserRecipes.length}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: "20px",
+                      alignItems: "flex-end",
+                      justifyContent: "flex-end",
+                      width: "100%",
+                    }}
+                  >
+                    <OrangeButton
+                      onClick={
+                        user && visitedUserData.id !== user.uid
+                          ? () =>
+                              handleFollow(
+                                visitedUserData,
+                                userData,
+                                isFollowed,
+                                setIsFollowed
+                              )
+                          : () => setIsLogged(false)
+                      }
+                    >
+                      {isFollowed ? (
+                        "Przestań obserwować"
+                      ) : (
+                        <>
+                          <AddIcon />
+                          Obserwuj
+                        </>
+                      )}
+                    </OrangeButton>
+                    <OrangeButton>
+                      <MessageIcon /> Napisz wiadomość
+                    </OrangeButton>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <UserDetailsButtons updateSelectedTab={updateSelectedTab} selectedTab={selectedTab}/>
+                </Grid>
+                {selectedTab === "added" && (
+                  <UserRecipesAdded
+                    userRecipes={visitedUserRecipes}
+                    username={username}
+                  />
+                )}
+                {selectedTab === "liked" && (
+                  <UserRecipesLiked
+                    likedByUser={likedByVisitedUser}
+                    username={username}
+                  />
+                )}
+                {selectedTab === "following" && (
+                  <UserFollowing
+                    visitedUserData={visitedUserData}
+                    username={username}
+                    handleFollow={handleFollow}
+                  />
+                )}
+                {selectedTab === "followers" && (
+                  <UserFollowers
+                    visitedUserData={visitedUserData}
+                    username={username}
+                    handleFollow={handleFollow}
+                  />
+                )}
+              </Grid>
+            </Container>
+          )}
+        </section>
       )}
-    </section>
+    </>
   );
 };
