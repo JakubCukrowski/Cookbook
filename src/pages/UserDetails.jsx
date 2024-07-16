@@ -13,11 +13,7 @@ import {
 import { db } from "../firebase";
 import { UserAuth } from "../context/AuthContext";
 import { RecipesProvider } from "../context/RecipesContext";
-import {
-  Avatar,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Avatar, Grid, Snackbar, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { OrangeButton } from "../assets/styles/Buttons";
 import MessageIcon from "@mui/icons-material/Message";
@@ -28,7 +24,7 @@ import UserFollowing from "../components/user_recipes_page/UserFollowing";
 import UserFollowers from "../components/user_recipes_page/UserFollowers";
 import CustomSignUpModal from "../components/user_recipes_page/CustomSignUpModal";
 import { NotFound } from "./NotFound";
-import UserDetailsButtons from '../components/ui/UserDetailsButtons'
+import UserDetailsButtons from "../components/user_recipes_page/UserDetailsButtons";
 
 export const UserDetails = () => {
   const { username } = useParams();
@@ -41,6 +37,7 @@ export const UserDetails = () => {
   const [isLogged, setIsLogged] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -171,9 +168,19 @@ export const UserDetails = () => {
     }
   };
 
+  const handleFollowUser = (
+    userToHandle,
+    loggedUserData,
+    state,
+    updateState
+  ) => {
+    handleFollow(userToHandle, loggedUserData, state, updateState);
+    setIsOpen((prev) => !prev);
+  };
+
   const updateSelectedTab = (value) => {
-    setSelectedTab(value)
-  }
+    setSelectedTab(value);
+  };
 
   return (
     <>
@@ -181,6 +188,22 @@ export const UserDetails = () => {
         <NotFound />
       ) : (
         <section id="user_details">
+          <Snackbar
+            autoHideDuration={4000}
+            open={isOpen}
+            onClose={(event, reason) => {
+              if (reason === "clickaway") {
+                return;
+              }
+
+              setIsOpen((prev) => !prev);
+            }}
+            message={
+              isFollowed
+                ? `Obserwujesz użytkownika ${visitedUserData.username}`
+                : `Przestałeś obserwować użytkownika ${visitedUserData.username}`
+            }
+          />
           <CustomSignUpModal
             isOpen={isLogged === false}
             isClose={() => setIsLogged(null)}
@@ -217,10 +240,11 @@ export const UserDetails = () => {
                     }}
                   >
                     <OrangeButton
+                      disabled={isOpen}
                       onClick={
                         user && visitedUserData.id !== user.uid
                           ? () =>
-                              handleFollow(
+                              handleFollowUser(
                                 visitedUserData,
                                 userData,
                                 isFollowed,
@@ -244,7 +268,10 @@ export const UserDetails = () => {
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
-                  <UserDetailsButtons updateSelectedTab={updateSelectedTab} selectedTab={selectedTab}/>
+                  <UserDetailsButtons
+                    updateSelectedTab={updateSelectedTab}
+                    selectedTab={selectedTab}
+                  />
                 </Grid>
                 {selectedTab === "added" && (
                   <UserRecipesAdded
