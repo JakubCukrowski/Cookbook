@@ -12,4 +12,9 @@ export const ModalContent = styled(Box)`
   box-shadow: 0 0 6px 4px rgba(66, 68, 90, 1);
   background-color: white;
   border-radius: 8px;
+  width: 80%;
+
+  @media (min-width: 992px) {
+    width: 50%;
+  }
 `;
