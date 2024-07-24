@@ -10,7 +10,7 @@ import { SignUp } from "./pages/SignUp";
 import { SignIn } from "./pages/SignIn";
 import { Dashboard } from "./pages/Dashboard";
 import { NotFound } from "./pages/NotFound";
-// import { RecipesPage } from "./pages/RecipesPage";
+import { RecipesPage } from "./pages/RecipesPage";
 import { GlobalStyle } from "./assets/styles/GlobalStyles";
 import { AddRecipe } from "./components/recipes/add_delete_edit_recipe/AddRecipe";
 import { PrivateRoute } from "./components/PrivateRoute";
@@ -52,7 +52,7 @@ function App() {
                 element={<FilterRecipes />}
               />
               <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
-              {/* <Route path="/search" element={<RecipesPage />} /> */}
+              <Route path="/search" element={<RecipesPage />} />
               <Route path="/show" element={<SearchedTag />} />
               <Route path="/violation" element={<ProfanityViolation />} />
               <Route path="/popular/:tagName" element={<PopularTags />} />

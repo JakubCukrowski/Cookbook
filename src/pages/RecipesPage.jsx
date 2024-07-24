@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { UserAuth } from "../context/AuthContext";
 import Fuse from "fuse.js";
-import { RecipesGroup } from "../components/RecipesGroup";
-import { Spinner } from "react-bootstrap";
-import { SpinnerContainer } from "../assets/styles/Containers";
 import { NewestRecipes } from "../components/recipes/main_page_recipes/NewestRecipes";
-import {PopularRecipes} from '../components/recipes/main_page_recipes/PopularRecipes'
-import {Desserts} from '../components/recipes/main_page_recipes/Desserts'
-import { StyledH2 } from "../assets/styles/StyledH2";
+import { PopularRecipes } from "../components/recipes/main_page_recipes/PopularRecipes";
+import { Desserts } from "../components/recipes/main_page_recipes/Desserts";
+import { RecipeStructure } from "../components/RecipeStructure";
+import CircularProgressPage from "./CircularProgressPage";
+import { Container, Grid, Typography } from "@mui/material";
+import { RecipesProvider } from "../context/RecipesContext";
 
 export const RecipesPage = () => {
   const {
@@ -17,7 +16,7 @@ export const RecipesPage = () => {
     queryText,
     recipes,
     updateQueryResults,
-  } = UserAuth();
+  } = RecipesProvider();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isDownloaded, setIsDownloaded] = useState(false);
 
@@ -40,27 +39,36 @@ export const RecipesPage = () => {
       return setIsDownloaded(true);
     }, 500);
 
-    return () => clearTimeout(timeout)
-
+    return () => clearTimeout(timeout);
   }, [queryText, recipes]);
-
 
   return (
     <>
       {isDownloaded ? (
-        <section style={{minHeight: 'calc(100vh - 192.8px)'}}>
-          <StyledH2>{queryText.length > 0 && queryResults.length > 0 ? `Przepisy zawierające: ${query}` : `Brak wyników dla: ${query}`}</StyledH2>
-          <RecipesGroup
-            array={queryResults}
-          />
-          {queryResults.length > 0 ? null : <><PopularRecipes /><NewestRecipes /><Desserts /></>}
+        <section>
+          <Container maxWidth='xl' sx={{paddingBottom: '20px'}}>
+            <Typography variant="h4" sx={{textAlign: "center", padding: '20px 0'}}>
+              {queryText.length > 0 && queryResults.length > 0
+                ? `Przepisy zawierające: ${query}`
+                : `Brak wyników dla: ${query}`}
+            </Typography>
+            <Grid container columnSpacing={4} rowSpacing={4}>
+              {queryResults.map((recipe, index) => (
+                <RecipeStructure recipe={recipe} key={index} />
+              ))}
+            </Grid>
+            {queryResults.length > 0 ? null : (
+              <>
+                <PopularRecipes />
+                <NewestRecipes />
+                <Desserts />
+              </>
+            )}
+          </Container>
         </section>
       ) : (
-        <SpinnerContainer>
-          <Spinner />
-        </SpinnerContainer>
+        <CircularProgressPage />
       )}
-
     </>
   );
 };
