@@ -6,7 +6,6 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
-  Grid,
   Typography,
 } from "@mui/material";
 import { OrangeButton } from "../assets/styles/Buttons";
@@ -16,14 +15,14 @@ import {
   startWithUpper,
 } from "../helpers/helpers";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
 
-export const RecipeStructure = ({ recipe, onClick }) => {
+export const RecipeStructure = ({ recipe }) => {
   const { user } = UserAuth();
+  const navigate = useNavigate()
   return (
     <>
-      <Grid sx={{ margin: "0 auto" }} item xs={12} sm={6} lg={4} xl={3}>
         <Card
           sx={{ backgroundColor: "rgb(247,247,247)", position: "relative" }}
         >
@@ -70,10 +69,9 @@ export const RecipeStructure = ({ recipe, onClick }) => {
             </Typography>
           </CardContent>
           <CardContent>
-            <OrangeButton onClick={onClick}>Przejdź do przepisu</OrangeButton>
+            <OrangeButton onClick={() => navigate(`/recipes/${recipe.id}`)}>Przejdź do przepisu</OrangeButton>
           </CardContent>
         </Card>
-      </Grid>
     </>
   );
 };
