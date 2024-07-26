@@ -12,7 +12,7 @@ const MainRecipesStructure = ({
 }) => {
   const navigate = useNavigate();
   return (
-    <section id={sectionId} style={{ margin: '10px 0'}}>
+    <section id={sectionId} style={{ margin: "10px 0" }}>
       <Container maxWidth="xl">
         <Grid container rowSpacing={3}>
           <Grid item xs={12}>
@@ -24,11 +24,12 @@ const MainRecipesStructure = ({
           </Grid>
           <Grid container item columnSpacing={5} rowSpacing={3}>
             {recipesArray.slice(0, 4).map((recipe, index) => (
-              <RecipeStructure
-                key={index}
-                recipe={recipe}
-                onClick={() => navigate(`/recipes/${recipe.id}`)}
-              />
+              <Grid key={index} item xs={12} md={6} lg={4} xl={3}>
+                <RecipeStructure
+                  recipe={recipe}
+                  onClick={() => navigate(`/recipes/${recipe.id}`)}
+                />
+              </Grid>
             ))}
           </Grid>
           <Grid item xs={12}>
