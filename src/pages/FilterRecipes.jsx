@@ -3,6 +3,7 @@ import CircularProgressPage from "../pages/CircularProgressPage";
 import { RecipesProvider } from "../context/RecipesContext";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  CircularProgress,
   Container,
   FormGroup,
   Grid,
@@ -22,6 +23,7 @@ export const FilterRecipes = () => {
     preparationTime: "Wszystko",
     difficulty: "Wszystko",
   });
+  const [recipesVisible, setRecipesVisible] = useState(false);
   const checkDate = (date) => new Date(date);
   const navigate = useNavigate();
 
@@ -30,11 +32,56 @@ export const FilterRecipes = () => {
     "popular-recipes": "Najpopularniejsze przepisy",
     soups: "Zupy",
     desserts: "Desery",
-    "main-dishes": "Dania główne",
+    main_dishes: "Dania główne",
     breakfasts: "Śniadania",
     supper: "Kolacje",
     snacks: "Przekąski",
     beverages: "Napoje",
+  };
+
+  const filterByPreparationTime = (array, prepTime) => {
+    return array.filter((recipe) => recipe.preparationTime === prepTime);
+  };
+
+  const filterByDifficulty = (array, difficulty) => {
+    return array.filter((recipe) => recipe.difficulty === difficulty);
+  };
+
+  const filterByBoth = (array, prepTime, difficulty) => {
+    return array
+      .filter((recipe) => recipe.difficulty === difficulty)
+      .filter((recipe) => recipe.preparationTime === prepTime);
+  };
+
+  const handleFiltering = (array) => {
+    if (
+      filterRecipes.preparationTime !== "Wszystko" &&
+      filterRecipes.difficulty === "Wszystko"
+    ) {
+      setFilteredList(
+        filterByPreparationTime(array, filterRecipes.preparationTime)
+      );
+    }
+
+    if (
+      filterRecipes.preparationTime === "Wszystko" &&
+      filterRecipes.difficulty !== "Wszystko"
+    ) {
+      setFilteredList(filterByDifficulty(array, filterRecipes.difficulty));
+    }
+
+    if (
+      filterRecipes.preparationTime !== "Wszystko" &&
+      filterRecipes.difficulty !== "Wszystko"
+    ) {
+      setFilteredList(
+        filterByBoth(
+          array,
+          filterRecipes.preparationTime,
+          filterRecipes.difficulty
+        )
+      );
+    }
   };
 
   useEffect(() => {
@@ -44,22 +91,41 @@ export const FilterRecipes = () => {
     }));
 
     if (categoryName === "newest-recipes") {
-      setFilteredList(
-        recipes.sort(
-          (recipeA, recipeB) => recipeB.createdAt - recipeA.createdAt
-        )
+      const sortedByCreationDate = [...recipes].sort(
+        (recipeA, recipeB) => recipeB.createdAt - recipeA.createdAt
       );
+      setFilteredList(sortedByCreationDate);
+      handleFiltering(sortedByCreationDate);
     } else if (categoryName === "popular-recipes") {
-      setFilteredList(
-        recipes.sort(
-          (recipeA, recipeB) => recipeB.likedBy.length - recipeA.likedBy.length
-        )
+      const sortByPopular = [...recipes].sort(
+        (recipeA, recipeB) => recipeB.likedBy.length - recipeA.likedBy.length
       );
+      setFilteredList(sortByPopular);
+      handleFiltering(sortByPopular);
     } else {
-      setFilteredList(
-        recipes.filter((recipe) => recipe.category === categoryName)
-      );
+      const sortedByCategory = [...recipes]
+        .sort((recipeA, recipeB) => recipeB.createdAt - recipeA.createdAt)
+        .filter((recipe) => recipe.category === categoryName);
+      setFilteredList(sortedByCategory);
+      handleFiltering(sortedByCategory);
     }
+    const timeout = setTimeout(() => {
+      setRecipesVisible(true);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [
+    filterRecipes.category,
+    filterRecipes.difficulty,
+    filterRecipes.preparationTime,
+  ]);
+
+  useEffect(() => {
+    setFilterRecipes((prev) => ({
+      ...prev,
+      preparationTime: "Wszystko",
+      difficulty: "Wszystko",
+    }));
   }, [categoryName]);
 
   return (
@@ -67,22 +133,25 @@ export const FilterRecipes = () => {
       {recipes ? (
         <section style={{ padding: "20px 0" }}>
           <Container maxWidth="xl">
-            <Typography variant="h4" sx={{ textAlign: "center" }}>
-              {categories[categoryName]}
-            </Typography>
             <Grid container columnSpacing={2} rowSpacing={4}>
+              <Grid item xs={12}>
+                <Typography variant="h4" sx={{ textAlign: "center" }}>
+                  {categories[categoryName]}
+                </Typography>
+              </Grid>
               <Grid item xs={12} md={4}>
-                <form>
+                <form style={{display: 'flex', flexDirection: "column", gap: 10}}>
                   <FormGroup>
                     <InputLabel>Kategoria</InputLabel>
                     <Select
                       value={filterRecipes.category}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        setRecipesVisible(false);
                         setFilterRecipes((prev) => ({
                           ...prev,
                           category: e.target.value,
-                        }))
-                      }
+                        }));
+                      }}
                     >
                       {Object.entries(categories).map((category, index) => (
                         <MenuItem
@@ -99,12 +168,13 @@ export const FilterRecipes = () => {
                     <InputLabel>Czas przygotowania</InputLabel>
                     <Select
                       value={filterRecipes.preparationTime}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        setRecipesVisible(false);
                         setFilterRecipes((prev) => ({
                           ...prev,
                           preparationTime: e.target.value,
-                        }))
-                      }
+                        }));
+                      }}
                     >
                       <MenuItem value={"Wszystko"}>Wszystko</MenuItem>
                       <MenuItem value={30}>Około 30 minut</MenuItem>
@@ -120,17 +190,18 @@ export const FilterRecipes = () => {
                     <InputLabel>Poziom trudności</InputLabel>
                     <Select
                       value={filterRecipes.difficulty}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        setRecipesVisible(false);
                         setFilterRecipes((prev) => ({
                           ...prev,
                           difficulty: e.target.value,
-                        }))
-                      }
+                        }));
+                      }}
                     >
                       <MenuItem value={"Wszystko"}>Wszystko</MenuItem>
-                      <MenuItem value={30}>Łatwy</MenuItem>
-                      <MenuItem value={60}>Średni</MenuItem>
-                      <MenuItem value={90}>Trudny</MenuItem>
+                      <MenuItem value={"easy"}>Łatwy</MenuItem>
+                      <MenuItem value={"medium"}>Średni</MenuItem>
+                      <MenuItem value={"hard"}>Trudny</MenuItem>
                     </Select>
                   </FormGroup>
                 </form>
@@ -143,11 +214,25 @@ export const FilterRecipes = () => {
                 rowSpacing={2}
                 columnSpacing={2}
               >
-                {filteredList.map((recipe, index) => (
-                  <Grid item key={index} xs={12} sm={6} lg={4}>
-                    <RecipeStructure recipe={recipe}/>
+                {recipesVisible ? (
+                  filteredList.map((recipe, index) => (
+                    <Grid item key={index} xs={12} sm={6} lg={4}>
+                      <RecipeStructure recipe={recipe} />
+                    </Grid>
+                  ))
+                ) : (
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CircularProgress color="inherit" />
                   </Grid>
-                ))}
+                )}
               </Grid>
             </Grid>
           </Container>
@@ -158,211 +243,3 @@ export const FilterRecipes = () => {
     </>
   );
 };
-
-// //filtering
-// useEffect(() => {
-//   setFilterData((prev) => {
-//     return {
-//       ...prev,
-//       category: categories[categoryName],
-//     };
-//   });
-
-//   const sortRecipes = (array) => {
-//     return array.sort(
-//       (a, b) => checkDate(b.createdAt) - checkDate(a.createdAt)
-//     );
-//   };
-
-//   const filterRecipesByPrepTime = (array) => {
-//     return array.filter(
-//       (element) => element.preparationTime === filterData.prepTime
-//     );
-//   };
-
-//   const filterRecipesByDifficulty = (array) => {
-//     return array.filter(
-//       (element) => element.difficulty === filterData.difficulty
-//     );
-//   };
-
-//   let category = categories[categoryName];
-//   let prepTime = filterData.prepTime;
-//   let difficulty = filterData.difficulty;
-
-//   if (
-//     category === "Najnowsze przepisy" &&
-//     prepTime === "Wszystko" &&
-//     difficulty === "all"
-//   ) {
-//     const newest = sortRecipes([...recipes].splice(0, 20));
-//     setFilteredList(newest);
-//   } else if (
-//     category === "Najnowsze przepisy" &&
-//     prepTime !== "Wszystko" &&
-//     difficulty === "all"
-//   ) {
-//     const newestByPrepTime = filterRecipesByPrepTime([...recipes]);
-//     const newestSorted = sortRecipes(newestByPrepTime).splice(0, 20);
-//     setFilteredList(newestSorted);
-//   } else if (
-//     category === "Najnowsze przepisy" &&
-//     prepTime === "Wszystko" &&
-//     difficulty !== "all"
-//   ) {
-//     const newestByDifficulty = filterRecipesByDifficulty([...recipes]).splice(
-//       0,
-//       20
-//     );
-//     setFilteredList(newestByDifficulty);
-//   } else if (
-//     category === "Najnowsze przepisy" &&
-//     filterData.prepTime !== "Wszystko" &&
-//     filterData.difficulty !== "all"
-//   ) {
-//     const newestOfPrepAndDifficulty = filterRecipesByPrepTime(
-//       filterRecipesByDifficulty([...recipes]).splice(0, 20)
-//     );
-//     setFilteredList(newestOfPrepAndDifficulty);
-//   }
-
-//   if (
-//     category === "Najpopularniejsze przepisy" &&
-//     prepTime === "Wszystko" &&
-//     difficulty === "all"
-//   ) {
-//     const mostPopular = [...recipes]
-//       .sort((a, b) => b.createdAt - a.createdAt)
-//       .sort((a, b) => b.likedBy.length - a.likedBy.length)
-//       .splice(0, 90);
-//     setFilteredList(mostPopular);
-//   } else if (
-//     category === "Najpopularniejsze przepisy" &&
-//     prepTime !== "Wszystko" &&
-//     difficulty === "all"
-//   ) {
-//     const popularByPrepTime = filterRecipesByPrepTime([...recipes]);
-//     const popularSorted = popularByPrepTime
-//       .sort((a, b) => b.likedBy.length - a.likedBy.length)
-//       .splice(0, 90);
-//     setFilteredList(popularSorted);
-//   } else if (
-//     category === "Najpopularniejsze przepisy" &&
-//     prepTime === "Wszystko" &&
-//     difficulty !== "all"
-//   ) {
-//     const newestByDifficulty = filterRecipesByDifficulty([...recipes]);
-//     const newestSorted = newestByDifficulty
-//       .sort((a, b) => b.likedBy.length - a.likedBy.length)
-//       .splice(0, 90);
-//     setFilteredList(newestSorted);
-//   } else if (
-//     category === "Najpopularniejsze przepisy" &&
-//     filterData.prepTime !== "Wszystko" &&
-//     filterData.difficulty !== "all"
-//   ) {
-//     const newestOfPrepAndDifficulty = filterRecipesByPrepTime(
-//       filterRecipesByDifficulty(
-//         [...recipes].sort((a, b) => b.likedBy.length - a.likedBy.length)
-//       ).splice(0, 90)
-//     );
-//     setFilteredList(newestOfPrepAndDifficulty);
-//   }
-
-//   if (
-//     category !== "Najpopularniejsze przepisy" &&
-//     category !== "Najnowsze przepisy" &&
-//     prepTime === "Wszystko" &&
-//     difficulty === "all"
-//   ) {
-//     const filterByCategory = [...recipes].filter(
-//       (recipe) => recipe.category === category
-//     );
-
-//     setFilteredList(sortRecipes(filterByCategory));
-//   } else if (
-//     category !== "Najpopularniejsze przepisy" &&
-//     category !== "Najnowsze przepisy" &&
-//     prepTime !== "Wszystko" &&
-//     difficulty === "all"
-//   ) {
-//     const filterByCategory = [...recipes].filter(
-//       (recipe) => recipe.category === category
-//     );
-//     const filteredByPrepTime = filterRecipesByPrepTime(filterByCategory);
-//     setFilteredList(sortRecipes(filteredByPrepTime));
-//   } else if (
-//     category !== "Najpopularniejsze przepisy" &&
-//     category !== "Najnowsze przepisy" &&
-//     prepTime !== "Wszystko" &&
-//     difficulty !== "all"
-//   ) {
-//     const filterByCategory = [...recipes].filter(
-//       (recipe) => recipe.category === categories[categoryName]
-//     );
-//     const filterByPrepAndDifficulty = filterRecipesByPrepTime(
-//       filterRecipesByDifficulty(filterByCategory)
-//     );
-//     setFilteredList(sortRecipes(filterByPrepAndDifficulty));
-//   } else if (
-//     category !== "Najpopularniejsze przepisy" &&
-//     category !== "Najnowsze przepisy" &&
-//     prepTime === "Wszystko" &&
-//     difficulty !== "all"
-//   ) {
-//     const filterByCategory = [...recipes].filter(
-//       (recipe) => recipe.category === category
-//     );
-//     const filterByDifficulty = filterRecipesByDifficulty(filterByCategory);
-//     setFilteredList(sortRecipes(filterByDifficulty));
-//   }
-
-//   if (isFilterSelected) {
-//     const timeout = setTimeout(() => {
-//       setIsFilterSelected(false);
-//     }, 500);
-//     return () => clearTimeout(timeout);
-//   }
-// }, [isFilterSelected, recipes]);
-
-// const handleChangeCategory = (e) => {
-//   setFilterData((prev) => {
-//     return {
-//       ...prev,
-//       prepTime: "Wszystko",
-//       difficulty: "all",
-//     };
-//   });
-//   const arrayFromObject = Object.entries(categories);
-//   setFilterData((prev) => {
-//     return {
-//       ...prev,
-//       category: e.target.value,
-//     };
-//   });
-//   const filtered = arrayFromObject.filter(
-//     (category) => category[1] === e.target.value
-//   );
-//   navigate(`/category/${filtered[0][0]}`);
-//   setIsFilterSelected(true);
-// };
-
-// const handlePrepTime = (e) => {
-//   setFilterData((prev) => {
-//     return {
-//       ...prev,
-//       prepTime: e.target.value,
-//     };
-//   });
-//   setIsFilterSelected(true);
-// };
-
-// const handleDifficulty = (e) => {
-//   setFilterData((prev) => {
-//     return {
-//       ...prev,
-//       difficulty: e.target.value,
-//     };
-//   });
-//   setIsFilterSelected(true);
-// };
