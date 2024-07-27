@@ -140,7 +140,9 @@ export const FilterRecipes = () => {
                 </Typography>
               </Grid>
               <Grid item xs={12} md={4}>
-                <form style={{display: 'flex', flexDirection: "column", gap: 10}}>
+                <form
+                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                >
                   <FormGroup>
                     <InputLabel>Kategoria</InputLabel>
                     <Select
@@ -215,11 +217,28 @@ export const FilterRecipes = () => {
                 columnSpacing={2}
               >
                 {recipesVisible ? (
-                  filteredList.map((recipe, index) => (
-                    <Grid item key={index} xs={12} sm={6} lg={4}>
-                      <RecipeStructure recipe={recipe} />
+                  filteredList.length > 0 ? (
+                    filteredList.map((recipe, index) => (
+                      <Grid item key={index} xs={12} sm={6} lg={4}>
+                        <RecipeStructure recipe={recipe} />
+                      </Grid>
+                    ))
+                  ) : (
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>
+                        Nie znaleźliśmy żadnego przepisu spełniającego podane
+                        warunki. Spróbuj jeszcze raz.
+                      </Typography>
                     </Grid>
-                  ))
+                  )
                 ) : (
                   <Grid
                     item
